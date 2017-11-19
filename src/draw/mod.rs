@@ -50,6 +50,31 @@ pub fn draw_hex_edge(center: na::Vector2<f64>,
         .set("d", data)
 }
 
+pub fn draw_path(center: na::Vector2<f64>,
+                 from: na::Point3<f64>,
+                 to: na::Point3<f64>,
+                 orientation: Orientation,
+                 hex_size: Option<f64>) -> Path {
+    let id_point3: na::Point3<f64> = na::Point3::new(0.0, 0.0, 0.0);
+    let hex_size = match hex_size {
+        Some(s) => s,
+        None => 20.0,
+    };
+    let basis = match orientation {
+        Orientation::Horizontal => hor_basis(),
+        Orientation::Vertical => ver_basis(),
+    };
+    let (x, y) = point_to_tuple(hex_size * (basis * to + center));
+    let (x1, y1) = point_to_tuple(hex_size * (basis * id_point3 + center));
+    let data = Data::new()
+        .move_to(point_to_tuple(hex_size * (basis * from + center)))
+        .quadratic_curve_to((x1, y1, x, y));
+    Path::new()
+        .set("stroke", "black")
+        .set("stroke-width", 2)
+        .set("d", data)
+}
+
 fn hor_basis() -> na::Matrix2x3<f64> {
     na::Matrix2x3::from_columns(&[
         na::Vector2::new(1.0,   0.0),
