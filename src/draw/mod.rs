@@ -1,43 +1,21 @@
 extern crate svg;
 extern crate nalgebra as na;
 
-use svg::Document;
-use svg::node::element::Path;
-use svg::node::element::path::Data;
+use self::svg::node::element::Path;
+use self::svg::node::element::path::Data;
+use super::Orientation;
 
-enum Orientation {
-    Horizontal,
-    Vertical,
-}
-
-fn hor_basis() -> na::Matrix2x3<f64> {
-    na::Matrix2x3::from_columns(&[
-        na::Vector2::new(1.0,   0.0),
-        na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt()),
-        na::Vector2::new(-0.5,  0.5 * 3.0_f64.sqrt())
-    ])
-}
-
-fn ver_basis() -> na::Matrix2x3<f64> {
-    na::Matrix2x3::from_columns(&[
-        na::Vector2::new(0.5 * 3.0_f64.sqrt(), -0.5),
-        na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
-        na::Vector2::new(0.0, 1.0)
-    ])
-}
-
-fn main() {
-    let path = draw_hex(na::Vector2::new(1.0, 1.0),
-                        Orientation::Horizontal,
-                        None)
-        .set("fill", "none");
-    let document = Document::new()
-        .set("viewBox", (0, 0, 70, 70))
-        .add(path);
-    svg::save("image.svg", &document).unwrap();
-}
-
-fn draw_hex(center: na::Vector2<f64>,
+/// Draw the outline of a hexagon
+///
+/// # Parameters
+///
+/// center: the middle point of the hex
+///
+/// orientation: whether the hex should have a flat top or one of the points
+///              should be at the top
+///
+/// hex_size: a factor to scale the hex by
+pub fn draw_hex_edge(center: na::Vector2<f64>,
             orientation: Orientation,
             hex_size: Option<f64>) -> Path {
     let hex_size = match hex_size {
@@ -70,6 +48,22 @@ fn draw_hex(center: na::Vector2<f64>,
         .set("stroke", "black")
         .set("stroke-width", 0.5)
         .set("d", data)
+}
+
+fn hor_basis() -> na::Matrix2x3<f64> {
+    na::Matrix2x3::from_columns(&[
+        na::Vector2::new(1.0,   0.0),
+        na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt()),
+        na::Vector2::new(-0.5,  0.5 * 3.0_f64.sqrt())
+    ])
+}
+
+fn ver_basis() -> na::Matrix2x3<f64> {
+    na::Matrix2x3::from_columns(&[
+        na::Vector2::new(0.5 * 3.0_f64.sqrt(), -0.5),
+        na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
+        na::Vector2::new(0.0, 1.0)
+    ])
 }
 
 fn point_to_tuple(p: na::Point2<f64>) -> (f64, f64) {
