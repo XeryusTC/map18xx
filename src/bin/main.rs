@@ -18,9 +18,7 @@ fn main() {
                                None)
         .set("fill", "none");
     let document = Document::new()
-        .set("width", 100)
-        .set("height", 100)
-        .set("viewBox", (0, 0, 70, 70))
+        .set("viewBox", (0, 0, 100, 100))
         .add(hex)
         .add(path);
     svg::save("image.svg", &document).unwrap();
