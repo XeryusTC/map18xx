@@ -1,4 +1,6 @@
 pub mod draw;
+pub mod tile;
+pub mod map;
 
 /// Orientation that hexes should be in
 pub enum Orientation {

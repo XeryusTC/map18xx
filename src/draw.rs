@@ -1,9 +1,30 @@
 extern crate svg;
 extern crate nalgebra as na;
 
-use self::svg::node::element::Path;
+use self::svg::node::element::{Group, Path};
 use self::svg::node::element::path::Data;
 use super::Orientation;
+use super::tile;
+use super::map;
+
+/// Draws the tile manifest
+pub fn draw_tile_manifest(tiles: &Vec<tile::Tile>) -> Group {
+    let tile = draw_tile(&tiles[0], &map::MapInfo::default());
+
+    Group::new()
+        .add(tile)
+}
+
+/// Draws a single tile
+pub fn draw_tile(tile: &tile::Tile, map: &map::MapInfo) -> Group {
+    let bg = draw_hex_edge(na::Vector2::new(1.0, 1.0),
+                           &map.orientation,
+                           None)
+        .set("fill", tile.color());
+
+    Group::new()
+        .add(bg)
+}
 
 /// Draw the outline of a hexagon
 ///
@@ -15,16 +36,16 @@ use super::Orientation;
 ///              should be at the top
 ///
 /// hex_size: a factor to scale the hex by
-pub fn draw_hex_edge(center: na::Vector2<f64>,
-            orientation: Orientation,
+fn draw_hex_edge(center: na::Vector2<f64>,
+            orientation: &Orientation,
             hex_size: Option<f64>) -> Path {
     let hex_size = match hex_size {
         Some(s) => s,
         None => 20.0,
     };
     let basis = match orientation {
-        Orientation::Horizontal => hor_basis(),
-        Orientation::Vertical => ver_basis(),
+        &Orientation::Horizontal => hor_basis(),
+        &Orientation::Vertical => ver_basis(),
     };
 
     let points = [
@@ -50,7 +71,7 @@ pub fn draw_hex_edge(center: na::Vector2<f64>,
         .set("d", data)
 }
 
-pub fn draw_path(center: na::Vector2<f64>,
+fn draw_path(center: na::Vector2<f64>,
                  from: na::Point3<f64>,
                  to: na::Point3<f64>,
                  orientation: Orientation,
