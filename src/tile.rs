@@ -38,6 +38,7 @@ fn edge_to_coordinate(edge: &str) -> na::Point3<f64> {
         "S"  => na::Point3::new( 0.0, -0.5,  0.5),
         "SW" => na::Point3::new(-0.5,  0.0,  0.5),
         "NW" => na::Point3::new(-0.5,  0.5,  0.0),
+        "C"  => na::Point3::new( 0.0,  0.0,  0.0),
         c => panic!("Invalid edge code {}", c),
     }
 }
@@ -68,8 +69,8 @@ impl TileDefinition {
         self.path
     }
 
-    fn cities(&self) -> &Option<Vec<City>> {
-        &self.city
+    fn cities(self) -> Option<Vec<City>> {
+        self.city
     }
 }
 
@@ -113,6 +114,18 @@ pub struct City {
     pos: Option<Box<[f64]>>,
 }
 
+impl City {
+    pub fn position(&self) -> na::Point3<f64> {
+        match &self.pos {
+            &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
+            &None => match &self.position {
+                &Some(ref s) => edge_to_coordinate(s.as_ref()),
+                &None => na::Point3::new(0.0, 0.0, 0.0),
+            }
+        }
+    }
+}
+
 /// Reads and parses all tile definitions in ./tiledefs/
 pub fn definitions() -> HashMap<String, TileDefinition> {
     let def_files: Vec<PathBuf> = match fs::read_dir("tiledefs") {
@@ -149,6 +162,53 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
 mod tests {
     extern crate toml;
     use super::{TileDefinition, na};
+
+    #[test]
+    fn city_position_is_center_by_default() {
+        let tile: TileDefinition = toml::from_str(r#"
+            [[city]]
+            circles = 1
+            revenue = 10
+            "#).unwrap();
+        assert_eq!(tile.cities().unwrap()[0].position(),
+                   na::Point3::new(0.0, 0.0, 0.0));
+    }
+
+    #[test]
+    fn city_returns_pos_when_position_also_given() {
+        let tile: TileDefinition = toml::from_str(r#"
+            [[city]]
+            circles = 1
+            revenue = 10
+            pos = [0.3, 0.0, -0.3]
+            "#).unwrap();
+        assert_eq!(tile.cities().unwrap()[0].position(),
+                   na::Point3::new(0.3, 0.0, -0.3));
+    }
+
+    #[test]
+    fn city_returns_edge_position_when_given() {
+        let tile: TileDefinition = toml::from_str(r#"
+            [[city]]
+            circles = 1
+            revenue = 10
+            position = "N"
+            "#).unwrap();
+        assert_eq!(tile.cities().unwrap()[0].position(),
+                   na::Point3::new(0.0, 0.5, -0.5));
+    }
+
+    #[test]
+    fn city_returns_center_when_position_is_c() {
+        let tile: TileDefinition = toml::from_str(r#"
+            [[city]]
+            circles = 1
+            revenue = 10
+            position = "C"
+            "#).unwrap();
+        assert_eq!(tile.cities().unwrap()[0].position(),
+                   na::Point3::new(0.0, 0.0, 0.0));
+    }
 
     #[test]
     #[should_panic(expected = "No start position found")]
