@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate serde_derive;
+
 pub mod draw;
 pub mod tile;
 pub mod map;
