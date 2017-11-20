@@ -1,3 +1,26 @@
+//! Representation of tiles
+//!
+//! Items within a hex are usually given in hexagon-space. This is a 3D space
+//! where the axis are at 240° to each other. An example of the axis is given
+//! [here (cube coordinate section)][1]. Note that the orientation of the axis
+//! when the hexagons are oriented with horizontal edges differs from when the
+//! hexagons are oriented with vertical edges.
+//!
+//! Instead of using coordinates in hexagon-space there are these position
+//! codes that can be used as a shortcut. North is the upper edge on a hexagon
+//! that has horizontal edges, it is the top left edge on hexagons that are
+//! oriented vertically.
+//!
+//! * `N`:  north edge
+//! * `NE`: north east edge
+//! * `NW`: north west edge
+//! * `S`:  south edge
+//! * `SE`: south east edge
+//! * `SW`: south west edge
+//! * `C`:  center of hexagon
+//!
+//! [1]: https://www.redblobgames.com/grids/hexagons/#coordinates
+
 extern crate toml;
 extern crate nalgebra as na;
 
@@ -7,6 +30,7 @@ use std::path::PathBuf;
 use std::fs::File;
 use std::io::prelude::*;
 
+/// Standard colors that can be used
 pub mod colors {
     pub struct Color {
         value: &'static str,
@@ -30,6 +54,14 @@ pub mod colors {
     pub const WHITE:   Color  = Color { value: "#FFFFFF" };
 }
 
+/// Converts a position code to hex coordinates
+///
+/// Converts a position code to a hexagon-space coordinate with its origin in
+/// the hexagon center.
+///
+/// # Panics
+///
+/// On invalid position code
 fn edge_to_coordinate(edge: &str) -> na::Point3<f64> {
     match edge {
         "N"  => na::Point3::new( 0.0,  0.5, -0.5),
@@ -58,6 +90,7 @@ impl Tile {
     }
 }
 
+/// Definition of tile layout, does not include color or name
 #[derive(Deserialize, Debug)]
 pub struct TileDefinition {
     path: Option<Vec<Path>>,
@@ -65,15 +98,24 @@ pub struct TileDefinition {
 }
 
 impl TileDefinition {
-    fn paths(self) -> Option<Vec<Path>> {
+    /// The paths on the tile.
+    pub fn paths(self) -> Option<Vec<Path>> {
         self.path
     }
 
-    fn cities(self) -> Option<Vec<City>> {
+    /// The city revenue locations on the tile.
+    pub fn cities(self) -> Option<Vec<City>> {
         self.city
     }
 }
 
+/// Path on the tile
+///
+/// A path is a line section that goes between `start point` and `end point`.
+/// There are two versions of each point `[start|end]` and `[start|end]_pos`,
+/// the `_pos` variant takes precedence over the non-`_pos` version. The
+/// non-`_pos` version should always be a position code, while the `_pos`
+/// version is a 3D position in hexagon-space.
 #[derive(Deserialize, Debug)]
 pub struct Path {
     start: Option<String>,
@@ -85,6 +127,7 @@ pub struct Path {
 }
 
 impl Path {
+    /// Getter that always returns the start coordinate in hexagon-space.
     pub fn start(&self) -> na::Point3<f64> {
         match &self.start_pos {
             &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
@@ -95,6 +138,7 @@ impl Path {
         }
     }
 
+    /// Getter that always returns the end coordinate in hexagon-space.
     pub fn end(&self) -> na::Point3<f64> {
         match &self.end_pos {
             &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
@@ -106,15 +150,25 @@ impl Path {
     }
 }
 
+/// City on the tile
+///
+/// A city is a collection of circles where tokens can be put down. A city
+/// requires the specification of the number of circles (a positive integer)
+/// and the revenue (a positive integer). An optional position can also be
+/// given. If omitted then the position is assumed to be the center of the
+/// tile. The position can be given as the `pos` or `position` fields. The
+/// `pos` field is a coordinate in hexagon-space. The `position` field is a
+/// position code.
 #[derive(Deserialize, Debug)]
 pub struct City {
-    circles: u32,
-    revenue: u32,
+    pub circles: u32,
+    pub revenue: u32,
     position: Option<String>,
     pos: Option<Box<[f64]>>,
 }
 
 impl City {
+    /// The coordinate of the city in hexagon-space.
     pub fn position(&self) -> na::Point3<f64> {
         match &self.pos {
             &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
