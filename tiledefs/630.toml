@@ -1,0 +1,11 @@
+[[path]]
+start = "N"
+end = "NW"
+stops = 1
+revenue = 10
+
+[[path]]
+start = "NE"
+end = "S"
+stops = 1
+revenue = 10
