@@ -3,7 +3,7 @@ extern crate nalgebra as na;
 
 use std::collections::HashMap;
 use self::svg::node;
-use self::svg::node::element::{Group, Path, Text};
+use self::svg::node::element::{Circle, Group, Path, Text};
 use self::svg::node::element::path::Data;
 use super::Orientation;
 use super::tile;
@@ -46,6 +46,10 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
     for path in tile.paths() {
         g = g.add(draw_path(path, *pos, &map.orientation, None));
+    };
+
+    for city in tile.cities() {
+        g = g.add(draw_city(city, *pos, &map.orientation, None));
     };
 
     g
@@ -124,6 +128,29 @@ fn draw_path(path: tile::Path,
         .set("stroke", "black")
         .set("stroke-width", 2)
         .set("d", data)
+}
+
+fn draw_city(city: tile::City,
+             center: na::Vector2<f64>,
+             orientation: &Orientation,
+             hex_size: Option<f64>) -> Circle {
+    let hex_size = match hex_size {
+        Some(s) => s,
+        None => 20.0,
+    };
+    let basis = match orientation {
+        &Orientation::Horizontal => hor_basis(),
+        &Orientation::Vertical => ver_basis(),
+    };
+
+    let pos = hex_size * (basis * city.position() + center);
+    Circle::new()
+        .set("cx", pos.x)
+        .set("cy", pos.y)
+        .set("r", hex_size * 0.3)
+        .set("fill", "white")
+        .set("stroke", "black")
+        .set("stroke-width", 0.5)
 }
 
 fn hor_basis() -> na::Matrix2x3<f64> {

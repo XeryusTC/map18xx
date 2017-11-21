@@ -112,7 +112,7 @@ impl TileDefinition {
     }
 
     /// The city revenue locations on the tile.
-    pub fn cities(self) -> Vec<City> {
+    pub fn cities(&self) -> Vec<City> {
         match self.city {
             Some(ref cities) => cities.to_vec(),
             None => vec![],
