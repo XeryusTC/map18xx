@@ -8,8 +8,8 @@ fn main() {
     let definitions = tile::definitions();
     let info = map::MapInfo::default();
     let document = Document::new()
-        .set("width", 3.0 * info.scale)
-        .set("height", 2.0 * info.scale * definitions.len() as f64)
+        .set("width", 11.5 * info.scale)
+        .set("height", 0.4 * info.scale * definitions.len() as f64)
         .add(draw::draw_tile_definitions(&definitions));
 
     svg::save("definitions.svg", &document).unwrap();

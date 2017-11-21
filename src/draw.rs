@@ -30,14 +30,13 @@ pub fn draw_tile_definitions(
     keys.sort_by(|a, b| a.len().cmp(&b.len()).then(a.cmp(b)));
     for name in keys {
         let definition = &definitions[name];
-        let drawing = draw_tile(&definition,
-                                &na::Vector2::new(1.1, 1.0 + 2.0 * i),
-                                &info);
-        let text = Text::new()
-            .add(node::Text::new(name.as_str()))
-            .set("x", info.scale * 2.2)
-            .set("y", info.scale * (1.0 + 2.0 * i));
-        g = g.add(drawing).add(text);
+        let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
+                                   1.0 + 2.0 * (i / 5.0).floor());
+        g = g.add(draw_tile(&definition, &pos, &info))
+            .add(Text::new()
+                .add(node::Text::new(name.as_str()))
+                .set("x", info.scale * (pos.x - 1.0))
+                .set("y", info.scale * (pos.y - 0.7)));
         i += 1.0;
     }
     g
