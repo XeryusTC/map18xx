@@ -1,29 +1,52 @@
 extern crate svg;
 extern crate nalgebra as na;
 
-use self::svg::node::element::{Group, Path};
+use std::collections::HashMap;
+use self::svg::node;
+use self::svg::node::element::{Group, Path, Text};
 use self::svg::node::element::path::Data;
 use super::Orientation;
 use super::tile;
+use super::tile::TileSpec;
 use super::map;
 
-/// Draws the tile manifest
-pub fn draw_tile_manifest(tiles: &Vec<tile::Tile>) -> Group {
-    let tile = draw_tile(&tiles[0], &map::MapInfo::default());
-
-    Group::new()
-        .add(tile)
+/// Draws tile definitions
+pub fn draw_tile_definitions(
+        definitions: &HashMap<String, tile::TileDefinition>) -> Group {
+    let mut g = Group::new();
+    let mut i = 0.0;
+    let info = map::MapInfo::default();
+    for (name, definition) in definitions {
+        println!("Rendering {}: {}", i, name);
+        let drawing = draw_tile(&definition,
+                                &na::Vector2::new(1.1, 1.0 + 2.0 * i),
+                                &info)
+            .set("fill", "white");
+        let text = Text::new()
+            .add(node::Text::new(name.as_str()))
+            .set("x", 50)
+            .set("y", 20.0* (1.0 + 2.0 * i));
+        g = g.add(drawing).add(text);
+        i += 1.0;
+    }
+    g
 }
 
 /// Draws a single tile
-pub fn draw_tile(tile: &tile::Tile, map: &map::MapInfo) -> Group {
-    let bg = draw_hex_edge(na::Vector2::new(1.0, 1.0),
-                           &map.orientation,
-                           None)
-        .set("fill", tile.color());
+pub fn draw_tile(tile: &tile::TileDefinition,
+                 pos: &na::Vector2<f64>,
+                 map: &map::MapInfo) -> Group {
+    let mut g = Group::new();
 
-    Group::new()
-        .add(bg)
+    let bg = draw_hex_edge(*pos, &map.orientation, None)
+        .set("fill", tile.color().value());
+    g = g.add(bg);
+
+    for path in tile.paths() {
+        g = g.add(draw_path(path, *pos, &map.orientation, None));
+    };
+
+    g
 }
 
 /// Draw the outline of a hexagon
@@ -71,26 +94,26 @@ fn draw_hex_edge(center: na::Vector2<f64>,
         .set("d", data)
 }
 
-fn draw_path(center: na::Vector2<f64>,
-                 from: na::Point3<f64>,
-                 to: na::Point3<f64>,
-                 orientation: Orientation,
-                 hex_size: Option<f64>) -> Path {
+fn draw_path(path: tile::Path,
+             center: na::Vector2<f64>,
+             orientation: &Orientation,
+             hex_size: Option<f64>) -> Path {
     let id_point3: na::Point3<f64> = na::Point3::new(0.0, 0.0, 0.0);
     let hex_size = match hex_size {
         Some(s) => s,
         None => 20.0,
     };
     let basis = match orientation {
-        Orientation::Horizontal => hor_basis(),
-        Orientation::Vertical => ver_basis(),
+        &Orientation::Horizontal => hor_basis(),
+        &Orientation::Vertical => ver_basis(),
     };
-    let (x, y) = point_to_tuple(hex_size * (basis * to + center));
+    let (x, y) = point_to_tuple(hex_size * (basis * path.end() + center));
     let (x1, y1) = point_to_tuple(hex_size * (basis * id_point3 + center));
     let data = Data::new()
-        .move_to(point_to_tuple(hex_size * (basis * from + center)))
+        .move_to(point_to_tuple(hex_size * (basis * path.start() + center)))
         .quadratic_curve_to((x1, y1, x, y));
     Path::new()
+        .set("fill", "none")
         .set("stroke", "black")
         .set("stroke-width", 2)
         .set("d", data)
