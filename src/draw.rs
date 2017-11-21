@@ -31,8 +31,7 @@ pub fn draw_tile_definitions(
         let definition = &definitions[name];
         let drawing = draw_tile(&definition,
                                 &na::Vector2::new(1.1, 1.0 + 2.0 * i),
-                                &info)
-            .set("fill", "white");
+                                &info);
         let text = Text::new()
             .add(node::Text::new(name.as_str()))
             .set("x", info.scale * 2.2)
@@ -49,9 +48,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
                  map: &map::MapInfo) -> Group {
     let mut g = Group::new();
 
-    let bg = draw_hex_edge(*pos, &map)
-        .set("fill", tile.color().value());
-    g = g.add(bg);
+    g = g.add(draw_hex_background(*pos, &map, tile.color()));
 
     for path in tile.paths() {
         g = g.add(draw_path(path, *pos, &map));
@@ -61,17 +58,11 @@ pub fn draw_tile(tile: &tile::TileDefinition,
         g = g.add(draw_city(city, *pos, &map));
     };
 
-    g
+    g.add(draw_hex_edge(*pos, &map))
 }
 
-/// Draw the outline of a hexagon
-///
-/// # Parameters
-///
-/// center: the middle point of the hex
-///
-/// info: an instance of MapInfo
-fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo, ) -> Path {
+/// Draw a hexagon
+fn draw_hex(center: na::Vector2<f64>, info: &map::MapInfo) -> Path {
     let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
@@ -95,9 +86,24 @@ fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo, ) -> Path {
         .close();
 
     Path::new()
+        .set("d", data)
+}
+
+/// Draws a border around a hex
+fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo) -> Path {
+    draw_hex(center, info)
+        .set("fill", "none")
         .set("stroke", "black")
         .set("stroke-width", LINE_WIDTH * info.scale)
-        .set("d", data)
+}
+
+/// Draws the background (the color) of a hex
+fn draw_hex_background(center: na::Vector2<f64>,
+                       info: &map::MapInfo,
+                       color: tile::colors::Color) -> Path {
+    draw_hex(center, info)
+        .set("fill", color.value())
+        .set("stroke", "none")
 }
 
 fn draw_path(path: tile::Path,
