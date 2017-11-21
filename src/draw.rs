@@ -51,9 +51,12 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
     g = g.add(draw_hex_background(*pos, &map, tile.color()));
 
-    // Draw white contrast lines first, then black lines
+    // Draw white contrast lines first, then black lines.
     for path in tile.paths() {
         g = g.add(draw_path_contrast(path, *pos, &map));
+    }
+    if tile.is_lawson() {
+        g = g.add(draw_lawson(*pos, &map));
     }
     for path in tile.paths() {
         g = g.add(draw_path(path, *pos, &map));
@@ -194,6 +197,18 @@ fn draw_stop(stop: tile::Stop,
         .set("cx", pos.x)
         .set("cy", pos.y)
         .set("r", STOP_SIZE * info.scale)
+        .set("fill", "black")
+        .set("stroke", "white")
+        .set("stroke-width", LINE_WIDTH * info.scale)
+}
+
+/// Draw a small black circle in the middle of a tile to connect paths nicely
+fn draw_lawson(center: na::Vector2<f64>, info: &map::MapInfo) -> Circle {
+    Circle::new()
+        .set("cx", center.x * info.scale)
+        .set("cy", center.y * info.scale)
+        // Add LINE_WIDTH to compensate for stroke being half in the circle
+        .set("r", (PATH_WIDTH + LINE_WIDTH) / 2.0 * info.scale)
         .set("fill", "black")
         .set("stroke", "white")
         .set("stroke-width", LINE_WIDTH * info.scale)

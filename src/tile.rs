@@ -101,6 +101,7 @@ pub struct TileDefinition {
     path: Option<Vec<Path>>,
     city: Option<Vec<City>>,
     stop: Option<Vec<Stop>>,
+    is_lawson: Option<bool>,
 }
 
 impl TileDefinition {
@@ -125,6 +126,14 @@ impl TileDefinition {
         match self.stop {
             Some(ref stops) => stops.to_vec(),
             None => vec![],
+        }
+    }
+
+    /// Whether a tile should be drawn as lawson track
+    pub fn is_lawson(&self) -> bool {
+        match self.is_lawson {
+            Some(lawson) => lawson,
+            None => false,
         }
     }
 }
