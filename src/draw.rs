@@ -102,11 +102,13 @@ fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo, ) -> Path {
 
 fn draw_path(path: tile::Path,
              center: na::Vector2<f64>,
-             info: &map::MapInfo) -> Path {
+             info: &map::MapInfo) -> Group {
     let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
+
+    // Calculate end points and control points
     let (start_x, start_y) = point_to_tuple(
         info.scale * (basis * path.start() + center));
     let (end_x, end_y) = point_to_tuple(
@@ -115,14 +117,22 @@ fn draw_path(path: tile::Path,
     let control2 = C * basis * path.end() + center;
     let (x1, y1) = point_to_tuple(info.scale * control1);
     let (x2, y2) = point_to_tuple(info.scale * control2);
+
+    // Do the drawing
     let data = Data::new()
         .move_to((start_x, start_y))
         .cubic_curve_to((x1, y1, x2, y2, end_x, end_y));
-    Path::new()
-        .set("fill", "none")
-        .set("stroke", "black")
-        .set("stroke-width", PATH_WIDTH * info.scale)
-        .set("d", data)
+    Group::new()
+        .add(Path::new()
+             .set("fill", "none")
+             .set("stroke", "white")
+             .set("stroke-width", (PATH_WIDTH + 2.0 * LINE_WIDTH) * info.scale)
+             .set("d", data.clone()))
+        .add(Path::new()
+            .set("fill", "none")
+            .set("stroke", "black")
+            .set("stroke-width", PATH_WIDTH * info.scale)
+            .set("d", data.clone()))
 }
 
 fn draw_city(city: tile::City,
