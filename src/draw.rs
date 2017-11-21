@@ -16,6 +16,7 @@ const C: f64 = 0.551915024494;
 const PATH_WIDTH: f64 = 0.15;
 const LINE_WIDTH: f64 = 0.025;
 const TOKEN_SIZE: f64 = 0.3;
+const STOP_SIZE:  f64 = 0.15;
 
 /// Draws tile definitions
 pub fn draw_tile_definitions(
@@ -53,6 +54,10 @@ pub fn draw_tile(tile: &tile::TileDefinition,
     for path in tile.paths() {
         g = g.add(draw_path(path, *pos, &map));
     };
+
+    for stop in tile.stops() {
+        g = g.add(draw_stop(stop, *pos, &map));
+    }
 
     for city in tile.cities() {
         g = g.add(draw_city(city, *pos, &map));
@@ -141,6 +146,7 @@ fn draw_path(path: tile::Path,
             .set("d", data.clone()))
 }
 
+/// Draw a city
 fn draw_city(city: tile::City,
              center: na::Vector2<f64>,
              info: &map::MapInfo) -> Circle {
@@ -156,6 +162,25 @@ fn draw_city(city: tile::City,
         .set("r", TOKEN_SIZE * info.scale)
         .set("fill", "white")
         .set("stroke", "black")
+        .set("stroke-width", LINE_WIDTH * info.scale)
+}
+
+/// Draw a stop
+fn draw_stop(stop: tile::Stop,
+             center: na::Vector2<f64>,
+             info: &map::MapInfo) -> Circle {
+    let basis = match &info.orientation {
+        &Orientation::Horizontal => hor_basis(),
+        &Orientation::Vertical => ver_basis(),
+    };
+
+    let pos = info.scale * (basis * stop.position() + center);
+    Circle::new()
+        .set("cx", pos.x)
+        .set("cy", pos.y)
+        .set("r", STOP_SIZE * info.scale)
+        .set("fill", "black")
+        .set("stroke", "white")
         .set("stroke-width", LINE_WIDTH * info.scale)
 }
 
