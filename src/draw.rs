@@ -73,11 +73,11 @@ fn draw_hex_edge(center: na::Vector2<f64>,
 
     let points = [
         na::Vector3::new(-1.0,  0.0,  0.0),
-        na::Vector3::new( 0.0,  1.0,  0.0),
-        na::Vector3::new( 0.0,  0.0, -1.0),
-        na::Vector3::new( 1.0,  0.0,  0.0),
-        na::Vector3::new( 0.0, -1.0,  0.0),
         na::Vector3::new( 0.0,  0.0,  1.0),
+        na::Vector3::new( 0.0,  1.0,  0.0),
+        na::Vector3::new( 1.0,  0.0,  0.0),
+        na::Vector3::new( 0.0,  0.0, -1.0),
+        na::Vector3::new( 0.0, -1.0,  0.0),
     ];
     let data = Data::new()
         .move_to(point_to_tuple(hex_size * (basis * points[0] + center)))
@@ -121,17 +121,17 @@ fn draw_path(path: tile::Path,
 
 fn hor_basis() -> na::Matrix2x3<f64> {
     na::Matrix2x3::from_columns(&[
-        na::Vector2::new(1.0,   0.0),
-        na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt()),
-        na::Vector2::new(-0.5,  0.5 * 3.0_f64.sqrt())
+        na::Vector2::new( 1.0,  0.0),
+        na::Vector2::new( 0.5, -0.5 * 3.0_f64.sqrt()),
+        na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt())
     ])
 }
 
 fn ver_basis() -> na::Matrix2x3<f64> {
     na::Matrix2x3::from_columns(&[
         na::Vector2::new(0.5 * 3.0_f64.sqrt(), -0.5),
+        na::Vector2::new(0.0, -1.0),
         na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
-        na::Vector2::new(0.0, 1.0)
     ])
 }
 

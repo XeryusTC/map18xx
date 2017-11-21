@@ -1,10 +1,10 @@
 //! Representation of tiles
 //!
 //! Items within a hex are usually given in hexagon-space. This is a 3D space
-//! where the axis are at 240° to each other. An example of the axis is given
-//! [here (cube coordinate section)][1]. Note that the orientation of the axis
-//! when the hexagons are oriented with horizontal edges differs from when the
-//! hexagons are oriented with vertical edges.
+//! where the axis are at 60° to each other. An example of the axis is given
+//! below. Note that the orientation of the axis when the hexagons are oriented
+//! with horizontal edges differs from when the hexagons are oriented with
+//! vertical edges.
 //!
 //! Instead of using coordinates in hexagon-space there are these position
 //! codes that can be used as a shortcut. North is the upper edge on a hexagon
@@ -19,7 +19,7 @@
 //! * `SW`: south west edge
 //! * `C`:  center of hexagon
 //!
-//! [1]: https://www.redblobgames.com/grids/hexagons/#coordinates
+//! ![Coordinate system](../../../../axes.svg)
 
 extern crate toml;
 extern crate nalgebra as na;
@@ -64,12 +64,12 @@ pub mod colors {
 /// On invalid position code
 fn edge_to_coordinate(edge: &str) -> na::Vector3<f64> {
     match edge {
-        "N"  => na::Vector3::new( 0.0,  0.5, -0.5),
-        "NE" => na::Vector3::new( 0.5,  0.0, -0.5),
-        "SE" => na::Vector3::new( 0.5, -0.5,  0.0),
-        "S"  => na::Vector3::new( 0.0, -0.5,  0.5),
-        "SW" => na::Vector3::new(-0.5,  0.0,  0.5),
-        "NW" => na::Vector3::new(-0.5,  0.5,  0.0),
+        "N"  => na::Vector3::new( 0.0,  0.5,  0.5),
+        "NE" => na::Vector3::new( 0.5,  0.5,  0.0),
+        "SE" => na::Vector3::new( 0.5,  0.0, -0.5),
+        "S"  => na::Vector3::new( 0.0, -0.5, -0.5),
+        "SW" => na::Vector3::new(-0.5, -0.5,  0.0),
+        "NW" => na::Vector3::new(-0.5,  0.0,  0.5),
         "C"  => na::Vector3::new( 0.0,  0.0,  0.0),
         c => panic!("Invalid edge code {}", c),
     }
@@ -264,7 +264,7 @@ mod tests {
             position = "N"
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
-                   na::Vector3::new(0.0, 0.5, -0.5));
+                   na::Vector3::new(0.0, 0.5, 0.5));
     }
 
     #[test]
@@ -333,42 +333,42 @@ mod tests {
     fn path_converts_start_n() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "N"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, 0.5, -0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, 0.5, 0.5));
     }
 
     #[test]
     fn path_converts_start_ne() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "NE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, 0.0, -0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, 0.5, 0.0));
     }
 
     #[test]
     fn path_converts_start_nw() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "NW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, 0.5, 0.0));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, 0.0, 0.5));
     }
 
     #[test]
     fn path_converts_start_s() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "S"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, -0.5, 0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, -0.5, -0.5));
     }
 
     #[test]
     fn path_converts_start_se() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "SE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, -0.5, 0.0));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, 0.0, -0.5));
     }
 
     #[test]
     fn path_converts_start_sw() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "SW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, 0.0, 0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, -0.5, 0.0));
     }
 
     #[test]
@@ -394,41 +394,41 @@ mod tests {
     fn path_converts_end_n() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "N"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, 0.5, -0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, 0.5, 0.5));
     }
 
     #[test]
     fn path_converts_end_ne() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "NE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, 0.0, -0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, 0.5, 0.0));
     }
 
     #[test]
     fn path_converts_end_nw() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "NW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, 0.5, 0.0));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, 0.0, 0.5));
     }
 
     #[test]
     fn path_converts_end_s() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "S"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, -0.5, 0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, -0.5, -0.5));
     }
 
     #[test]
     fn path_converts_end_se() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "SE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, -0.5, 0.0));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, 0.0, -0.5));
     }
 
     #[test]
     fn path_converts_end_sw() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "SW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, 0.0, 0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, -0.5, 0.0));
     }
 }

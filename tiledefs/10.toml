@@ -1,17 +1,17 @@
 [[path]]
 start = "S"
-end_pos = [0.0, 0.0, 0.5]
+end_pos = [0.0, 0.0, -0.5]
 
 [[path]]
 start = "N"
-end_pos = [0.0, 0.0, -0.5]
-
-[[city]]
-circles = 1
-pos = [0.0, 0.0, 0.5]
-revenue = 20
+end_pos = [0.0, 0.0, 0.5]
 
 [[city]]
 circles = 1
 pos = [0.0, 0.0, -0.5]
+revenue = 20
+
+[[city]]
+circles = 1
+pos = [0.0, 0.0, 0.5]
 revenue = 20
