@@ -1,5 +1,7 @@
 [[path]]
 start = "SW"
 end = "S"
-stops = 1
+
+[[stop]]
 revenue = 10
+position = [0.0, -0.5, 0.0]

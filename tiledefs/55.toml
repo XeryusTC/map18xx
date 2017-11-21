@@ -1,11 +1,15 @@
 [[path]]
 start = "N"
 end = "S"
-stops = 1
-revenue = 10
 
 [[path]]
 start = "NW"
 end = "SE"
-stops = 1
+
+[[stop]]
 revenue = 10
+position = [-0.3, 0.0, 0.3]
+
+[[stop]]
+revenue = 10
+position = [0.0, -0.3, -0.3]

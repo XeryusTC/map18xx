@@ -5,7 +5,13 @@ stops = 1
 revenue = 10
 
 [[path]]
-start = "NE"
+start = "SW"
 end = "SE"
-stops = 1
+
+[[stop]]
 revenue = 10
+position = [0.0, 0.3, 0.3]
+
+[[stop]]
+revenue = 10
+position = [0.3, -0.08, -0.3]
