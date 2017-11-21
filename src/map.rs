@@ -9,7 +9,7 @@ impl MapInfo {
     pub fn default () -> MapInfo {
         MapInfo {
             orientation: Orientation::Horizontal,
-            scale: 20.0,
+            scale: 35.43307 * 2.85, // 90 DPI -> hex size
         }
     }
 }

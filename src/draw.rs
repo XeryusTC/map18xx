@@ -10,7 +10,12 @@ use super::tile;
 use super::tile::TileSpec;
 use super::map;
 
+// Bezier constant taken from
+// http://spencermortensen.com/articles/bezier-circle/
 const C: f64 = 0.551915024494;
+const PATH_WIDTH: f64 = 0.15;
+const LINE_WIDTH: f64 = 0.025;
+const TOKEN_SIZE: f64 = 0.3;
 
 /// Draws tile definitions
 pub fn draw_tile_definitions(
@@ -26,7 +31,7 @@ pub fn draw_tile_definitions(
             .set("fill", "white");
         let text = Text::new()
             .add(node::Text::new(name.as_str()))
-            .set("x", 50)
+            .set("x", info.scale * 2.2)
             .set("y", info.scale * (1.0 + 2.0 * i));
         g = g.add(drawing).add(text);
         i += 1.0;
@@ -87,7 +92,7 @@ fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo, ) -> Path {
 
     Path::new()
         .set("stroke", "black")
-        .set("stroke-width", 0.5)
+        .set("stroke-width", LINE_WIDTH * info.scale)
         .set("d", data)
 }
 
@@ -112,7 +117,7 @@ fn draw_path(path: tile::Path,
     Path::new()
         .set("fill", "none")
         .set("stroke", "black")
-        .set("stroke-width", 2)
+        .set("stroke-width", PATH_WIDTH * info.scale)
         .set("d", data)
 }
 
@@ -128,10 +133,10 @@ fn draw_city(city: tile::City,
     Circle::new()
         .set("cx", pos.x)
         .set("cy", pos.y)
-        .set("r", info.scale * 0.3)
+        .set("r", TOKEN_SIZE * info.scale)
         .set("fill", "white")
         .set("stroke", "black")
-        .set("stroke-width", 0.5)
+        .set("stroke-width", LINE_WIDTH * info.scale)
 }
 
 fn hor_basis() -> na::Matrix2x3<f64> {
