@@ -20,11 +20,15 @@ const TOKEN_SIZE: f64 = 0.3;
 /// Draws tile definitions
 pub fn draw_tile_definitions(
         definitions: &HashMap<String, tile::TileDefinition>) -> Group {
+    println!("Drawing tile definitions...");
     let mut g = Group::new();
     let mut i = 0.0;
     let info = map::MapInfo::default();
-    for (name, definition) in definitions {
-        println!("Rendering {}: {}", i, name);
+
+    let mut keys: Vec<_> = definitions.keys().collect();
+    keys.sort_by(|a, b| a.len().cmp(&b.len()).then(a.cmp(b)));
+    for name in keys {
+        let definition = &definitions[name];
         let drawing = draw_tile(&definition,
                                 &na::Vector2::new(1.1, 1.0 + 2.0 * i),
                                 &info)
