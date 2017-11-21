@@ -10,6 +10,8 @@ use super::tile;
 use super::tile::TileSpec;
 use super::map;
 
+const C: f64 = 0.551915024494;
+
 /// Draws tile definitions
 pub fn draw_tile_definitions(
         definitions: &HashMap<String, tile::TileDefinition>) -> Group {
@@ -98,7 +100,6 @@ fn draw_path(path: tile::Path,
              center: na::Vector2<f64>,
              orientation: &Orientation,
              hex_size: Option<f64>) -> Path {
-    let id_point3: na::Vector3<f64> = na::Vector3::new(0.0, 0.0, 0.0);
     let hex_size = match hex_size {
         Some(s) => s,
         None => 20.0,
@@ -107,11 +108,17 @@ fn draw_path(path: tile::Path,
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
-    let (x, y) = point_to_tuple(hex_size * (basis * path.end() + center));
-    let (x1, y1) = point_to_tuple(hex_size * (basis * id_point3 + center));
+    let (start_x, start_y) = point_to_tuple(
+        hex_size * (basis * path.start() + center));
+    let (end_x, end_y) = point_to_tuple(
+        hex_size * (basis * path.end() + center));
+    let control1 = C * basis * path.start() + center;
+    let control2 = C * basis * path.end() + center;
+    let (x1, y1) = point_to_tuple(hex_size * control1);
+    let (x2, y2) = point_to_tuple(hex_size * control2);
     let data = Data::new()
-        .move_to(point_to_tuple(hex_size * (basis * path.start() + center)))
-        .quadratic_curve_to((x1, y1, x, y));
+        .move_to((start_x, start_y))
+        .cubic_curve_to((x1, y1, x2, y2, end_x, end_y));
     Path::new()
         .set("fill", "none")
         .set("stroke", "black")
