@@ -51,6 +51,10 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
     g = g.add(draw_hex_background(*pos, &map, tile.color()));
 
+    // Draw white contrast lines first, then black lines
+    for path in tile.paths() {
+        g = g.add(draw_path_contrast(path, *pos, &map));
+    }
     for path in tile.paths() {
         g = g.add(draw_path(path, *pos, &map));
     };
@@ -111,9 +115,10 @@ fn draw_hex_background(center: na::Vector2<f64>,
         .set("stroke", "none")
 }
 
-fn draw_path(path: tile::Path,
+/// Helper for drawing the paths, does the actual point calculation
+fn draw_path_helper(path: tile::Path,
              center: na::Vector2<f64>,
-             info: &map::MapInfo) -> Group {
+             info: &map::MapInfo) -> Path {
     let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
@@ -133,17 +138,27 @@ fn draw_path(path: tile::Path,
     let data = Data::new()
         .move_to((start_x, start_y))
         .cubic_curve_to((x1, y1, x2, y2, end_x, end_y));
-    Group::new()
-        .add(Path::new()
-             .set("fill", "none")
-             .set("stroke", "white")
-             .set("stroke-width", (PATH_WIDTH + 2.0 * LINE_WIDTH) * info.scale)
-             .set("d", data.clone()))
-        .add(Path::new()
-            .set("fill", "none")
-            .set("stroke", "black")
-            .set("stroke-width", PATH_WIDTH * info.scale)
-            .set("d", data.clone()))
+    Path::new()
+        .set("d", data.clone())
+        .set("fill", "none")
+}
+
+/// Draws the white contrast lines around a path
+fn draw_path_contrast(path: tile::Path,
+                      center: na::Vector2<f64>,
+                      info: &map::MapInfo) -> Path {
+    draw_path_helper(path, center, info)
+        .set("stroke", "white")
+        .set("stroke-width", (PATH_WIDTH + 2.0 * LINE_WIDTH) * info.scale)
+}
+
+/// Draws the black inside line of a path
+fn draw_path(path: tile::Path,
+             center: na::Vector2<f64>,
+             info: &map::MapInfo) -> Path {
+    draw_path_helper(path, center, info)
+        .set("stroke", "black")
+        .set("stroke-width", PATH_WIDTH * info.scale)
 }
 
 /// Draw a city
