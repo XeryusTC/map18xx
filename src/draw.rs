@@ -3,7 +3,7 @@ extern crate nalgebra as na;
 
 use std::collections::HashMap;
 use self::svg::node;
-use self::svg::node::element::{Circle, Group, Path, Text};
+use self::svg::node::element::{Circle, Group, Path, Rectangle, Text};
 use self::svg::node::element::path::Data;
 use super::Orientation;
 use super::tile;
@@ -50,10 +50,15 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
     g = g.add(draw_hex_background(*pos, &map, tile.color()));
 
-    // Draw white contrast lines first, then black lines.
+    // Draw white contrast lines first
     for path in tile.paths() {
         g = g.add(draw_path_contrast(path, *pos, &map));
     }
+    for city in tile.cities() {
+        g = g.add(draw_city_contrast(city, pos, &map));
+    };
+
+    // Draw elements
     if tile.is_lawson() {
         g = g.add(draw_lawson(*pos, &map));
     }
@@ -166,13 +171,44 @@ fn draw_path(path: tile::Path,
 /// Draw a city
 fn draw_city(city: tile::City,
              center: na::Vector2<f64>,
-             info: &map::MapInfo) -> Circle {
+             info: &map::MapInfo) -> Group {
     let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
+    let g = Group::new();
 
     let pos = info.scale * (basis * city.position() + center);
+    match city.circles {
+        1 => g.add(draw_city_circle(&pos, info)),
+        2 => {
+            let pos1 = pos + na::Vector2::new(-info.scale * TOKEN_SIZE, 0.0);
+            let pos2 = pos + na::Vector2::new( info.scale * TOKEN_SIZE, 0.0);
+            g.add(Rectangle::new()
+                  .set("x", (center.x - TOKEN_SIZE) * info.scale)
+                  .set("y", (center.y - TOKEN_SIZE) * info.scale)
+                  .set("width", TOKEN_SIZE * info.scale * 2.0)
+                  .set("height", TOKEN_SIZE * info.scale * 2.0)
+                  .set("fill", "white")
+                  .set("stroke", "black")
+                  .set("stroke-width", LINE_WIDTH * info.scale))
+                .add(draw_city_circle(&pos1, info))
+                .add(draw_city_circle(&pos2, info))
+        }
+        x => {
+            println!("A tile has an unknown number of circles: {}", x);
+            g.add(Circle::new()
+                  .set("cx", pos.x)
+                  .set("cy", pos.y)
+                  .set("r", TOKEN_SIZE * info.scale)
+                  .set("fill", "red"))
+        }
+    }
+
+}
+
+/// Draw a single city circle
+fn draw_city_circle(pos: &na::Vector2<f64>, info: &map::MapInfo) -> Circle {
     Circle::new()
         .set("cx", pos.x)
         .set("cy", pos.y)
@@ -180,6 +216,44 @@ fn draw_city(city: tile::City,
         .set("fill", "white")
         .set("stroke", "black")
         .set("stroke-width", LINE_WIDTH * info.scale)
+}
+
+fn draw_city_contrast(city: tile::City,
+                      center: &na::Vector2<f64>,
+                      info: &map::MapInfo) -> Group {
+    let basis = match &info.orientation {
+        &Orientation::Horizontal => hor_basis(),
+        &Orientation::Vertical => ver_basis(),
+    };
+    let g = Group::new();
+    let pos = info.scale * (basis * city.position() + center);
+    match city.circles {
+        1 => {
+            let size = (TOKEN_SIZE + LINE_WIDTH) * info.scale;
+            g.add(Circle::new()
+                  .set("cx", pos.x)
+                  .set("cy", pos.y)
+                  .set("r", size)
+                  .set("stroke", "white")
+                  .set("stroke-width", LINE_WIDTH * info.scale))
+        }
+        2 => {
+            let pos = pos - na::Vector2::new(
+                (2.0 * TOKEN_SIZE + LINE_WIDTH) * info.scale,
+                (TOKEN_SIZE + LINE_WIDTH) * info.scale);
+            g.add(Rectangle::new()
+                  .set("x", pos.x)
+                  .set("y", pos.y)
+                  .set("width",
+                       (TOKEN_SIZE * 4.0 + LINE_WIDTH * 2.0) * info.scale)
+                  .set("height", (TOKEN_SIZE + LINE_WIDTH) * info.scale * 2.0)
+                  .set("rx", TOKEN_SIZE * info.scale)
+                  .set("stroke", "white")
+                  .set("stroke-width", LINE_WIDTH * info.scale)
+            )
+        }
+        _ => g,
+    }
 }
 
 /// Draw a stop
