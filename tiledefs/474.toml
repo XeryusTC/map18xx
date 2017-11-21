@@ -1,0 +1,15 @@
+[[path]]
+start = "C"
+end = "S"
+
+[[path]]
+start = "NW"
+end = "SE"
+
+[[path]]
+start = "NE"
+end = "SW"
+
+[[stop]]
+revenue = 10
+position = [0.0, 0.0, 0.0]

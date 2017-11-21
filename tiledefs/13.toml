@@ -1,0 +1,16 @@
+[[path]]
+start = "NW"
+end = "C"
+
+[[path]]
+start = "S"
+end = "C"
+
+[[path]]
+start = "NE"
+end = "C"
+
+[[city]]
+position = "C"
+circles = 1
+revenue = 30

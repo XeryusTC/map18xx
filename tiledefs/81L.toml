@@ -1,0 +1,13 @@
+is_lawson = true
+
+[[path]]
+start = "NW"
+end = "C"
+
+[[path]]
+start = "NE"
+end = "C"
+
+[[path]]
+start = "S"
+end = "C"
