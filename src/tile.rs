@@ -100,6 +100,7 @@ impl Tile {
 pub struct TileDefinition {
     path: Option<Vec<Path>>,
     city: Option<Vec<City>>,
+    stop: Option<Vec<Stop>>,
 }
 
 impl TileDefinition {
@@ -115,6 +116,14 @@ impl TileDefinition {
     pub fn cities(&self) -> Vec<City> {
         match self.city {
             Some(ref cities) => cities.to_vec(),
+            None => vec![],
+        }
+    }
+
+    /// The stop revenue locations on the tile
+    pub fn stops(&self) -> Vec<Stop> {
+        match self.stop {
+            Some(ref stops) => stops.to_vec(),
             None => vec![],
         }
     }
@@ -139,8 +148,6 @@ pub struct Path {
     start_pos: Option<Box<[f64]>>,
     end: Option<String>,
     end_pos: Option<Box<[f64]>>,
-    stops: Option<u32>,
-    revenue: Option<u32>,
 }
 
 impl Path {
@@ -197,8 +204,26 @@ impl City {
     }
 }
 
+/// Stop on the tile
+///
+/// A stop is a position with a revenue number. The `position` field is an
+/// 3D position in hexagon-space.
+#[derive(Deserialize, Debug, Clone)]
+pub struct Stop {
+    position: Box<[f64]>,
+    revenue: u32,
+}
+
+impl Stop {
+    /// The coordinate of the stop in hexagon-space.
+    pub fn position(&self) -> na::Vector3<f64> {
+        na::Vector3::new(self.position[0], self.position[1], self.position[2])
+    }
+}
+
 /// Reads and parses all tile definitions in ./tiledefs/
 pub fn definitions() -> HashMap<String, TileDefinition> {
+    println!("Reading tile definitions from file...");
     let def_files: Vec<PathBuf> = match fs::read_dir("tiledefs") {
         Err(why) => panic!("! {:?}", why.kind()),
         Ok(paths) => {
@@ -231,6 +256,17 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
 mod tests {
     extern crate toml;
     use super::{TileDefinition, na};
+
+    #[test]
+    fn stop_position_returns_vector3() {
+        let tile: TileDefinition = toml::from_str(r#"
+            [[stop]]
+            position = [0.1, 0.2, 0.4]
+            revenue = 10
+            "#).unwrap();
+        assert_eq!(tile.stops()[0].position(),
+                   na::Vector3::new(0.1, 0.2, 0.4));
+    }
 
     #[test]
     fn city_position_is_center_by_default() {
