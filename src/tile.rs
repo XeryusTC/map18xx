@@ -42,15 +42,15 @@ pub mod colors {
         }
     }
 
-    pub const GROUND:  Color  = Color { value: "#F5F5F5" };
-    pub const YELLOW:  Color  = Color { value: "#FFFF00" };
-    pub const GREEN:   Color  = Color { value: "#64E164" };
-    pub const RUSSET:  Color  = Color { value: "#EE7621" };
-    pub const GREY:    Color  = Color { value: "#BEBEBE" };
-    pub const BROWN:   Color  = Color { value: "#CD6600" };
-    pub const RED:     Color  = Color { value: "#FF6464" };
-    pub const BLUE:    Color  = Color { value: "#6464FF" };
-    pub const BARRIER: Color  = Color { value: "#1E90FF" };
+    pub const GROUND:  Color  = Color { value: "#FDD9B5" }; // Sandy Tan
+    pub const YELLOW:  Color  = Color { value: "#FDEE00" }; // Aureolin
+    pub const GREEN:   Color  = Color { value: "#7CFC00" }; // Lawn Green
+    pub const RUSSET:  Color  = Color { value: "#CD7F32" }; // Bronze
+    pub const GREY:    Color  = Color { value: "#ACACAC" }; // Silver Chalice
+    pub const BROWN:   Color  = Color { value: "#7B3F00" }; // Chocolate
+    pub const RED:     Color  = Color { value: "#C80815" }; // Venetian Red
+    pub const BLUE:    Color  = Color { value: "#007FFF" }; // Azure
+    pub const BARRIER: Color  = Color { value: "#660000" }; // Blood Red
     pub const WHITE:   Color  = Color { value: "#FFFFFF" };
 }
 
