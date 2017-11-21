@@ -1,22 +1,15 @@
 use super::Orientation;
-use super::tile::Tile;
 
 pub struct MapInfo {
-    name: String,
     pub orientation: Orientation,
-    columns: u32,
-    rows: u32,
-    tiles: Vec<Tile>,
+    pub scale: f64,
 }
 
 impl MapInfo {
     pub fn default () -> MapInfo {
         MapInfo {
-            name: String::from("Debug"),
             orientation: Orientation::Horizontal,
-            columns: 0,
-            rows: 0,
-            tiles: vec![],
+            scale: 20.0,
         }
     }
 }

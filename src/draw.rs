@@ -27,7 +27,7 @@ pub fn draw_tile_definitions(
         let text = Text::new()
             .add(node::Text::new(name.as_str()))
             .set("x", 50)
-            .set("y", 20.0* (1.0 + 2.0 * i));
+            .set("y", info.scale * (1.0 + 2.0 * i));
         g = g.add(drawing).add(text);
         i += 1.0;
     }
@@ -40,16 +40,16 @@ pub fn draw_tile(tile: &tile::TileDefinition,
                  map: &map::MapInfo) -> Group {
     let mut g = Group::new();
 
-    let bg = draw_hex_edge(*pos, &map.orientation, None)
+    let bg = draw_hex_edge(*pos, &map)
         .set("fill", tile.color().value());
     g = g.add(bg);
 
     for path in tile.paths() {
-        g = g.add(draw_path(path, *pos, &map.orientation, None));
+        g = g.add(draw_path(path, *pos, &map));
     };
 
     for city in tile.cities() {
-        g = g.add(draw_city(city, *pos, &map.orientation, None));
+        g = g.add(draw_city(city, *pos, &map));
     };
 
     g
@@ -61,18 +61,9 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 ///
 /// center: the middle point of the hex
 ///
-/// orientation: whether the hex should have a flat top or one of the points
-///              should be at the top
-///
-/// hex_size: a factor to scale the hex by
-fn draw_hex_edge(center: na::Vector2<f64>,
-            orientation: &Orientation,
-            hex_size: Option<f64>) -> Path {
-    let hex_size = match hex_size {
-        Some(s) => s,
-        None => 20.0,
-    };
-    let basis = match orientation {
+/// info: an instance of MapInfo
+fn draw_hex_edge(center: na::Vector2<f64>, info: &map::MapInfo, ) -> Path {
+    let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
@@ -86,12 +77,12 @@ fn draw_hex_edge(center: na::Vector2<f64>,
         na::Vector3::new( 0.0, -1.0,  0.0),
     ];
     let data = Data::new()
-        .move_to(point_to_tuple(hex_size * (basis * points[0] + center)))
-        .line_to(point_to_tuple(hex_size * (basis * points[1] + center)))
-        .line_to(point_to_tuple(hex_size * (basis * points[2] + center)))
-        .line_to(point_to_tuple(hex_size * (basis * points[3] + center)))
-        .line_to(point_to_tuple(hex_size * (basis * points[4] + center)))
-        .line_to(point_to_tuple(hex_size * (basis * points[5] + center)))
+        .move_to(point_to_tuple(info.scale * (basis * points[0] + center)))
+        .line_to(point_to_tuple(info.scale * (basis * points[1] + center)))
+        .line_to(point_to_tuple(info.scale * (basis * points[2] + center)))
+        .line_to(point_to_tuple(info.scale * (basis * points[3] + center)))
+        .line_to(point_to_tuple(info.scale * (basis * points[4] + center)))
+        .line_to(point_to_tuple(info.scale * (basis * points[5] + center)))
         .close();
 
     Path::new()
@@ -102,24 +93,19 @@ fn draw_hex_edge(center: na::Vector2<f64>,
 
 fn draw_path(path: tile::Path,
              center: na::Vector2<f64>,
-             orientation: &Orientation,
-             hex_size: Option<f64>) -> Path {
-    let hex_size = match hex_size {
-        Some(s) => s,
-        None => 20.0,
-    };
-    let basis = match orientation {
+             info: &map::MapInfo) -> Path {
+    let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
     let (start_x, start_y) = point_to_tuple(
-        hex_size * (basis * path.start() + center));
+        info.scale * (basis * path.start() + center));
     let (end_x, end_y) = point_to_tuple(
-        hex_size * (basis * path.end() + center));
+        info.scale * (basis * path.end() + center));
     let control1 = C * basis * path.start() + center;
     let control2 = C * basis * path.end() + center;
-    let (x1, y1) = point_to_tuple(hex_size * control1);
-    let (x2, y2) = point_to_tuple(hex_size * control2);
+    let (x1, y1) = point_to_tuple(info.scale * control1);
+    let (x2, y2) = point_to_tuple(info.scale * control2);
     let data = Data::new()
         .move_to((start_x, start_y))
         .cubic_curve_to((x1, y1, x2, y2, end_x, end_y));
@@ -132,22 +118,17 @@ fn draw_path(path: tile::Path,
 
 fn draw_city(city: tile::City,
              center: na::Vector2<f64>,
-             orientation: &Orientation,
-             hex_size: Option<f64>) -> Circle {
-    let hex_size = match hex_size {
-        Some(s) => s,
-        None => 20.0,
-    };
-    let basis = match orientation {
+             info: &map::MapInfo) -> Circle {
+    let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
         &Orientation::Vertical => ver_basis(),
     };
 
-    let pos = hex_size * (basis * city.position() + center);
+    let pos = info.scale * (basis * city.position() + center);
     Circle::new()
         .set("cx", pos.x)
         .set("cy", pos.y)
-        .set("r", hex_size * 0.3)
+        .set("r", info.scale * 0.3)
         .set("fill", "white")
         .set("stroke", "black")
         .set("stroke-width", 0.5)
