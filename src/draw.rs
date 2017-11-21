@@ -72,12 +72,12 @@ fn draw_hex_edge(center: na::Vector2<f64>,
     };
 
     let points = [
-        na::Point3::new(-1.0,  0.0,  0.0),
-        na::Point3::new( 0.0,  1.0,  0.0),
-        na::Point3::new( 0.0,  0.0, -1.0),
-        na::Point3::new( 1.0,  0.0,  0.0),
-        na::Point3::new( 0.0, -1.0,  0.0),
-        na::Point3::new( 0.0,  0.0,  1.0),
+        na::Vector3::new(-1.0,  0.0,  0.0),
+        na::Vector3::new( 0.0,  1.0,  0.0),
+        na::Vector3::new( 0.0,  0.0, -1.0),
+        na::Vector3::new( 1.0,  0.0,  0.0),
+        na::Vector3::new( 0.0, -1.0,  0.0),
+        na::Vector3::new( 0.0,  0.0,  1.0),
     ];
     let data = Data::new()
         .move_to(point_to_tuple(hex_size * (basis * points[0] + center)))
@@ -98,7 +98,7 @@ fn draw_path(path: tile::Path,
              center: na::Vector2<f64>,
              orientation: &Orientation,
              hex_size: Option<f64>) -> Path {
-    let id_point3: na::Point3<f64> = na::Point3::new(0.0, 0.0, 0.0);
+    let id_point3: na::Vector3<f64> = na::Vector3::new(0.0, 0.0, 0.0);
     let hex_size = match hex_size {
         Some(s) => s,
         None => 20.0,
@@ -135,6 +135,6 @@ fn ver_basis() -> na::Matrix2x3<f64> {
     ])
 }
 
-fn point_to_tuple(p: na::Point2<f64>) -> (f64, f64) {
-    (p.coords.x, p.coords.y)
+fn point_to_tuple(p: na::Vector2<f64>) -> (f64, f64) {
+    (p.x, p.y)
 }

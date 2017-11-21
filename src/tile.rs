@@ -62,15 +62,15 @@ pub mod colors {
 /// # Panics
 ///
 /// On invalid position code
-fn edge_to_coordinate(edge: &str) -> na::Point3<f64> {
+fn edge_to_coordinate(edge: &str) -> na::Vector3<f64> {
     match edge {
-        "N"  => na::Point3::new( 0.0,  0.5, -0.5),
-        "NE" => na::Point3::new( 0.5,  0.0, -0.5),
-        "SE" => na::Point3::new( 0.5, -0.5,  0.0),
-        "S"  => na::Point3::new( 0.0, -0.5,  0.5),
-        "SW" => na::Point3::new(-0.5,  0.0,  0.5),
-        "NW" => na::Point3::new(-0.5,  0.5,  0.0),
-        "C"  => na::Point3::new( 0.0,  0.0,  0.0),
+        "N"  => na::Vector3::new( 0.0,  0.5, -0.5),
+        "NE" => na::Vector3::new( 0.5,  0.0, -0.5),
+        "SE" => na::Vector3::new( 0.5, -0.5,  0.0),
+        "S"  => na::Vector3::new( 0.0, -0.5,  0.5),
+        "SW" => na::Vector3::new(-0.5,  0.0,  0.5),
+        "NW" => na::Vector3::new(-0.5,  0.5,  0.0),
+        "C"  => na::Vector3::new( 0.0,  0.0,  0.0),
         c => panic!("Invalid edge code {}", c),
     }
 }
@@ -145,9 +145,9 @@ pub struct Path {
 
 impl Path {
     /// Getter that always returns the start coordinate in hexagon-space.
-    pub fn start(&self) -> na::Point3<f64> {
+    pub fn start(&self) -> na::Vector3<f64> {
         match &self.start_pos {
-            &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
+            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
             &None => match &self.start {
                 &Some(ref s) => edge_to_coordinate(s.as_ref()),
                 &None => panic!("No start position found"),
@@ -156,9 +156,9 @@ impl Path {
     }
 
     /// Getter that always returns the end coordinate in hexagon-space.
-    pub fn end(&self) -> na::Point3<f64> {
+    pub fn end(&self) -> na::Vector3<f64> {
         match &self.end_pos {
-            &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
+            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
             &None => match &self.end {
                 &Some(ref s) => edge_to_coordinate(s.as_ref()),
                 _ => panic!("No end position found"),
@@ -186,12 +186,12 @@ pub struct City {
 
 impl City {
     /// The coordinate of the city in hexagon-space.
-    pub fn position(&self) -> na::Point3<f64> {
+    pub fn position(&self) -> na::Vector3<f64> {
         match &self.pos {
-            &Some(ref pos) => na::Point3::new(pos[0], pos[1], pos[2]),
+            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
             &None => match &self.position {
                 &Some(ref s) => edge_to_coordinate(s.as_ref()),
-                &None => na::Point3::new(0.0, 0.0, 0.0),
+                &None => na::Vector3::new(0.0, 0.0, 0.0),
             }
         }
     }
@@ -240,7 +240,7 @@ mod tests {
             revenue = 10
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
-                   na::Point3::new(0.0, 0.0, 0.0));
+                   na::Vector3::new(0.0, 0.0, 0.0));
     }
 
     #[test]
@@ -252,7 +252,7 @@ mod tests {
             pos = [0.3, 0.0, -0.3]
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
-                   na::Point3::new(0.3, 0.0, -0.3));
+                   na::Vector3::new(0.3, 0.0, -0.3));
     }
 
     #[test]
@@ -264,7 +264,7 @@ mod tests {
             position = "N"
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
-                   na::Point3::new(0.0, 0.5, -0.5));
+                   na::Vector3::new(0.0, 0.5, -0.5));
     }
 
     #[test]
@@ -276,7 +276,7 @@ mod tests {
             position = "C"
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
-                   na::Point3::new(0.0, 0.0, 0.0));
+                   na::Vector3::new(0.0, 0.0, 0.0));
     }
 
     #[test]
@@ -317,7 +317,7 @@ mod tests {
             start = "N"
             "#).unwrap();
         assert_eq!(tile.paths()[0].start(),
-                   na::Point3::new(-0.1_f64, 0.1, 0.0));
+                   na::Vector3::new(-0.1_f64, 0.1, 0.0));
     }
 
     #[test]
@@ -326,49 +326,49 @@ mod tests {
         [[path]]
         start_pos = [0.1, 0.3, 0.7]
         "#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(0.1, 0.3, 0.7));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.1, 0.3, 0.7));
     }
 
     #[test]
     fn path_converts_start_n() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "N"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(0.0, 0.5, -0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, 0.5, -0.5));
     }
 
     #[test]
     fn path_converts_start_ne() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "NE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(0.5, 0.0, -0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, 0.0, -0.5));
     }
 
     #[test]
     fn path_converts_start_nw() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "NW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(-0.5, 0.5, 0.0));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, 0.5, 0.0));
     }
 
     #[test]
     fn path_converts_start_s() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "S"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(0.0, -0.5, 0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.0, -0.5, 0.5));
     }
 
     #[test]
     fn path_converts_start_se() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "SE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(0.5, -0.5, 0.0));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(0.5, -0.5, 0.0));
     }
 
     #[test]
     fn path_converts_start_sw() {
         let tile: TileDefinition = toml::from_str(
             r#"path = [{start = "SW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].start(), na::Point3::new(-0.5, 0.0, 0.5));
+        assert_eq!(tile.paths()[0].start(), na::Vector3::new(-0.5, 0.0, 0.5));
     }
 
     #[test]
@@ -378,7 +378,7 @@ mod tests {
             end_pos = [0.5, 0.5, 0.5]
             end = "N"
             "#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.5_f64, 0.5, 0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5_f64, 0.5, 0.5));
     }
 
     #[test]
@@ -387,48 +387,48 @@ mod tests {
             [[path]]
             end_pos = [0.2, 0.4, 0.6]
             "#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.2_f64, 0.4, 0.6));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.2_f64, 0.4, 0.6));
     }
 
     #[test]
     fn path_converts_end_n() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "N"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.0, 0.5, -0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, 0.5, -0.5));
     }
 
     #[test]
     fn path_converts_end_ne() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "NE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.5, 0.0, -0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, 0.0, -0.5));
     }
 
     #[test]
     fn path_converts_end_nw() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "NW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(-0.5, 0.5, 0.0));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, 0.5, 0.0));
     }
 
     #[test]
     fn path_converts_end_s() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "S"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.0, -0.5, 0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.0, -0.5, 0.5));
     }
 
     #[test]
     fn path_converts_end_se() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "SE"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(0.5, -0.5, 0.0));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(0.5, -0.5, 0.0));
     }
 
     #[test]
     fn path_converts_end_sw() {
         let tile:TileDefinition = toml::from_str(
             r#"path = [{end = "SW"}]"#).unwrap();
-        assert_eq!(tile.paths()[0].end(), na::Point3::new(-0.5, 0.0, 0.5));
+        assert_eq!(tile.paths()[0].end(), na::Vector3::new(-0.5, 0.0, 0.5));
     }
 }
