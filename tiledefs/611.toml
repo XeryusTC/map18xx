@@ -1,16 +1,15 @@
 [[path]]
+start = "N"
+end = "S"
+
+[[path]]
 start = "NE"
-end = "C"
+end = "SW"
 
 [[path]]
 start = "NW"
 end = "C"
 
-[[path]]
-start = "N"
-end = "S"
-
 [[city]]
-revenue = 30
-position = "C"
 circles = 2
+revenue = 10

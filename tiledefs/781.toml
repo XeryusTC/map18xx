@@ -1,0 +1,11 @@
+[[path]]
+start = "N"
+end = "NE"
+
+[[path]]
+start = "SE"
+end = "S"
+
+[[path]]
+start = "SW"
+end = "NW"

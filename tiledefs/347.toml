@@ -1,0 +1,18 @@
+is_lawson = true
+
+[[path]]
+start = "N"
+end = "S"
+
+[[path]]
+start = "NW"
+end = "C"
+
+[[path]]
+start = "NE"
+end = "C"
+
+[[path]]
+start = "SW"
+end = "SE"
+is_bridge = true

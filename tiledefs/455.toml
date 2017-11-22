@@ -1,0 +1,15 @@
+[[path]]
+start = "N"
+end = "S"
+
+[[path]]
+start = "NE"
+end = "SW"
+
+[[path]]
+start = "NW"
+end = "SE"
+
+[[city]]
+revenue = 10
+circles = 3

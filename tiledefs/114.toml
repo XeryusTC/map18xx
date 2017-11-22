@@ -1,0 +1,35 @@
+[[path]]
+start = "N"
+end = "SW"
+
+[[path]]
+start = "N"
+end = "SE"
+
+[[path]]
+start = "SE"
+end = "SW"
+
+[[path]]
+start = "NW"
+end = "S"
+is_bridge = true
+
+[[path]]
+start = "NE"
+end = "S"
+is_bridge = true
+
+[[path]]
+start = "NE"
+end = "NW"
+is_bridge = true
+
+# double paths to get rid of lines running through junctions
+[[path]]
+start = "NE"
+end = "S"
+
+[[path]]
+start = "NW"
+end = "S"

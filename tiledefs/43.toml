@@ -1,0 +1,16 @@
+[[path]]
+start = "N"
+end = "SW"
+
+[[path]]
+start = "NW"
+end = "S"
+is_bridge = true
+
+[[path]]
+start = "N"
+end = "S"
+
+[[path]]
+start = "NW"
+end = "SW"
