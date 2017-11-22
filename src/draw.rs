@@ -52,7 +52,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
     // Draw white contrast lines first
     for path in tile.paths() {
-        g = g.add(draw_path_contrast(path, *pos, &map));
+        g = g.add(draw_path_contrast(&path, pos, &map));
     }
     for city in tile.cities() {
         g = g.add(draw_city_contrast(city, pos, &map));
@@ -63,7 +63,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
         g = g.add(draw_lawson(*pos, &map));
     }
     for path in tile.paths() {
-        g = g.add(draw_path(path, *pos, &map));
+        g = g.add(draw_path(&path, pos, &map));
     };
 
     for stop in tile.stops() {
@@ -123,8 +123,8 @@ fn draw_hex_background(center: na::Vector2<f64>,
 }
 
 /// Helper for drawing the paths, does the actual point calculation
-fn draw_path_helper(path: tile::Path,
-             center: na::Vector2<f64>,
+fn draw_path_helper(path: &tile::Path,
+             center: &na::Vector2<f64>,
              info: &map::MapInfo) -> Path {
     let basis = match &info.orientation {
         &Orientation::Horizontal => hor_basis(),
@@ -151,8 +151,8 @@ fn draw_path_helper(path: tile::Path,
 }
 
 /// Draws the white contrast lines around a path
-fn draw_path_contrast(path: tile::Path,
-                      center: na::Vector2<f64>,
+fn draw_path_contrast(path: &tile::Path,
+                      center: &na::Vector2<f64>,
                       info: &map::MapInfo) -> Path {
     draw_path_helper(path, center, info)
         .set("stroke", "white")
@@ -160,12 +160,17 @@ fn draw_path_contrast(path: tile::Path,
 }
 
 /// Draws the black inside line of a path
-fn draw_path(path: tile::Path,
-             center: na::Vector2<f64>,
-             info: &map::MapInfo) -> Path {
-    draw_path_helper(path, center, info)
-        .set("stroke", "black")
-        .set("stroke-width", PATH_WIDTH * info.scale)
+fn draw_path(path: &tile::Path,
+             center: &na::Vector2<f64>,
+             info: &map::MapInfo) -> Group {
+    let mut g = Group::new();
+    // Draw an outline if the line is a bridge
+    if path.is_bridge() {
+        g = g.add(draw_path_contrast(path, center, info));
+    }
+    g.add(draw_path_helper(path, center, info)
+          .set("stroke", "black")
+          .set("stroke-width", PATH_WIDTH * info.scale))
 }
 
 /// Draw a city

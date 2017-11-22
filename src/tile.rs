@@ -157,6 +157,7 @@ pub struct Path {
     start_pos: Option<Box<[f64]>>,
     end: Option<String>,
     end_pos: Option<Box<[f64]>>,
+    is_bridge: Option<bool>,
 }
 
 impl Path {
@@ -179,6 +180,14 @@ impl Path {
                 &Some(ref s) => edge_to_coordinate(s.as_ref()),
                 _ => panic!("No end position found"),
             }
+        }
+    }
+
+    /// Whether the is_bridge flag is set
+    pub fn is_bridge(&self) -> bool {
+        match self.is_bridge {
+            Some(is_bridge) => is_bridge,
+            None => false,
         }
     }
 }
