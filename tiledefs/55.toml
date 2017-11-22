@@ -5,6 +5,7 @@ end = "S"
 [[path]]
 start = "NW"
 end = "SE"
+is_bridge = true
 
 [[stop]]
 revenue = 10
