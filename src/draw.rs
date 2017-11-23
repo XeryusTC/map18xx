@@ -200,6 +200,33 @@ fn draw_city(city: tile::City,
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos2, info))
         }
+        3 => {
+            let sq3 = 3.0_f64.sqrt();
+            let size = info.scale * TOKEN_SIZE;
+            let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
+            let pos2 = pos + na::Vector2::new(-size, size / sq3);
+            let pos3 = pos + na::Vector2::new( size, size / sq3);
+            let data = Data::new()
+                .move_to((-size + pos.x, size / sq3 + size + pos.y))
+                .line_to((size + pos.x, size / sq3 + size + pos.y))
+                .line_to((size * (0.5 * sq3 + 1.0) + pos.x,
+                          (size / sq3 - 0.5 * size) + pos.y))
+                .line_to((0.5 * sq3 * size + pos.x,
+                          -2.0 * size / sq3 - 0.5 * size + pos.y))
+                .line_to((-0.5 * sq3 * size + pos.x,
+                          -2.0 * size / sq3 - 0.5 * size + pos.y))
+                .line_to((-size * (0.5 * sq3 + 1.0) + pos.x,
+                          (size / sq3 - 0.5 * size) + pos.y))
+                .close();
+            g.add(Path::new()
+                    .set("d", data)
+                    .set("fill", "white")
+                    .set("stroke", "black")
+                    .set("stroke-width", LINE_WIDTH * info.scale))
+                .add(draw_city_circle(&pos1, info))
+                .add(draw_city_circle(&pos2, info))
+                .add(draw_city_circle(&pos3, info))
+        }
         x => {
             println!("A tile has an unknown number of circles: {}", x);
             g.add(Circle::new()
@@ -256,6 +283,47 @@ fn draw_city_contrast(city: tile::City,
                   .set("stroke", "white")
                   .set("stroke-width", LINE_WIDTH * info.scale)
             )
+        }
+        3 => {
+            let sq3 = 3.0_f64.sqrt();
+            let size = info.scale * TOKEN_SIZE;
+            let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
+            let pos2 = pos + na::Vector2::new(-size, size / sq3);
+            let pos3 = pos + na::Vector2::new( size, size / sq3);
+            let data = Data::new()
+                .move_to((-size + pos.x, size / sq3 + size + pos.y))
+                .line_to((size + pos.x, size / sq3 + size + pos.y))
+                .line_to((size * (0.5 * sq3 + 1.0) + pos.x,
+                          (size / sq3 - 0.5 * size) + pos.y))
+                .line_to((0.5 * sq3 * size + pos.x,
+                          -2.0 * size / sq3 - 0.5 * size + pos.y))
+                .line_to((-0.5 * sq3 * size + pos.x,
+                          -2.0 * size / sq3 - 0.5 * size + pos.y))
+                .line_to((-size * (0.5 * sq3 + 1.0) + pos.x,
+                          (size / sq3 - 0.5 * size) + pos.y))
+                .close();
+            g.add(Path::new()
+                    .set("d", data)
+                    .set("stroke", "white")
+                    .set("stroke-width", 3.0 *LINE_WIDTH * info.scale))
+                .add(Circle::new()
+                     .set("cx", pos1.x)
+                     .set("cy", pos1.y)
+                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
+                     .set("fill", "white")
+                     .set("stroke", "none"))
+                .add(Circle::new()
+                     .set("cx", pos2.x)
+                     .set("cy", pos2.y)
+                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
+                     .set("fill", "white")
+                     .set("stroke", "none"))
+                .add(Circle::new()
+                     .set("cx", pos3.x)
+                     .set("cy", pos3.y)
+                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
+                     .set("fill", "white")
+                     .set("stroke", "none"))
         }
         _ => g,
     }
