@@ -229,11 +229,8 @@ fn draw_city(city: tile::City,
         }
         x => {
             println!("A tile has an unknown number of circles: {}", x);
-            g.add(Circle::new()
-                  .set("cx", pos.x)
-                  .set("cy", pos.y)
-                  .set("r", TOKEN_SIZE * info.scale)
-                  .set("fill", "red"))
+            g.add(draw_circle(&pos, TOKEN_SIZE * info.scale, "red", "none",
+                              0.0))
         }
     }
 
@@ -241,13 +238,8 @@ fn draw_city(city: tile::City,
 
 /// Draw a single city circle
 fn draw_city_circle(pos: &na::Vector2<f64>, info: &map::MapInfo) -> Circle {
-    Circle::new()
-        .set("cx", pos.x)
-        .set("cy", pos.y)
-        .set("r", TOKEN_SIZE * info.scale)
-        .set("fill", "white")
-        .set("stroke", "black")
-        .set("stroke-width", LINE_WIDTH * info.scale)
+    draw_circle(pos, TOKEN_SIZE * info.scale, "white", "black",
+                LINE_WIDTH * info.scale)
 }
 
 fn draw_city_contrast(city: tile::City,
@@ -262,12 +254,8 @@ fn draw_city_contrast(city: tile::City,
     match city.circles {
         1 => {
             let size = (TOKEN_SIZE + LINE_WIDTH) * info.scale;
-            g.add(Circle::new()
-                  .set("cx", pos.x)
-                  .set("cy", pos.y)
-                  .set("r", size)
-                  .set("stroke", "white")
-                  .set("stroke-width", LINE_WIDTH * info.scale))
+            g.add(draw_circle(&pos, size, "none", "white",
+                              LINE_WIDTH * info.scale))
         }
         2 => {
             let pos = pos - na::Vector2::new(
@@ -287,6 +275,7 @@ fn draw_city_contrast(city: tile::City,
         3 => {
             let sq3 = 3.0_f64.sqrt();
             let size = info.scale * TOKEN_SIZE;
+            let radius = (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale;
             let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
             let pos2 = pos + na::Vector2::new(-size, size / sq3);
             let pos3 = pos + na::Vector2::new( size, size / sq3);
@@ -306,27 +295,24 @@ fn draw_city_contrast(city: tile::City,
                     .set("d", data)
                     .set("stroke", "white")
                     .set("stroke-width", 3.0 *LINE_WIDTH * info.scale))
-                .add(Circle::new()
-                     .set("cx", pos1.x)
-                     .set("cy", pos1.y)
-                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
-                     .set("fill", "white")
-                     .set("stroke", "none"))
-                .add(Circle::new()
-                     .set("cx", pos2.x)
-                     .set("cy", pos2.y)
-                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
-                     .set("fill", "white")
-                     .set("stroke", "none"))
-                .add(Circle::new()
-                     .set("cx", pos3.x)
-                     .set("cy", pos3.y)
-                     .set("r", (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale)
-                     .set("fill", "white")
-                     .set("stroke", "none"))
+                .add(draw_circle(&pos1, radius, "white", "none", 0.0))
+                .add(draw_circle(&pos2, radius, "white", "none", 0.0))
+                .add(draw_circle(&pos3, radius, "white", "none", 0.0))
         }
         _ => g,
     }
+}
+
+/// Helper to draw circles
+fn draw_circle(pos: &na::Vector2<f64>, radius: f64, fill: &str,
+               stroke_color: &str, stroke_width: f64) -> Circle {
+    Circle::new()
+        .set("cx", pos.x)
+        .set("cy", pos.y)
+        .set("r", radius)
+        .set("fill", fill)
+        .set("stroke", stroke_color)
+        .set("stroke-width", stroke_width)
 }
 
 /// Draw a stop
@@ -339,25 +325,16 @@ fn draw_stop(stop: tile::Stop,
     };
 
     let pos = info.scale * (basis * stop.position() + center);
-    Circle::new()
-        .set("cx", pos.x)
-        .set("cy", pos.y)
-        .set("r", STOP_SIZE * info.scale)
-        .set("fill", "black")
-        .set("stroke", "white")
-        .set("stroke-width", LINE_WIDTH * info.scale)
+    draw_circle(&pos, STOP_SIZE * info.scale, "black", "white",
+                LINE_WIDTH * info.scale)
 }
 
 /// Draw a small black circle in the middle of a tile to connect paths nicely
 fn draw_lawson(center: na::Vector2<f64>, info: &map::MapInfo) -> Circle {
-    Circle::new()
-        .set("cx", center.x * info.scale)
-        .set("cy", center.y * info.scale)
         // Add LINE_WIDTH to compensate for stroke being half in the circle
-        .set("r", (PATH_WIDTH + LINE_WIDTH) / 2.0 * info.scale)
-        .set("fill", "black")
-        .set("stroke", "white")
-        .set("stroke-width", LINE_WIDTH * info.scale)
+    draw_circle(center * info.scale,
+                (PATH_WIDTH + LINE_WIDTH) * 0.5 * info.scale,
+                "black", "white", LINE_WIDTH * info.scale)
 }
 
 fn hor_basis() -> na::Matrix2x3<f64> {
