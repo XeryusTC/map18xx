@@ -1,0 +1,18 @@
+[[path]]
+start = "S"
+end = "N"
+
+[[path]]
+start = "SE"
+end = "NW"
+is_bridge = true
+
+[[city]]
+revenue = 10
+circles = 1
+pos = [0.43, -0.15, -0.15]
+
+[[city]]
+revenue = 10
+circles = 1
+pos = [0.0, 0.28, 0.28]
