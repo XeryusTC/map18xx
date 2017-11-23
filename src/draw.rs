@@ -184,6 +184,7 @@ fn draw_city(city: tile::City,
     let g = Group::new();
 
     let pos = info.scale * (basis * city.position() + center);
+    let center = basis * city.position() + center;
     match city.circles {
         1 => g.add(draw_city_circle(&pos, info)),
         2 => {
@@ -332,7 +333,7 @@ fn draw_stop(stop: tile::Stop,
 /// Draw a small black circle in the middle of a tile to connect paths nicely
 fn draw_lawson(center: na::Vector2<f64>, info: &map::MapInfo) -> Circle {
         // Add LINE_WIDTH to compensate for stroke being half in the circle
-    draw_circle(center * info.scale,
+    draw_circle(&(center * info.scale),
                 (PATH_WIDTH + LINE_WIDTH) * 0.5 * info.scale,
                 "black", "white", LINE_WIDTH * info.scale)
 }
