@@ -228,6 +228,27 @@ fn draw_city(city: tile::City,
                 .add(draw_city_circle(&pos2, info))
                 .add(draw_city_circle(&pos3, info))
         }
+        4 => {
+            let size = info.scale * TOKEN_SIZE;
+            let pos1 = pos + na::Vector2::new(-size, -size);
+            let pos2 = pos + na::Vector2::new(-size,  size);
+            let pos3 = pos + na::Vector2::new( size, -size);
+            let pos4 = pos + na::Vector2::new( size,  size);
+            g.add(Rectangle::new()
+                  .set("x", (center.x - 2.0 * TOKEN_SIZE) * info.scale)
+                  .set("y", (center.y - 2.0 * TOKEN_SIZE) * info.scale)
+                  .set("width", TOKEN_SIZE * info.scale * 4.0)
+                  .set("height", TOKEN_SIZE * info.scale * 4.0)
+                  .set("rx", TOKEN_SIZE * info.scale)
+                  .set("fill", "white")
+                  .set("stroke", "black")
+                  .set("stroke-width", LINE_WIDTH * info.scale))
+                .add(draw_city_circle(&pos1, info))
+                .add(draw_city_circle(&pos1, info))
+                .add(draw_city_circle(&pos2, info))
+                .add(draw_city_circle(&pos3, info))
+                .add(draw_city_circle(&pos4, info))
+        }
         x => {
             println!("A tile has an unknown number of circles: {}", x);
             g.add(draw_circle(&pos, TOKEN_SIZE * info.scale, "red", "none",
@@ -299,6 +320,19 @@ fn draw_city_contrast(city: tile::City,
                 .add(draw_circle(&pos1, radius, "white", "none", 0.0))
                 .add(draw_circle(&pos2, radius, "white", "none", 0.0))
                 .add(draw_circle(&pos3, radius, "white", "none", 0.0))
+        }
+        4 => {
+            let pos = pos - na::Vector2::new(
+                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale,
+                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale);
+            let dim = (4.0 * TOKEN_SIZE + 3.0 * LINE_WIDTH) * info.scale;
+            g.add(Rectangle::new()
+                  .set("x", pos.x)
+                  .set("y", pos.y)
+                  .set("width", dim)
+                  .set("height", dim)
+                  .set("rx", (TOKEN_SIZE + LINE_WIDTH) * info.scale)
+                  .set("fill", "white"))
         }
         _ => g,
     }
