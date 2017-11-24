@@ -29,6 +29,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::fs::File;
 use std::io::prelude::*;
+use std::process;
 
 /// Standard colors that can be used
 pub mod colors {
@@ -262,7 +263,15 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
         file.read_to_string(&mut contents).unwrap();
 
         // Parse TOML file
-        let tile: TileDefinition = toml::from_str(&contents).unwrap();
+        let tile: TileDefinition = match toml::from_str(&contents) {
+            Ok(content) => content,
+            Err(e) => {
+                eprintln!("Invalid tile definitions {:?}: {:?}",
+                          def.file_stem().unwrap(),
+                          e);
+                process::exit(1);
+            }
+        };
         definitions.insert(String::from(def.file_stem().unwrap()
                                            .to_string_lossy()),
                            tile);
