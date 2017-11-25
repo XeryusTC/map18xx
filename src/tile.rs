@@ -219,7 +219,8 @@ impl Path {
 #[derive(Deserialize, Debug, Clone)]
 pub struct City {
     pub circles: u32,
-    pub revenue: u32,
+    pub text_id: u32,
+    pub revenue_pos: Box<[f64]>,
     position: Option<String>,
     pos: Option<Box<[f64]>>,
 }
@@ -234,6 +235,12 @@ impl City {
                 &None => na::Vector3::new(0.0, 0.0, 0.0),
             }
         }
+    }
+
+    pub fn revenue_position(&self) -> na::Vector3<f64>{
+        na::Vector3::new(self.revenue_pos[0],
+                         self.revenue_pos[1],
+                         self.revenue_pos[2])
     }
 }
 

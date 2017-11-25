@@ -184,7 +184,19 @@ fn draw_city(city: tile::City,
              center: na::Vector2<f64>,
              info: &map::MapInfo) -> Group {
     let basis = get_basis(&info.orientation);
-    let g = Group::new();
+
+    let text_circle_pos = info.scale * (basis * city.revenue_position()
+                                        + center);
+    let text_pos = text_circle_pos + info.scale *
+        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 3.0);
+    let g = Group::new()
+        .add(draw_circle(&text_circle_pos, REVENUE_CIRCLE_RADIUS * info.scale,
+                         "white", "black", LINE_WIDTH * info.scale))
+        .add(Text::new()
+             .add(node::Text::new(city.text_id.to_string()))
+             .set("x", text_pos.x)
+             .set("y", text_pos.y)
+             .set("style", "text-anchor:middle;"));
 
     let pos = info.scale * (basis * city.position() + center);
     let center = basis * city.position() + center;
