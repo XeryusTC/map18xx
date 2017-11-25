@@ -9,9 +9,9 @@ end = "S"
 [[city]]
 revenue = 60
 circles = 2
-pos = [0.25, 0.0, 0.5]
+pos = [0.0, 0.23, 0.23]
 
 [[city]]
 revenue = 60
 circles = 2
-pos = [0.25, -0.5, 0.0]
+pos = [0.0, -0.23, -0.23]

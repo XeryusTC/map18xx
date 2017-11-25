@@ -79,6 +79,8 @@ fn edge_to_coordinate(edge: &str) -> na::Vector3<f64> {
 /// Attributes that are common between Tile and TileDefinition
 pub trait TileSpec {
     fn color(&self) -> colors::Color;
+    fn set_name(&mut self, name: String);
+    fn name(&self) -> &str;
 }
 
 pub struct Tile {
@@ -99,6 +101,7 @@ impl Tile {
 /// Definition of tile layout, does not include color or name
 #[derive(Deserialize, Debug)]
 pub struct TileDefinition {
+    name: Option<String>,
     path: Option<Vec<Path>>,
     city: Option<Vec<City>>,
     stop: Option<Vec<Stop>>,
@@ -142,6 +145,17 @@ impl TileDefinition {
 impl TileSpec for TileDefinition {
     fn color(&self) -> colors::Color {
         colors::GROUND
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.name = Some(name);
+    }
+
+    fn name(&self) -> &str {
+        match &self.name {
+            &Some(ref s) => &s.as_str(),
+            &None => "NA",
+        }
     }
 }
 
@@ -264,7 +278,7 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
         file.read_to_string(&mut contents).unwrap();
 
         // Parse TOML file
-        let tile: TileDefinition = match toml::from_str(&contents) {
+        let mut tile: TileDefinition = match toml::from_str(&contents) {
             Ok(content) => content,
             Err(e) => {
                 eprintln!("Invalid tile definitions {:?}: {:?}",
@@ -273,9 +287,9 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
                 process::exit(1);
             }
         };
-        definitions.insert(String::from(def.file_stem().unwrap()
-                                           .to_string_lossy()),
-                           tile);
+        tile.set_name(String::from(def.file_stem()
+                                   .unwrap().to_string_lossy()));
+        definitions.insert(String::from(tile.name()), tile);
     }
     definitions
 }

@@ -50,6 +50,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
                  pos: &na::Vector2<f64>,
                  map: &map::MapInfo) -> Group {
     let mut g = Group::new();
+    let basis = get_basis(&map.orientation);
 
     g = g.add(draw_hex_background(*pos, &map, tile.color()));
 
@@ -77,6 +78,14 @@ pub fn draw_tile(tile: &tile::TileDefinition,
         g = g.add(draw_city(city, *pos, &map));
     };
 
+    // Draw tile number
+    let text_pos = map.scale*(basis * na::Vector3::new(0.0, 0.0, -0.95) + pos);
+    g = g.add(Text::new()
+          .add(node::Text::new(tile.name()))
+          .set("x", text_pos.x)
+          .set("y", text_pos.y)
+          .set("style", "text-anchor:end;font-size:80%"));
+    // Draw outline last to prevent visual effects
     g.add(draw_hex_edge(*pos, &map))
 }
 
