@@ -7,11 +7,13 @@ start = "NW"
 end = "S"
 
 [[city]]
-revenue = 10
+text_id = 1
+revenue_pos = [0.0, 0.6, 0.0]
 circles = 1
 pos = [0.5, 0.0, 0.0]
 
 [[city]]
-revenue = 10
+text_id = 1
+revenue_pos = [-0.1, -0.6, 0.0]
 circles = 1
-pos = [-0.15, -0.2, -0.2]
+pos = [-0.2, -0.15, 0.2]

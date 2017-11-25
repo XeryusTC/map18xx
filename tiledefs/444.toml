@@ -11,6 +11,7 @@ start = "N"
 end = "C"
 
 [[city]]
-revenue = 30
 position = "C"
 circles = 2
+text_id = 1
+revenue_pos = [0.0, -0.6, 0.0]

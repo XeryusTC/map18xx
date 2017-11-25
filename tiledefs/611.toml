@@ -12,4 +12,5 @@ end = "C"
 
 [[city]]
 circles = 2
-revenue = 10
+text_id = 1
+revenue_pos = [0.0, 0.6, 0.0]
