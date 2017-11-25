@@ -2,6 +2,7 @@ extern crate svg;
 extern crate nalgebra as na;
 
 use std::collections::HashMap;
+use std::f64::consts::PI;
 use self::svg::node;
 use self::svg::node::element::{Circle, Group, Path, Rectangle, Text};
 use self::svg::node::element::path::Data;
@@ -13,10 +14,12 @@ use super::map;
 // Bezier constant taken from
 // http://spencermortensen.com/articles/bezier-circle/
 const C: f64 = 0.551915024494;
-const PATH_WIDTH: f64 = 0.15;
+const PATH_WIDTH: f64 = 0.12;
 const LINE_WIDTH: f64 = 0.025;
 const TOKEN_SIZE: f64 = 0.3;
 const STOP_SIZE:  f64 = 0.15;
+const STOP_TEXT_DIST: f64 = 0.4;
+const REVENUE_CIRCLE_RADIUS: f64 = 0.15;
 
 /// Draws tile definitions
 pub fn draw_tile_definitions(
@@ -341,11 +344,26 @@ fn draw_circle(pos: &na::Vector2<f64>, radius: f64, fill: &str,
 /// Draw a stop
 fn draw_stop(stop: tile::Stop,
              center: na::Vector2<f64>,
+             info: &map::MapInfo) -> Group {
     let basis = get_basis(&info.orientation);
 
     let pos = info.scale * (basis * stop.position() + center);
-    draw_circle(&pos, STOP_SIZE * info.scale, "black", "white",
-                LINE_WIDTH * info.scale)
+    let a = stop.revenue_angle as f64 * PI / 180.0;
+    let text_circle_pos = pos + info.scale *
+        na::Matrix2::new(a.cos(), a.sin(), -a.sin(), a.cos()) *
+        na::Vector2::new(STOP_TEXT_DIST, 0.0);
+    let text_pos = text_circle_pos + info.scale *
+        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 3.0);
+    Group::new()
+        .add(draw_circle(&pos, STOP_SIZE * info.scale, "black",
+                         "white", LINE_WIDTH * info.scale))
+        .add(draw_circle(&text_circle_pos, REVENUE_CIRCLE_RADIUS * info.scale,
+                         "white", "black", LINE_WIDTH * info.scale))
+        .add(Text::new()
+             .add(node::Text::new(stop.text_id.to_string()))
+             .set("x", text_pos.x)
+             .set("y", text_pos.y)
+             .set("style", "text-anchor:middle;"))
 }
 
 /// Draw a small black circle in the middle of a tile to connect paths nicely

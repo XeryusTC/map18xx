@@ -230,7 +230,8 @@ impl City {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Stop {
     position: Box<[f64]>,
-    revenue: u32,
+    pub text_id: u32,
+    pub revenue_angle: i32,
 }
 
 impl Stop {
