@@ -14,12 +14,12 @@ use super::map;
 // Bezier constant taken from
 // http://spencermortensen.com/articles/bezier-circle/
 const C: f64 = 0.551915024494;
-const PATH_WIDTH: f64 = 0.12;
-const LINE_WIDTH: f64 = 0.025;
-const TOKEN_SIZE: f64 = 0.3;
-const STOP_SIZE:  f64 = 0.15;
+const PATH_WIDTH: f64 = 0.1;
+const LINE_WIDTH: f64 = 0.015;
+const TOKEN_SIZE: f64 = 0.269;
+const STOP_SIZE:  f64 = 0.1;
 const STOP_TEXT_DIST: f64 = 0.4;
-const REVENUE_CIRCLE_RADIUS: f64 = 0.15;
+const REVENUE_CIRCLE_RADIUS: f64 = 0.13;
 
 /// Draws tile definitions
 pub fn draw_tile_definitions(
@@ -188,7 +188,7 @@ fn draw_city(city: tile::City,
     let text_circle_pos = info.scale * (basis * city.revenue_position()
                                         + center);
     let text_pos = text_circle_pos + info.scale *
-        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 3.0);
+        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let g = Group::new()
         .add(draw_circle(&text_circle_pos, REVENUE_CIRCLE_RADIUS * info.scale,
                          "white", "black", LINE_WIDTH * info.scale))
@@ -374,7 +374,7 @@ fn draw_stop(stop: tile::Stop,
         na::Matrix2::new(a.cos(), a.sin(), -a.sin(), a.cos()) *
         na::Vector2::new(STOP_TEXT_DIST, 0.0);
     let text_pos = text_circle_pos + info.scale *
-        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 3.0);
+        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     Group::new()
         .add(draw_circle(&pos, STOP_SIZE * info.scale, "black",
                          "white", LINE_WIDTH * info.scale))
