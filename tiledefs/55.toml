@@ -8,9 +8,11 @@ end = "SE"
 is_bridge = true
 
 [[stop]]
-revenue = 10
+text_id = 1
 position = [-0.3, 0.0, 0.3]
+revenue_angle = -90
 
 [[stop]]
-revenue = 10
-position = [0.0, -0.3, -0.3]
+text_id = 1
+position = [0.0, 0.3, 0.3]
+revenue_angle = 0

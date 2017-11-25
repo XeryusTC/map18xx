@@ -1,0 +1,9 @@
+[[city]]
+revenue = 1
+circles = 1
+pos = [-0.25, 0.0, 0.3]
+
+[[city]]
+revenue = 1
+circles = 1
+pos = [0.0, -0.25, -0.25]

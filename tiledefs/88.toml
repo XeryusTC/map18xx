@@ -7,5 +7,6 @@ start = "NW"
 end = "SE"
 
 [[stop]]
-revenue = 10
 position = [0.0, 0.0, 0.0]
+text_id = 1
+revenue_angle = 30

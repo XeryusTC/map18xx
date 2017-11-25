@@ -1,11 +1,3 @@
-[[path]]
-start = "N"
-end = "S"
-
-[[path]]
-start = "NW"
-end = "C"
-
 [[stop]]
 position = [0.0, 0.0, 0.0]
 text_id = 1
