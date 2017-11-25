@@ -79,10 +79,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
 
 /// Draw a hexagon
 fn draw_hex(center: na::Vector2<f64>, info: &map::MapInfo) -> Path {
-    let basis = match &info.orientation {
-        &Orientation::Horizontal => hor_basis(),
-        &Orientation::Vertical => ver_basis(),
-    };
+    let basis = get_basis(&info.orientation);
 
     let points = [
         na::Vector3::new(-1.0,  0.0,  0.0),
@@ -126,10 +123,7 @@ fn draw_hex_background(center: na::Vector2<f64>,
 fn draw_path_helper(path: &tile::Path,
              center: &na::Vector2<f64>,
              info: &map::MapInfo) -> Path {
-    let basis = match &info.orientation {
-        &Orientation::Horizontal => hor_basis(),
-        &Orientation::Vertical => ver_basis(),
-    };
+    let basis = get_basis(&info.orientation);
 
     // Calculate end points and control points
     let (start_x, start_y) = point_to_tuple(
@@ -177,10 +171,7 @@ fn draw_path(path: &tile::Path,
 fn draw_city(city: tile::City,
              center: na::Vector2<f64>,
              info: &map::MapInfo) -> Group {
-    let basis = match &info.orientation {
-        &Orientation::Horizontal => hor_basis(),
-        &Orientation::Vertical => ver_basis(),
-    };
+    let basis = get_basis(&info.orientation);
     let g = Group::new();
 
     let pos = info.scale * (basis * city.position() + center);
@@ -267,10 +258,7 @@ fn draw_city_circle(pos: &na::Vector2<f64>, info: &map::MapInfo) -> Circle {
 fn draw_city_contrast(city: tile::City,
                       center: &na::Vector2<f64>,
                       info: &map::MapInfo) -> Group {
-    let basis = match &info.orientation {
-        &Orientation::Horizontal => hor_basis(),
-        &Orientation::Vertical => ver_basis(),
-    };
+    let basis = get_basis(&info.orientation);
     let g = Group::new();
     let pos = info.scale * (basis * city.position() + center);
     match city.circles {
@@ -353,11 +341,7 @@ fn draw_circle(pos: &na::Vector2<f64>, radius: f64, fill: &str,
 /// Draw a stop
 fn draw_stop(stop: tile::Stop,
              center: na::Vector2<f64>,
-             info: &map::MapInfo) -> Circle {
-    let basis = match &info.orientation {
-        &Orientation::Horizontal => hor_basis(),
-        &Orientation::Vertical => ver_basis(),
-    };
+    let basis = get_basis(&info.orientation);
 
     let pos = info.scale * (basis * stop.position() + center);
     draw_circle(&pos, STOP_SIZE * info.scale, "black", "white",
@@ -372,20 +356,19 @@ fn draw_lawson(center: na::Vector2<f64>, info: &map::MapInfo) -> Circle {
                 "black", "white", LINE_WIDTH * info.scale)
 }
 
-fn hor_basis() -> na::Matrix2x3<f64> {
-    na::Matrix2x3::from_columns(&[
-        na::Vector2::new( 1.0,  0.0),
-        na::Vector2::new( 0.5, -0.5 * 3.0_f64.sqrt()),
-        na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt())
-    ])
-}
-
-fn ver_basis() -> na::Matrix2x3<f64> {
-    na::Matrix2x3::from_columns(&[
-        na::Vector2::new(0.5 * 3.0_f64.sqrt(), -0.5),
-        na::Vector2::new(0.0, -1.0),
-        na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
-    ])
+fn get_basis(orientation: &Orientation) -> na::Matrix2x3<f64> {
+    match orientation {
+        &Orientation::Horizontal => na::Matrix2x3::from_columns(&[
+                na::Vector2::new( 1.0,  0.0),
+                na::Vector2::new( 0.5, -0.5 * 3.0_f64.sqrt()),
+                na::Vector2::new(-0.5, -0.5 * 3.0_f64.sqrt())
+            ]),
+        &Orientation::Vertical => na::Matrix2x3::from_columns(&[
+                na::Vector2::new(0.5 * 3.0_f64.sqrt(), -0.5),
+                na::Vector2::new(0.0, -1.0),
+                na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
+            ]),
+    }
 }
 
 fn point_to_tuple(p: na::Vector2<f64>) -> (f64, f64) {
