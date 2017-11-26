@@ -1,0 +1,17 @@
+[[path]]
+start = "N"
+end = "S"
+
+[[path]]
+start = "NW"
+end = "C"
+
+[[path]]
+start = "NE"
+end = "C"
+
+[[city]]
+position = "C"
+circles = 1
+text_id = 1
+revenue_pos = [0.0, 0.6, 0.0]
