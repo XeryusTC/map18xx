@@ -320,7 +320,8 @@ mod tests {
         let tile: TileDefinition = toml::from_str(r#"
             [[stop]]
             position = [0.1, 0.2, 0.4]
-            revenue = 10
+            text_id = 1
+            revenue_angle = 0
             "#).unwrap();
         assert_eq!(tile.stops()[0].position(),
                    na::Vector3::new(0.1, 0.2, 0.4));
@@ -331,7 +332,8 @@ mod tests {
         let tile: TileDefinition = toml::from_str(r#"
             [[city]]
             circles = 1
-            revenue = 10
+            text_id = 1
+            revenue_pos = [0.0, 0.0, 0.0]
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
                    na::Vector3::new(0.0, 0.0, 0.0));
@@ -342,8 +344,9 @@ mod tests {
         let tile: TileDefinition = toml::from_str(r#"
             [[city]]
             circles = 1
-            revenue = 10
             pos = [0.3, 0.0, -0.3]
+            text_id = 1
+            revenue_pos = [0.0, 0.0, 0.0]
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
                    na::Vector3::new(0.3, 0.0, -0.3));
@@ -354,8 +357,9 @@ mod tests {
         let tile: TileDefinition = toml::from_str(r#"
             [[city]]
             circles = 1
-            revenue = 10
             position = "N"
+            text_id = 1
+            revenue_pos = [0.0, 0.0, 0.0]
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
                    na::Vector3::new(0.0, 0.5, 0.5));
@@ -366,8 +370,9 @@ mod tests {
         let tile: TileDefinition = toml::from_str(r#"
             [[city]]
             circles = 1
-            revenue = 10
             position = "C"
+            text_id = 1
+            revenue_pos = [0.0, 0.0, 0.0]
             "#).unwrap();
         assert_eq!(tile.cities()[0].position(),
                    na::Vector3::new(0.0, 0.0, 0.0));
