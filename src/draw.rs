@@ -3,6 +3,7 @@ extern crate nalgebra as na;
 
 use std::collections::HashMap;
 use std::f64::consts::PI;
+use std::process;
 use self::svg::node;
 use self::svg::node::element::{Circle, Group, Path, Rectangle, Text};
 use self::svg::node::element::path::Data;
@@ -85,6 +86,32 @@ pub fn draw_tile(tile: &tile::TileDefinition,
           .set("x", text_pos.x)
           .set("y", text_pos.y)
           .set("style", "text-anchor:end;font-size:80%"));
+    // Draw the tile code
+    match tile.code_text_id {
+        Some(text_id) => {
+            match tile.code_position() {
+                None => {
+                    eprintln!("Tile {} must have code_position and {}",
+                              tile.name(),
+                              "code_text_id set at the same time");
+                    process::exit(1);
+                },
+                Some(ref position) => {
+                    let text_pos = map.scale * (basis * position + pos);
+                    g = g.add(Text::new()
+                              .add(node::Text::new(text_id.to_string()))
+                              .set("x", text_pos.x)
+                              .set("y", text_pos.y)
+                              .set("style",
+                                   format!("{};{};{}",
+                                           "text-anchor:middle",
+                                           "font-size:120%",
+                                           "font-weight:900")));
+                }
+            }
+        }
+        None => {}
+    }
     // Draw outline last to prevent visual effects
     g.add(draw_hex_edge(*pos, &map))
 }

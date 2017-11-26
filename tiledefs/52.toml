@@ -1,3 +1,6 @@
+code_position = [0.25, 0.0, -0.25]
+code_text_id = 2
+
 [[path]]
 start = "NE"
 end_pos = [0.0, 0.7, 0.0]

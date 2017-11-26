@@ -106,6 +106,8 @@ pub struct TileDefinition {
     city: Option<Vec<City>>,
     stop: Option<Vec<Stop>>,
     is_lawson: Option<bool>,
+    pub code_position: Option<Box<[f64]>>,
+    pub code_text_id: Option<u32>,
 }
 
 impl TileDefinition {
@@ -138,6 +140,13 @@ impl TileDefinition {
         match self.is_lawson {
             Some(lawson) => lawson,
             None => false,
+        }
+    }
+
+    pub fn code_position(&self) -> Option<na::Vector3<f64>> {
+        match &self.code_position {
+            &None => None,
+            &Some(ref pos) => Some(na::Vector3::new(pos[0], pos[1], pos[2])),
         }
     }
 }
