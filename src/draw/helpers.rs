@@ -112,21 +112,26 @@ pub fn draw_lawson(center: na::Vector2<f64>,
 }
 
 /// Draw a city
-pub fn draw_city(city: tile::City,
-             center: na::Vector2<f64>,
-             info: &map::MapInfo) -> element::Group {
+pub fn draw_city<T>(city: tile::City,
+                    center: na::Vector2<f64>,
+                    info: &map::MapInfo,
+                    tile: &T) -> element::Group
+    where
+        T: tile::TileSpec
+{
     let basis = get_basis(&info.orientation);
 
     let text_circle_pos = info.scale * (basis * city.revenue_position()
                                         + center);
     let text_pos = text_circle_pos + info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
+    let text = tile.text(city.text_id);
     let g = element::Group::new()
         .add(draw_circle(&text_circle_pos,
                                   REVENUE_CIRCLE_RADIUS * info.scale,
                                   "white", "black", LINE_WIDTH * info.scale))
         .add(element::Text::new()
-             .add(node::Text::new(city.text_id.to_string()))
+             .add(node::Text::new(text))
              .set("x", text_pos.x)
              .set("y", text_pos.y)
              .set("style", "text-anchor:middle;"));
@@ -287,9 +292,13 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
 }
 
 /// Draw a stop
-pub fn draw_stop(stop: tile::Stop,
-             center: na::Vector2<f64>,
-             info: &map::MapInfo) -> element::Group {
+pub fn draw_stop<T>(stop: tile::Stop,
+                    center: na::Vector2<f64>,
+                    info: &map::MapInfo,
+                    tile: &T) -> element::Group
+    where
+        T: tile::TileSpec
+{
     let basis = get_basis(&info.orientation);
 
     let pos = info.scale * (basis * stop.position() + center);
@@ -299,6 +308,7 @@ pub fn draw_stop(stop: tile::Stop,
         na::Vector2::new(STOP_TEXT_DIST, 0.0);
     let text_pos = text_circle_pos + info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
+    let text = tile.text(stop.text_id);
     element::Group::new()
         .add(draw_circle(&pos, STOP_SIZE * info.scale, "black",
                                   "white", LINE_WIDTH * info.scale))
@@ -306,7 +316,7 @@ pub fn draw_stop(stop: tile::Stop,
                                   REVENUE_CIRCLE_RADIUS * info.scale,
                                   "white", "black", LINE_WIDTH * info.scale))
         .add(element::Text::new()
-             .add(node::Text::new(stop.text_id.to_string()))
+             .add(node::Text::new(text))
              .set("x", text_pos.x)
              .set("y", text_pos.y)
              .set("style", "text-anchor:middle;"))

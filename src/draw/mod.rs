@@ -85,7 +85,7 @@ pub fn draw_tile<T>(tile: &T,
     }
 
     for city in tile.cities() {
-        g = g.add(helpers::draw_city(city, *pos, &map));
+        g = g.add(helpers::draw_city(city, *pos, &map, tile));
     };
 
     // Draw tile number
@@ -96,8 +96,9 @@ pub fn draw_tile<T>(tile: &T,
           .set("y", text_pos.y)
           .set("style", "text-anchor:end;font-size:80%"));
     // Draw the tile code
-    match tile.code_text_id {
-        Some(text_id) => {
+    match tile.code_text() {
+        None => {}
+        Some(text) => {
             match tile.code_position() {
                 None => {
                     eprintln!("Tile {} must have code_position and {}",
@@ -108,7 +109,7 @@ pub fn draw_tile<T>(tile: &T,
                 Some(ref position) => {
                     let text_pos = map.scale * (basis * position + pos);
                     g = g.add(Text::new()
-                              .add(node::Text::new(text_id.to_string()))
+                              .add(node::Text::new(text))
                               .set("x", text_pos.x)
                               .set("y", text_pos.y)
                               .set("style",
@@ -119,7 +120,6 @@ pub fn draw_tile<T>(tile: &T,
                 }
             }
         }
-        None => {}
     }
     // Draw outline last to prevent visual effects
     g.add(helpers::draw_hex_edge(*pos, &map))
