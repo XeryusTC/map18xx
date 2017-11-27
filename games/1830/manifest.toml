@@ -1,0 +1,373 @@
+[amounts]
+# Yellows
+"1" = 1
+"2" = 1
+"3" = 2
+"4" = 2
+"7" = 4
+"8" = 8
+"9" = 7
+"55" = 1
+"56" = 1
+"57" = 4
+"58" = 2
+"69" = 1
+
+# Greens
+"14" = 3
+"15" = 2
+"16" = 1
+"18" = 1
+"19" = 1
+"20" = 1
+"23" = 3
+"24" = 3
+"25" = 1
+"26" = 1
+"27" = 1
+"28" = 1
+"29" = 1
+"53" = 2
+"54" = 1
+"59" = 2
+
+# Brown
+"39" = 1
+"40" = 1
+"41" = 2
+"42" = 2
+"43" = 2
+"44" = 1
+"45" = 2
+"46" = 2
+"47" = 1
+"61" = 2
+"62" = 1
+"63" = 3
+"64" = 1
+"65" = 1
+"66" = 1
+"67" = 1
+"68" = 1
+"70" = 1
+
+[[tile]]
+color = "yellow"
+base_tile = "1"
+text = [
+	"1",  # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "2"
+text = [
+	"2", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "3"
+text = [
+	"3", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "4"
+text = [
+	"4", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "7"
+text = [
+	"7", # tile number
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "8"
+text = [
+	"8", # tile number
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "9"
+text = [
+	"9", # tile number
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "55"
+text = [
+	"55", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "56"
+text = [
+	"56", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "57"
+text = [
+	"57", # tile number
+	"20", # revenue
+]
+
+[[tile]]
+color = "yellow"
+base_tile = "58"
+text = [
+	"58", # tile number
+	"10", # revenue
+]
+
+[[tile]]
+color = "green"
+base_tile = "14"
+text = [
+	"14", # tile number
+	"30", # revenue
+]
+
+[[tile]]
+color = "green"
+base_tile = "15"
+text = [
+	"15", # tile number
+	"30", # revenue
+]
+
+[[tile]]
+color = "green"
+base_tile = "16"
+text = [
+	"16", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "18"
+text = [
+	"18", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "19"
+text = [
+	"19", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "20"
+text = [
+	"20", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "23"
+text = [
+	"23", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "24"
+text = [
+	"24", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "25"
+text = [
+	"25", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "26"
+text = [
+	"26", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "27"
+text = [
+	"27", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "28"
+text = [
+	"28", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "29"
+text = [
+	"29", # tile number
+]
+
+[[tile]]
+color = "green"
+base_tile = "13"
+text = [
+	"53", # tile number
+	"50", # revenue
+	"B",  # code
+]
+
+[[tile]]
+color = "green"
+base_tile = "54"
+text = [
+	"54", # tile number
+	"60", # revenue
+	"NY", # code
+]
+
+[[tile]]
+color = "green"
+base_tile = "59"
+text = [
+	"59", # tile number
+	"40", # revenue
+	"OO", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "39"
+text = ["39"]
+
+[[tile]]
+color = "russet"
+base_tile = "40"
+text = ["40"]
+
+[[tile]]
+color = "russet"
+base_tile = "41"
+text = ["41"]
+
+[[tile]]
+color = "russet"
+base_tile = "42"
+text = ["42"]
+
+[[tile]]
+color = "russet"
+base_tile = "43"
+text = ["43"]
+
+[[tile]]
+color = "russet"
+base_tile = "44"
+text = ["44"]
+
+[[tile]]
+color = "russet"
+base_tile = "45"
+text = ["45"]
+
+[[tile]]
+color = "russet"
+base_tile = "46"
+text = ["46"]
+
+[[tile]]
+color = "russet"
+base_tile = "47"
+text = ["47"]
+
+[[tile]]
+color = "russet"
+base_tile = "61"
+text = [
+	"61", # tile number
+	"60", # revenue
+	"B",  # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "62"
+text = [
+	"62", # tile number
+	"80", # revenue
+	"NY", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "63"
+text = [
+	"63", # tile number
+	"40", # revenue
+]
+
+[[tile]]
+color = "russet"
+base_tile = "64"
+text = [
+	"64", # tile number
+	"50", # revenue
+	"OO", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "65"
+text = [
+	"65", # tile number
+	"50", # revenue
+	"OO", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "66"
+text = [
+	"66", # tile number
+	"50", # revenue
+	"OO", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "67"
+text = [
+	"67", # tile number
+	"50", # revenue
+	"OO", # code
+]
+
+[[tile]]
+color = "russet"
+base_tile = "68"
+text = [
+	"68", # tile number
+	"50", # revenue
+	"OO", # code
+]
