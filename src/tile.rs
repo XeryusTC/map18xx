@@ -43,6 +43,12 @@ pub mod colors {
         }
     }
 
+    impl Default for Color {
+        fn default() -> Color {
+            GROUND
+        }
+    }
+
     pub const GROUND:  Color  = Color { value: "#FDD9B5" }; // Sandy Tan
     pub const YELLOW:  Color  = Color { value: "#FDEE00" }; // Aureolin
     pub const GREEN:   Color  = Color { value: "#7CFC00" }; // Lawn Green
@@ -53,6 +59,22 @@ pub mod colors {
     pub const BLUE:    Color  = Color { value: "#007FFF" }; // Azure
     pub const BARRIER: Color  = Color { value: "#660000" }; // Blood Red
     pub const WHITE:   Color  = Color { value: "#FFFFFF" };
+
+    pub fn name_to_color(name: &String) -> Color {
+        match name.to_lowercase().as_str() {
+            "ground"  => GROUND,
+            "yellow"  => YELLOW,
+            "green"   => GREEN,
+            "russet"  => RUSSET,
+            "grey"    => GREY,
+            "brown"   => BROWN,
+            "red"     => RED,
+            "blue"    => BLUE,
+            "barrier" => BARRIER,
+            "white"   => WHITE,
+            _         => Color { value: "#000000" },
+        }
+    }
 }
 
 /// Converts a position code to hex coordinates
