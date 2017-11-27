@@ -103,22 +103,48 @@ pub trait TileSpec {
     fn color(&self) -> colors::Color;
     fn set_name(&mut self, name: String);
     fn name(&self) -> &str;
+    /// The paths on the tile.
+    fn paths(&self) -> Vec<Path>;
+    /// The city revenue locations on the tile.
+    fn cities(&self) -> Vec<City>;
+    /// The stop revenue locations on the tile
+    fn stops(&self) -> Vec<Stop>;
+    /// Whether a tile should be drawn as lawson track
+    fn is_lawson(&self) -> bool;
+
+    fn text(&self, u32) -> String;
+    fn code_text(&self) -> Option<String>;
+    fn code_position(&self) -> Option<na::Vector3<f64>>;
 }
 
 /// The specification of a tile to be used in the game
 #[derive(Deserialize)]
 pub struct Tile {
-    definition: String,
+    base_tile: String,
     color: String,
     text: Box<[String]>,
+
+    #[serde(skip)]
+    definition: Option<TileDefinition>,
 }
 
 impl Tile {
-    pub fn new(definition: String) -> Tile {
+    pub fn set_definition(&mut self, definition: &TileDefinition) {
+        self.definition = Some(definition.clone());
+    }
+
+    pub fn base_tile(&self) -> String {
+        self.base_tile.clone()
+    }
+}
+
+impl Default for Tile {
+    fn default() -> Tile {
         Tile {
-            definition,
+            base_tile: String::new(),
             color: String::new(),
             text: Box::new([]),
+            definition: None,
         }
     }
 }
@@ -136,62 +162,105 @@ impl TileSpec for Tile {
     fn set_name(&mut self, name: String) {
         self.text[0] = name;
     }
+
+    fn paths(&self) -> Vec<Path> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using paths()")
+            .paths()
+    }
+
+    fn cities(&self) -> Vec<City> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using cities()")
+            .cities()
+    }
+
+    fn stops(&self) -> Vec<Stop> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using stops()")
+            .stops()
+    }
+
+    fn is_lawson(&self) -> bool {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using is_lawson()")
+            .is_lawson()
+    }
+
+    fn text(&self, id: u32) -> String {
+        self.text[id as usize].to_string()
+    }
+
+    fn code_position(&self) -> Option<na::Vector3<f64>> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using \
+                    code_position()")
+            .code_position()
+    }
+
+    fn code_text(&self) -> Option<String> {
+        match self.definition.as_ref()
+            .expect("You must call set_definition() before using code_text()")
+            .code_text_id() {
+                None => None,
+                Some(id) => Some(self.text[id].clone()),
+            }
+    }
 }
 
 /// Definition of tile layout, does not include color or name
-#[derive(Deserialize, Debug)]
+#[derive(Clone, Deserialize, Debug)]
 pub struct TileDefinition {
     name: Option<String>,
     path: Option<Vec<Path>>,
     city: Option<Vec<City>>,
     stop: Option<Vec<Stop>>,
     is_lawson: Option<bool>,
-    pub code_position: Option<Box<[f64]>>,
-    pub code_text_id: Option<u32>,
+    code_position: Option<Box<[f64]>>,
+    code_text_id: Option<usize>,
 }
 
 impl TileDefinition {
-    /// The paths on the tile.
-    pub fn paths(&self) -> Vec<Path> {
+    pub fn code_text_id(&self) -> Option<usize> {
+        self.code_text_id
+    }
+}
+
+impl TileSpec for TileDefinition {
+    fn paths(&self) -> Vec<Path> {
         match self.path {
             Some(ref paths) => paths.to_vec(),
             None => vec![],
         }
     }
 
-    /// The city revenue locations on the tile.
-    pub fn cities(&self) -> Vec<City> {
+    fn cities(&self) -> Vec<City> {
         match self.city {
             Some(ref cities) => cities.to_vec(),
             None => vec![],
         }
     }
 
-    /// The stop revenue locations on the tile
-    pub fn stops(&self) -> Vec<Stop> {
+    fn stops(&self) -> Vec<Stop> {
         match self.stop {
             Some(ref stops) => stops.to_vec(),
             None => vec![],
         }
     }
 
-    /// Whether a tile should be drawn as lawson track
-    pub fn is_lawson(&self) -> bool {
+    fn is_lawson(&self) -> bool {
         match self.is_lawson {
             Some(lawson) => lawson,
             None => false,
         }
     }
 
-    pub fn code_position(&self) -> Option<na::Vector3<f64>> {
+    fn code_position(&self) -> Option<na::Vector3<f64>> {
         match &self.code_position {
             &None => None,
             &Some(ref pos) => Some(na::Vector3::new(pos[0], pos[1], pos[2])),
         }
     }
-}
-
-impl TileSpec for TileDefinition {
     fn color(&self) -> colors::Color {
         colors::GROUND
     }
@@ -204,6 +273,17 @@ impl TileSpec for TileDefinition {
         match &self.name {
             &Some(ref s) => &s.as_str(),
             &None => "NA",
+        }
+    }
+
+    fn text(&self, id: u32) -> String {
+        id.to_string()
+    }
+
+    fn code_text(&self) -> Option<String> {
+        match self.code_text_id {
+            None => None,
+            Some(id) => Some(id.to_string()),
         }
     }
 }
