@@ -6,6 +6,7 @@ use std::process;
 use self::svg::node;
 use self::svg::node::element::{Group, Text};
 use tile;
+use tile::TileSpec;
 use map;
 use game;
 
@@ -37,9 +38,8 @@ pub fn draw_tile_definitions(
 }
 
 /// Draw a game's tile manifest
-pub fn draw_tile_manifest(
-        manifest: &game::Manifest,
-        info: &map::MapInfo) -> Group {
+pub fn draw_tile_manifest(manifest: &game::Manifest,
+                          info: &map::MapInfo) -> Group {
     let mut g = Group::new();
     let mut i = 0.0;
 
@@ -48,6 +48,19 @@ pub fn draw_tile_manifest(
                                    1.0 + 2.0 * (i / 5.0).floor());
         g = g.add(draw_tile(tile, &pos, info));
         i += 1.0;
+
+        // Draw amount available
+        let amount = match manifest.amounts.get(tile.name()) {
+            None => {
+                eprintln!("No tile amount found for {}", tile.name());
+                process::exit(1);
+            }
+            Some(amount) => amount.to_string(),
+        };
+        g = g.add(Text::new()
+                  .add(node::Text::new(format!("{}×", amount)))
+                  .set("x", info.scale * (pos.x - 1.0))
+                  .set("y", info.scale * (pos.y - 0.7)));
     }
 
     g
