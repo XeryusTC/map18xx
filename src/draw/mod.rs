@@ -6,8 +6,8 @@ use std::process;
 use self::svg::node;
 use self::svg::node::element::{Group, Text};
 use tile;
-use tile::TileSpec;
 use map;
+use game;
 
 mod helpers;
 mod consts;
@@ -26,7 +26,7 @@ pub fn draw_tile_definitions(
         let definition = &definitions[name];
         let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
                                    1.0 + 2.0 * (i / 5.0).floor());
-        g = g.add(draw_tile(&definition, &pos, &info))
+        g = g.add(draw_tile(definition, &pos, &info))
             .add(Text::new()
                 .add(node::Text::new(name.as_str()))
                 .set("x", info.scale * (pos.x - 1.0))
@@ -36,10 +36,29 @@ pub fn draw_tile_definitions(
     g
 }
 
+/// Draw a game's tile manifest
+pub fn draw_tile_manifest(
+        manifest: &game::Manifest,
+        info: &map::MapInfo) -> Group {
+    let mut g = Group::new();
+    let mut i = 0.0;
+
+    for tile in &manifest.tiles {
+        let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
+                                   1.0 + 2.0 * (i / 5.0).floor());
+        g = g.add(draw_tile(tile, &pos, info));
+        i += 1.0;
+    }
+
+    g
+}
+
 /// Draws a single tile
-pub fn draw_tile(tile: &tile::TileDefinition,
+pub fn draw_tile<T>(tile: &T,
                  pos: &na::Vector2<f64>,
-                 map: &map::MapInfo) -> Group {
+                 map: &map::MapInfo) -> Group
+        where T: tile::TileSpec
+{
     let mut g = Group::new();
     let basis = helpers::get_basis(&map.orientation);
 
@@ -62,7 +81,7 @@ pub fn draw_tile(tile: &tile::TileDefinition,
     };
 
     for stop in tile.stops() {
-        g = g.add(helpers::draw_stop(stop, *pos, &map));
+        g = g.add(helpers::draw_stop(stop, *pos, &map, tile));
     }
 
     for city in tile.cities() {
