@@ -105,18 +105,36 @@ pub trait TileSpec {
     fn name(&self) -> &str;
 }
 
+/// The specification of a tile to be used in the game
+#[derive(Deserialize)]
 pub struct Tile {
-    number: String,
-    color: colors::Color,
+    definition: String,
+    color: String,
+    text: Box<[String]>,
 }
 
 impl Tile {
-    pub fn new(number: String, color: colors::Color) -> Tile {
-        Tile { number, color }
+    pub fn new(definition: String) -> Tile {
+        Tile {
+            definition,
+            color: String::new(),
+            text: Box::new([]),
+        }
+    }
+}
+
+impl TileSpec for Tile {
+    fn color(&self) -> colors::Color {
+        colors::name_to_color(&self.color)
     }
 
-    pub fn color(&self) -> &str {
-        self.color.value()
+    /// The number of the tile, should be the first text specified
+    fn name(&self) -> &str {
+        self.text[0].as_str()
+    }
+
+    fn set_name(&mut self, name: String) {
+        self.text[0] = name;
     }
 }
 
