@@ -70,6 +70,19 @@ fn definitions() {
 
 fn game_mode(name: &String, _options: &Options) {
     println!("Processing map '{}'", name);
-    let _game = game::Game::new()
+    let definitions = tile::definitions();
+    let mut game = game::Game::new()
         .set_directory(["games", name.as_str()].iter().collect());
+    for tile in game.manifest.tiles.iter_mut() {
+        let base = tile.base_tile();
+        tile.set_definition(definitions.get(&base).unwrap());
+    }
+
+    let document = svg::Document::new()
+        .set("width", 11.5 * game.info.scale)
+        .set("height",
+             2.0 * game.info.scale *
+                (game.manifest.tiles.len() as f64 / 5.0).ceil())
+        .add(draw::draw_tile_manifest(&game.manifest, &game.info));
+    svg::save("manifest.svg", &document).unwrap();
 }
