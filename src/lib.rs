@@ -6,8 +6,9 @@ extern crate svg;
 use argparse::ArgumentParser;
 
 pub mod draw;
-pub mod tile;
+pub mod game;
 pub mod map;
+pub mod tile;
 
 /// Orientation that hexes should be in
 pub enum Orientation {
@@ -67,6 +68,8 @@ fn definitions() {
     svg::save("definitions.svg", &document).unwrap();
 }
 
-fn game_mode(name: &String, options: &Options) {
+fn game_mode(name: &String, _options: &Options) {
     println!("Processing map '{}'", name);
+    let _game = game::Game::new()
+        .set_directory(["games", name.as_str()].iter().collect());
 }
