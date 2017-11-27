@@ -1,21 +1,25 @@
 extern crate toml;
 
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::PathBuf;
 use std::process;
 
+use map;
 use tile;
 
 /// A collection of tile specificiations
 pub struct Game {
-    manifest: Manifest,
+    pub manifest: Manifest,
+    pub info: map::MapInfo,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
             manifest: Manifest::default(),
+            info: map::MapInfo::default(),
         }
     }
 
@@ -45,13 +49,15 @@ impl Game {
 #[derive(Deserialize)]
 pub struct Manifest {
     #[serde(rename="tile")]
-    tiles: Vec<tile::Tile>,
+    pub tiles: Vec<tile::Tile>,
+    pub amounts: HashMap<String, u32>,
 }
 
 impl Default for Manifest {
     fn default() -> Manifest {
         Manifest {
             tiles: vec![],
+            amounts: HashMap::new(),
         }
     }
 }
