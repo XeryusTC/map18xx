@@ -3,8 +3,7 @@ extern crate nalgebra as na;
 
 use std::collections::HashMap;
 use std::process;
-use self::svg::node;
-use self::svg::node::element::{Group, Text};
+use self::svg::node::element::Group;
 use tile;
 use tile::TileSpec;
 use map;
@@ -27,11 +26,10 @@ pub fn draw_tile_definitions(
         let definition = &definitions[name];
         let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
                                    1.0 + 2.0 * (i / 5.0).floor());
+        let text_pos = info.scale * na::Vector2::new(pos.x - 1.0, pos.y - 0.7);
         g = g.add(draw_tile(definition, &pos, &info))
-            .add(Text::new()
-                .add(node::Text::new(name.as_str()))
-                .set("x", info.scale * (pos.x - 1.0))
-                .set("y", info.scale * (pos.y - 0.7)));
+            .add(helpers::draw_text(&name, &text_pos,
+                                    helpers::TextAnchor::Start, None, None));
         i += 1.0;
     }
     g
@@ -57,10 +55,9 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
             }
             Some(amount) => amount.to_string(),
         };
-        g = g.add(Text::new()
-                  .add(node::Text::new(format!("{}×", amount)))
-                  .set("x", info.scale * (pos.x - 1.0))
-                  .set("y", info.scale * (pos.y - 0.7)));
+        let text_pos = info.scale * na::Vector2::new(pos.x-1.0, pos.y-0.7);
+        g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
+                                     helpers::TextAnchor::Start, None, None));
     }
 
     g
@@ -103,11 +100,8 @@ pub fn draw_tile<T>(tile: &T,
 
     // Draw tile number
     let text_pos = map.scale*(basis * na::Vector3::new(0.0, 0.0, -0.95) + pos);
-    g = g.add(Text::new()
-          .add(node::Text::new(tile.name()))
-          .set("x", text_pos.x)
-          .set("y", text_pos.y)
-          .set("style", "text-anchor:end;font-size:80%"));
+    g = g.add(helpers::draw_text(&String::from(tile.name()), &text_pos,
+                                 helpers::TextAnchor::End, Some("80%"), None));
     // Draw the tile code
     match tile.code_text() {
         None => {}
@@ -121,15 +115,9 @@ pub fn draw_tile<T>(tile: &T,
                 },
                 Some(ref position) => {
                     let text_pos = map.scale * (basis * position + pos);
-                    g = g.add(Text::new()
-                              .add(node::Text::new(text))
-                              .set("x", text_pos.x)
-                              .set("y", text_pos.y)
-                              .set("style",
-                                   format!("{};{};{}",
-                                           "text-anchor:middle",
-                                           "font-size:120%",
-                                           "font-weight:900")));
+                    g = g.add(helpers::draw_text(&text, &text_pos,
+                                                 helpers::TextAnchor::Middle,
+                                                 Some("120%"), Some(900)));
                 }
             }
         }

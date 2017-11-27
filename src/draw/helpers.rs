@@ -10,6 +10,38 @@ use Orientation;
 use map;
 use tile;
 
+pub enum TextAnchor {
+    Start,
+    Middle,
+    End,
+}
+
+/// Draw text
+pub fn draw_text(text: &String,
+                 pos: &na::Vector2<f64>,
+                 anchor: TextAnchor,
+                 size: Option<&str>,
+                 weight: Option<u32>) -> element::Text {
+    let mut style = String::new();
+    style.push_str(match anchor {
+        TextAnchor::Start => "text-anchor:start;",
+        TextAnchor::Middle =>"text-anchor:middle;",
+        TextAnchor::End => "text-anchor:end;",
+    });
+    match size {
+        Some(size) => style.push_str(format!("font-size:{};", size).as_str()),
+        None => style.push_str("font-size:80%"),
+    }
+    if let Some(weight) = weight {
+        style.push_str(format!("font-weight:{};", weight).as_str());
+    }
+    element::Text::new()
+        .add(node::Text::new(text.clone()))
+        .set("x", pos.x)
+        .set("y", pos.y)
+        .set("style", style)
+}
+
 /// Draw a hexagon
 pub fn draw_hex(center: na::Vector2<f64>,
                 info: &map::MapInfo) -> element::Path {
@@ -130,11 +162,7 @@ pub fn draw_city<T>(city: tile::City,
         .add(draw_circle(&text_circle_pos,
                                   REVENUE_CIRCLE_RADIUS * info.scale,
                                   "white", "black", LINE_WIDTH * info.scale))
-        .add(element::Text::new()
-             .add(node::Text::new(text))
-             .set("x", text_pos.x)
-             .set("y", text_pos.y)
-             .set("style", "text-anchor:middle;"));
+        .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None));
 
     let pos = info.scale * (basis * city.position() + center);
     let center = basis * city.position() + center;
@@ -315,11 +343,7 @@ pub fn draw_stop<T>(stop: tile::Stop,
         .add(draw_circle(&text_circle_pos,
                                   REVENUE_CIRCLE_RADIUS * info.scale,
                                   "white", "black", LINE_WIDTH * info.scale))
-        .add(element::Text::new()
-             .add(node::Text::new(text))
-             .set("x", text_pos.x)
-             .set("y", text_pos.y)
-             .set("style", "text-anchor:middle;"))
+        .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None))
 }
 
 /// Helper to draw circles
