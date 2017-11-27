@@ -10,6 +10,8 @@ use Orientation;
 use map;
 use tile;
 
+use super::consts::PPCM;
+
 pub enum TextAnchor {
     Start,
     Middle,
@@ -56,12 +58,12 @@ pub fn draw_hex(center: na::Vector2<f64>,
         na::Vector3::new( 0.0, -1.0,  0.0),
     ];
     let data = Data::new()
-        .move_to(point_to_tuple(info.scale * (basis * points[0] + center)))
-        .line_to(point_to_tuple(info.scale * (basis * points[1] + center)))
-        .line_to(point_to_tuple(info.scale * (basis * points[2] + center)))
-        .line_to(point_to_tuple(info.scale * (basis * points[3] + center)))
-        .line_to(point_to_tuple(info.scale * (basis * points[4] + center)))
-        .line_to(point_to_tuple(info.scale * (basis * points[5] + center)))
+        .move_to(point_to_tuple(PPCM*info.scale* (basis * points[0] + center)))
+        .line_to(point_to_tuple(PPCM*info.scale* (basis * points[1] + center)))
+        .line_to(point_to_tuple(PPCM*info.scale* (basis * points[2] + center)))
+        .line_to(point_to_tuple(PPCM*info.scale* (basis * points[3] + center)))
+        .line_to(point_to_tuple(PPCM*info.scale* (basis * points[4] + center)))
+        .line_to(point_to_tuple(PPCM*info.scale* (basis * points[5] + center)))
         .close();
 
     element::Path::new()
@@ -74,7 +76,7 @@ pub fn draw_hex_edge(center: na::Vector2<f64>,
     draw_hex(center, info)
         .set("fill", "none")
         .set("stroke", "black")
-        .set("stroke-width", LINE_WIDTH * info.scale)
+        .set("stroke-width", LINE_WIDTH * PPCM * info.scale)
 }
 
 /// Draws the background (the color) of a hex
@@ -97,7 +99,7 @@ pub fn draw_path(path: &tile::Path,
     }
     g.add(draw_path_helper(path, center, info)
           .set("stroke", "black")
-          .set("stroke-width", PATH_WIDTH * info.scale))
+          .set("stroke-width", PATH_WIDTH * PPCM * info.scale))
 }
 
 /// Helper for drawing the paths, does the actual point calculation
@@ -108,13 +110,13 @@ pub fn draw_path_helper(path: &tile::Path,
 
     // Calculate end points and control points
     let (start_x, start_y) = point_to_tuple(
-        info.scale * (basis * path.start() + center));
+        PPCM * info.scale * (basis * path.start() + center));
     let (end_x, end_y) = point_to_tuple(
-        info.scale * (basis * path.end() + center));
+        PPCM * info.scale * (basis * path.end() + center));
     let control1 = C * basis * path.start() + center;
     let control2 = C * basis * path.end() + center;
-    let (x1, y1) = point_to_tuple(info.scale * control1);
-    let (x2, y2) = point_to_tuple(info.scale * control2);
+    let (x1, y1) = point_to_tuple(PPCM * info.scale * control1);
+    let (x2, y2) = point_to_tuple(PPCM * info.scale * control2);
 
     // Do the drawing
     let data = Data::new()
@@ -131,16 +133,17 @@ pub fn draw_path_contrast(path: &tile::Path,
                           info: &map::MapInfo) -> element::Path {
     draw_path_helper(path, center, info)
         .set("stroke", "white")
-        .set("stroke-width", (PATH_WIDTH + 2.0 * LINE_WIDTH) * info.scale)
+        .set("stroke-width",
+             (PATH_WIDTH + 2.0 * LINE_WIDTH) *PPCM * info.scale)
 }
 
 /// Draw a small black circle in the middle of a tile to connect paths nicely
 pub fn draw_lawson(center: na::Vector2<f64>,
                    info: &map::MapInfo) -> element::Circle {
         // Add LINE_WIDTH to compensate for stroke being half in the circle
-    draw_circle(&(center * info.scale),
-                (PATH_WIDTH + LINE_WIDTH) * 0.5 * info.scale,
-                "black", "white", LINE_WIDTH * info.scale)
+    draw_circle(&(center * PPCM * info.scale),
+                (PATH_WIDTH + LINE_WIDTH) * 0.5 * PPCM * info.scale,
+                "black", "white", LINE_WIDTH * PPCM * info.scale)
 }
 
 /// Draw a city
@@ -153,38 +156,40 @@ pub fn draw_city<T>(city: tile::City,
 {
     let basis = get_basis(&info.orientation);
 
-    let text_circle_pos = info.scale * (basis * city.revenue_position()
+    let text_circle_pos = PPCM * info.scale * (basis * city.revenue_position()
                                         + center);
-    let text_pos = text_circle_pos + info.scale *
+    let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.text(city.text_id);
     let g = element::Group::new()
         .add(draw_circle(&text_circle_pos,
-                                  REVENUE_CIRCLE_RADIUS * info.scale,
-                                  "white", "black", LINE_WIDTH * info.scale))
+                         REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
+                         "white", "black", LINE_WIDTH * PPCM * info.scale))
         .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None));
 
-    let pos = info.scale * (basis * city.position() + center);
+    let pos = PPCM * info.scale * (basis * city.position() + center);
     let center = basis * city.position() + center;
     match city.circles {
         1 => g.add(draw_city_circle(&pos, info)),
         2 => {
-            let pos1 = pos + na::Vector2::new(-info.scale * TOKEN_SIZE, 0.0);
-            let pos2 = pos + na::Vector2::new( info.scale * TOKEN_SIZE, 0.0);
+            let pos1 = pos + na::Vector2::new(-PPCM * info.scale * TOKEN_SIZE,
+                                              0.0);
+            let pos2 = pos + na::Vector2::new( PPCM * info.scale * TOKEN_SIZE,
+                                               0.0);
             g.add(element::Rectangle::new()
-                  .set("x", (center.x - TOKEN_SIZE) * info.scale)
-                  .set("y", (center.y - TOKEN_SIZE) * info.scale)
-                  .set("width", TOKEN_SIZE * info.scale * 2.0)
-                  .set("height", TOKEN_SIZE * info.scale * 2.0)
+                  .set("x", (center.x - TOKEN_SIZE) * PPCM * info.scale)
+                  .set("y", (center.y - TOKEN_SIZE) * PPCM * info.scale)
+                  .set("width", TOKEN_SIZE * PPCM * info.scale * 2.0)
+                  .set("height", TOKEN_SIZE * PPCM * info.scale * 2.0)
                   .set("fill", "white")
                   .set("stroke", "black")
-                  .set("stroke-width", LINE_WIDTH * info.scale))
+                  .set("stroke-width", LINE_WIDTH * PPCM * info.scale))
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos2, info))
         }
         3 => {
             let sq3 = 3.0_f64.sqrt();
-            let size = info.scale * TOKEN_SIZE;
+            let size = PPCM * info.scale * TOKEN_SIZE;
             let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
             let pos2 = pos + na::Vector2::new(-size, size / sq3);
             let pos3 = pos + na::Vector2::new( size, size / sq3);
@@ -204,26 +209,26 @@ pub fn draw_city<T>(city: tile::City,
                     .set("d", data)
                     .set("fill", "white")
                     .set("stroke", "black")
-                    .set("stroke-width", LINE_WIDTH * info.scale))
+                    .set("stroke-width", LINE_WIDTH * PPCM * info.scale))
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos2, info))
                 .add(draw_city_circle(&pos3, info))
         }
         4 => {
-            let size = info.scale * TOKEN_SIZE;
+            let size = PPCM * info.scale * TOKEN_SIZE;
             let pos1 = pos + na::Vector2::new(-size, -size);
             let pos2 = pos + na::Vector2::new(-size,  size);
             let pos3 = pos + na::Vector2::new( size, -size);
             let pos4 = pos + na::Vector2::new( size,  size);
             g.add(element::Rectangle::new()
-                  .set("x", (center.x - 2.0 * TOKEN_SIZE) * info.scale)
-                  .set("y", (center.y - 2.0 * TOKEN_SIZE) * info.scale)
-                  .set("width", TOKEN_SIZE * info.scale * 4.0)
-                  .set("height", TOKEN_SIZE * info.scale * 4.0)
-                  .set("rx", TOKEN_SIZE * info.scale)
+                  .set("x", (center.x - 2.0 * TOKEN_SIZE) * PPCM * info.scale)
+                  .set("y", (center.y - 2.0 * TOKEN_SIZE) * PPCM * info.scale)
+                  .set("width", TOKEN_SIZE * PPCM * info.scale * 4.0)
+                  .set("height", TOKEN_SIZE * PPCM * info.scale * 4.0)
+                  .set("rx", TOKEN_SIZE * PPCM * info.scale)
                   .set("fill", "white")
                   .set("stroke", "black")
-                  .set("stroke-width", LINE_WIDTH * info.scale))
+                  .set("stroke-width", LINE_WIDTH * PPCM * info.scale))
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos2, info))
@@ -233,8 +238,8 @@ pub fn draw_city<T>(city: tile::City,
         x => {
             println!("A tile has an unknown number of circles: {}", x);
             g.add(draw_circle(&pos,
-                                       TOKEN_SIZE * info.scale, "red", "none",
-                                       0.0))
+                              TOKEN_SIZE * PPCM * info.scale, "red", "none",
+                              0.0))
         }
     }
 
@@ -246,32 +251,34 @@ pub fn draw_city_contrast(city: tile::City,
                       info: &map::MapInfo) -> element::Group {
     let basis = get_basis(&info.orientation);
     let g = element::Group::new();
-    let pos = info.scale * (basis * city.position() + center);
+    let pos = PPCM * info.scale * (basis * city.position() + center);
     match city.circles {
         1 => {
-            let size = (TOKEN_SIZE + LINE_WIDTH) * info.scale;
+            let size = (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale;
             g.add(draw_circle(&pos, size, "none", "white",
-                                       LINE_WIDTH * info.scale))
+                              LINE_WIDTH * PPCM * info.scale))
         }
         2 => {
             let pos = pos - na::Vector2::new(
-                (2.0 * TOKEN_SIZE + LINE_WIDTH) * info.scale,
-                (TOKEN_SIZE + LINE_WIDTH) * info.scale);
+                (2.0 * TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale,
+                (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale);
             g.add(element::Rectangle::new()
                   .set("x", pos.x)
                   .set("y", pos.y)
                   .set("width",
-                       (TOKEN_SIZE * 4.0 + LINE_WIDTH * 2.0) * info.scale)
-                  .set("height", (TOKEN_SIZE + LINE_WIDTH) * info.scale * 2.0)
-                  .set("rx", TOKEN_SIZE * info.scale)
+                       (TOKEN_SIZE * 4.0 + LINE_WIDTH * 2.0) *
+                        PPCM * info.scale)
+                  .set("height",
+                       (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale * 2.0)
+                  .set("rx", TOKEN_SIZE * PPCM * info.scale)
                   .set("stroke", "white")
-                  .set("stroke-width", LINE_WIDTH * info.scale)
+                  .set("stroke-width", LINE_WIDTH * PPCM * info.scale)
             )
         }
         3 => {
             let sq3 = 3.0_f64.sqrt();
-            let size = info.scale * TOKEN_SIZE;
-            let radius = (TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale;
+            let size = PPCM * info.scale * TOKEN_SIZE;
+            let radius = (TOKEN_SIZE + 1.5 * LINE_WIDTH) * PPCM * info.scale;
             let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
             let pos2 = pos + na::Vector2::new(-size, size / sq3);
             let pos3 = pos + na::Vector2::new( size, size / sq3);
@@ -290,22 +297,22 @@ pub fn draw_city_contrast(city: tile::City,
             g.add(element::Path::new()
                     .set("d", data)
                     .set("stroke", "white")
-                    .set("stroke-width", 3.0 *LINE_WIDTH * info.scale))
+                    .set("stroke-width", 3.0 *LINE_WIDTH * PPCM * info.scale))
                 .add(draw_circle(&pos1, radius, "white", "none", 0.0))
                 .add(draw_circle(&pos2, radius, "white", "none", 0.0))
                 .add(draw_circle(&pos3, radius, "white", "none", 0.0))
         }
         4 => {
             let pos = pos - na::Vector2::new(
-                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale,
-                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * info.scale);
-            let dim = (4.0 * TOKEN_SIZE + 3.0 * LINE_WIDTH) * info.scale;
+                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * PPCM * info.scale,
+                (2.0 * TOKEN_SIZE + 1.5 * LINE_WIDTH) * PPCM * info.scale);
+            let dim = (4.0 * TOKEN_SIZE + 3.0 * LINE_WIDTH) * PPCM *info.scale;
             g.add(element::Rectangle::new()
                   .set("x", pos.x)
                   .set("y", pos.y)
                   .set("width", dim)
                   .set("height", dim)
-                  .set("rx", (TOKEN_SIZE + LINE_WIDTH) * info.scale)
+                  .set("rx", (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale)
                   .set("fill", "white"))
         }
         _ => g,
@@ -315,8 +322,8 @@ pub fn draw_city_contrast(city: tile::City,
 /// Draw a single city circle
 pub fn draw_city_circle(pos: &na::Vector2<f64>,
                         info: &map::MapInfo) -> element::Circle {
-    draw_circle(pos, TOKEN_SIZE * info.scale, "white", "black",
-                LINE_WIDTH * info.scale)
+    draw_circle(pos, TOKEN_SIZE * PPCM * info.scale, "white", "black",
+                LINE_WIDTH * PPCM * info.scale)
 }
 
 /// Draw a stop
@@ -329,20 +336,20 @@ pub fn draw_stop<T>(stop: tile::Stop,
 {
     let basis = get_basis(&info.orientation);
 
-    let pos = info.scale * (basis * stop.position() + center);
+    let pos = PPCM * info.scale * (basis * stop.position() + center);
     let a = stop.revenue_angle as f64 * PI / 180.0;
-    let text_circle_pos = pos + info.scale *
+    let text_circle_pos = pos + PPCM * info.scale *
         na::Matrix2::new(a.cos(), a.sin(), -a.sin(), a.cos()) *
         na::Vector2::new(STOP_TEXT_DIST, 0.0);
-    let text_pos = text_circle_pos + info.scale *
+    let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.text(stop.text_id);
     element::Group::new()
-        .add(draw_circle(&pos, STOP_SIZE * info.scale, "black",
-                                  "white", LINE_WIDTH * info.scale))
+        .add(draw_circle(&pos, STOP_SIZE * PPCM * info.scale, "black",
+                         "white", LINE_WIDTH * PPCM * info.scale))
         .add(draw_circle(&text_circle_pos,
-                                  REVENUE_CIRCLE_RADIUS * info.scale,
-                                  "white", "black", LINE_WIDTH * info.scale))
+                         REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
+                         "white", "black", LINE_WIDTH * PPCM * info.scale))
         .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None))
 }
 

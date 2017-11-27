@@ -59,17 +59,16 @@ pub fn run() {
 
 fn definitions() {
     let definitions = tile::definitions();
-    let info = map::MapInfo::default();
     let document = svg::Document::new()
-        .set("width", 11.5 * info.scale)
+        .set("width", "210mm") // A4 width
         .set("height",
-             2.0 * info.scale * (definitions.len() as f64 / 5.0).ceil())
+             format!("{}mm", (definitions.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_definitions(&definitions));
     svg::save("definitions.svg", &document).unwrap();
 }
 
 fn game_mode(name: &String, _options: &Options) {
-    println!("Processing map '{}'", name);
+    println!("Processing game '{}'", name);
     let definitions = tile::definitions();
     let mut game = game::Game::new()
         .set_directory(["games", name.as_str()].iter().collect());
@@ -78,11 +77,12 @@ fn game_mode(name: &String, _options: &Options) {
         tile.set_definition(definitions.get(&base).unwrap());
     }
 
+    println!("Exporting tile manifest...");
     let document = svg::Document::new()
-        .set("width", 11.5 * game.info.scale)
+        .set("width", "210mm") // A4 width
         .set("height",
-             2.0 * game.info.scale *
-                (game.manifest.tiles.len() as f64 / 5.0).ceil())
+             format!("{}mm",
+                     (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_manifest(&game.manifest, &game.info));
     svg::save("manifest.svg", &document).unwrap();
 }

@@ -8,9 +8,12 @@ use tile;
 use tile::TileSpec;
 use map;
 use game;
+use self::na::{Vector2, Vector3};
 
 mod helpers;
 mod consts;
+
+const TILES_PER_ROW: f64 = 4.0;
 
 /// Draws tile definitions
 pub fn draw_tile_definitions(
@@ -24,9 +27,10 @@ pub fn draw_tile_definitions(
     keys.sort_by(|a, b| a.len().cmp(&b.len()).then(a.cmp(b)));
     for name in keys {
         let definition = &definitions[name];
-        let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
-                                   1.0 + 2.0 * (i / 5.0).floor());
-        let text_pos = info.scale * na::Vector2::new(pos.x - 1.0, pos.y - 0.7);
+        let pos = Vector2::new(1.1_f64 + 2.25 * (i % TILES_PER_ROW),
+                                   1.0 + 2.0 * (i / TILES_PER_ROW).floor());
+        let text_pos = consts::PPCM * info.scale
+            * Vector2::new(pos.x - 1.0, pos.y - 0.7);
         g = g.add(draw_tile(definition, &pos, &info))
             .add(helpers::draw_text(&name, &text_pos,
                                     helpers::TextAnchor::Start, None, None));
@@ -42,8 +46,8 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
     let mut i = 0.0;
 
     for tile in &manifest.tiles {
-        let pos = na::Vector2::new(1.1_f64 + 2.25 * (i % 5.0),
-                                   1.0 + 2.0 * (i / 5.0).floor());
+        let pos = Vector2::new(1.1_f64 + 2.25 * (i % TILES_PER_ROW),
+                                   1.0 + 2.0 * (i / TILES_PER_ROW).floor());
         g = g.add(draw_tile(tile, &pos, info));
         i += 1.0;
 
@@ -55,7 +59,8 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
             }
             Some(amount) => amount.to_string(),
         };
-        let text_pos = info.scale * na::Vector2::new(pos.x-1.0, pos.y-0.7);
+        let text_pos = consts::PPCM * info.scale *
+            Vector2::new(pos.x-1.0, pos.y-0.7);
         g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
                                      helpers::TextAnchor::Start, None, None));
     }
@@ -65,7 +70,7 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
 
 /// Draws a single tile
 pub fn draw_tile<T>(tile: &T,
-                 pos: &na::Vector2<f64>,
+                 pos: &Vector2<f64>,
                  map: &map::MapInfo) -> Group
         where T: tile::TileSpec
 {
@@ -99,7 +104,8 @@ pub fn draw_tile<T>(tile: &T,
     };
 
     // Draw tile number
-    let text_pos = map.scale*(basis * na::Vector3::new(0.0, 0.0, -0.95) + pos);
+    let text_pos = consts::PPCM * map.scale *
+        (basis * Vector3::new(0.0, 0.0, -0.95) + pos);
     g = g.add(helpers::draw_text(&String::from(tile.name()), &text_pos,
                                  helpers::TextAnchor::End, Some("80%"), None));
     // Draw the tile code
@@ -114,7 +120,8 @@ pub fn draw_tile<T>(tile: &T,
                     process::exit(1);
                 },
                 Some(ref position) => {
-                    let text_pos = map.scale * (basis * position + pos);
+                    let text_pos = consts::PPCM * map.scale *
+                        (basis * position + pos);
                     g = g.add(helpers::draw_text(&text, &text_pos,
                                                  helpers::TextAnchor::Middle,
                                                  Some("120%"), Some(900)));
