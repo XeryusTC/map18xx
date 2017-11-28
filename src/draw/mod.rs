@@ -83,7 +83,7 @@ pub fn draw_tile_sheets(manifest: &game::Manifest,
     let mut cur_doc = svg::Document::new()
         .set("width", "210mm")
         .set("height", "297mm")
-        .add(helpers::draw_text(&format!("Tile sheet {}", drawn/TILES_PER_COL),
+        .add(helpers::draw_text(&"Tile sheet 0".to_string(),
                                 &(Vector2::new(2.0_f64, 0.5) * info.scale *
                                   consts::PPCM),
                                 helpers::TextAnchor::Start, Some("200%"),
@@ -102,7 +102,12 @@ pub fn draw_tile_sheets(manifest: &game::Manifest,
                 sheets.push(cur_doc);
                 cur_doc = svg::Document::new()
                     .set("width", "210mm")
-                    .set("height", "297mm");
+                    .set("height", "297mm")
+                    .add(helpers::draw_text(
+                            &format!("Tile sheet {}", drawn/TILES_PER_PAGE),
+                            &(Vector2::new(2.0_f64, 0.5) * info.scale *
+                              consts::PPCM),
+                            helpers::TextAnchor::Start, Some("200%"), None));
             }
         }
     }
