@@ -62,7 +62,7 @@ fn definitions() {
     let document = svg::Document::new()
         .set("width", "210mm") // A4 width
         .set("height",
-             format!("{}mm", (definitions.len() as f64/3.0).ceil()*30.0+3.0))
+             format!("{}mm", (definitions.len() as f64/3.0).ceil()*32.0+3.0))
         .add(draw::draw_tile_definitions(&definitions));
     svg::save("definitions.svg", &document).unwrap();
 }

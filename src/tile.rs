@@ -51,7 +51,7 @@ pub mod colors {
 
     pub const GROUND:  Color  = Color { value: "#FDD9B5" }; // Sandy Tan
     pub const YELLOW:  Color  = Color { value: "#FDEE00" }; // Aureolin
-    pub const GREEN:   Color  = Color { value: "#7CFC00" }; // Lawn Green
+    pub const GREEN:   Color  = Color { value: "#00A550" }; // Pigment Green
     pub const RUSSET:  Color  = Color { value: "#CD7F32" }; // Bronze
     pub const GREY:    Color  = Color { value: "#ACACAC" }; // Silver Chalice
     pub const BROWN:   Color  = Color { value: "#7B3F00" }; // Chocolate
