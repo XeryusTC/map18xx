@@ -249,7 +249,7 @@ text = [
 
 [[tile]]
 color = "green"
-base_tile = "59"
+base_tile = "52"
 text = [
 	"59", # tile number
 	"40", # revenue

@@ -1,0 +1,23 @@
+[[path]]
+start = "N"
+end = "S"
+
+[[path]]
+start = "N"
+end_pos = [-0.5, -0.1, -0.1]
+
+[[path]]
+start = "S"
+end_pos = [0.5, 0.1, 0.1]
+
+[[city]]
+circles = 1
+pos = [-0.5, -0.1, -0.1]
+text_id = 1
+revenue_pos = [-0.5, 0.2, 0.2]
+
+[[city]]
+circles = 1
+pos = [0.5, 0.1, 0.1]
+text_id = 1
+revenue_pos = [0.5, -0.2, -0.2]
