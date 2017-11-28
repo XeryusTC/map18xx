@@ -9,6 +9,7 @@ use tile::TileSpec;
 use map;
 use game;
 use self::na::{Vector2, Vector3};
+use super::Orientation;
 
 mod helpers;
 mod consts;
@@ -153,8 +154,15 @@ pub fn draw_tile<T>(tile: &T,
     // Draw tile number
     let text_pos = consts::PPCM * map.scale *
         (basis * Vector3::new(0.0, 0.0, -0.95) + pos);
-    g = g.add(helpers::draw_text(&String::from(tile.name()), &text_pos,
-                                 helpers::TextAnchor::End, Some("80%"), None));
+    let mut text = helpers::draw_text(&String::from(tile.name()), &text_pos,
+                                      helpers::TextAnchor::End, Some("80%"),
+                                      None);
+    if let Orientation::Vertical = map.orientation {
+        text = text.set("transform",
+                        format!("rotate(-30 {} {})", text_pos.x, text_pos.y));
+    }
+    g = g.add(text);
+
     // Draw the tile code
     match tile.code_text() {
         None => {}

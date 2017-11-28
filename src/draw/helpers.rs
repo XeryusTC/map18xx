@@ -1,5 +1,4 @@
 extern crate nalgebra as na;
-extern crate svg;
 
 use std::f64::consts::PI;
 use super::svg::node;
@@ -161,7 +160,7 @@ pub fn draw_city<T>(city: tile::City,
     let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.text(city.text_id);
-    let g = element::Group::new()
+    let master = element::Group::new()
         .add(draw_circle(&text_circle_pos,
                          REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
                          "white", "black", LINE_WIDTH * PPCM * info.scale))
@@ -169,7 +168,11 @@ pub fn draw_city<T>(city: tile::City,
 
     let pos = PPCM * info.scale * (basis * city.position() + center);
     let center = basis * city.position() + center;
-    match city.circles {
+    let mut g = element::Group::new();
+    if let Orientation::Vertical = info.orientation {
+        g = g.set("transform", format!("rotate(-30 {} {})", pos.x, pos.y));
+    }
+    g = match city.circles {
         1 => g.add(draw_city_circle(&pos, info)),
         2 => {
             let pos1 = pos + na::Vector2::new(-PPCM * info.scale * TOKEN_SIZE,
@@ -241,8 +244,8 @@ pub fn draw_city<T>(city: tile::City,
                               TOKEN_SIZE * PPCM * info.scale, "red", "none",
                               0.0))
         }
-    }
-
+    };
+    master.add(g)
 }
 
 /// Draw the constrast line around a city
@@ -250,8 +253,11 @@ pub fn draw_city_contrast(city: tile::City,
                       center: &na::Vector2<f64>,
                       info: &map::MapInfo) -> element::Group {
     let basis = get_basis(&info.orientation);
-    let g = element::Group::new();
+    let mut g = element::Group::new();
     let pos = PPCM * info.scale * (basis * city.position() + center);
+    if let Orientation::Vertical = info.orientation {
+        g = g.set("transform", format!("rotate(-30 {} {})", pos.x, pos.y));
+    }
     match city.circles {
         1 => {
             let size = (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale;
