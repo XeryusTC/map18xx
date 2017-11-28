@@ -85,4 +85,11 @@ fn game_mode(name: &String, _options: &Options) {
                      (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_manifest(&game.manifest, &game.info));
     svg::save("manifest.svg", &document).unwrap();
+
+    println!("Exporting tile sheets...");
+    let sheets = draw::draw_tile_sheets(&game.manifest, &game.info);
+    for (i, sheet) in sheets.iter().enumerate() {
+        let filename = format!("{}-sheet-{}.svg", name, i);
+        svg::save(filename, sheet).unwrap();
+    }
 }

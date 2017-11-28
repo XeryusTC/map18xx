@@ -68,6 +68,48 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
     g
 }
 
+/// Draws sheets with tiles of them for printing
+pub fn draw_tile_sheets(manifest: &game::Manifest,
+                        info: &map::MapInfo) -> Vec<svg::Document> {
+    const TILES_PER_PAGE: u32 = 30;
+    const TILES_PER_COL: u32 = 6;
+    // Always draw vertical (fits more on a page)
+    let info = map::MapInfo {
+        orientation: super::Orientation::Vertical,
+        ..*info
+    };
+    let mut drawn = 0;
+    let mut sheets = vec![];
+    let mut cur_doc = svg::Document::new()
+        .set("width", "210mm")
+        .set("height", "297mm")
+        .add(helpers::draw_text(&format!("Tile sheet {}", drawn/TILES_PER_COL),
+                                &(Vector2::new(2.0_f64, 0.5) * info.scale *
+                                  consts::PPCM),
+                                helpers::TextAnchor::Start, Some("200%"),
+                                None));
+    for tile in manifest.tiles.iter() {
+        for _ in 0..*manifest.amounts.get(tile.name()).unwrap() {
+            let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
+            let y = (drawn % TILES_PER_COL) as f64;
+            let pos = Vector2::new(3.0_f64.sqrt() * (x + 1.0),
+                                   2.0 * y + 1.75 + (x % 2.0));
+            cur_doc = cur_doc.add(draw_tile(tile, &pos, &info));
+            drawn += 1;
+            // When a sheet is full, append this to the list and start a
+            // new page
+            if drawn % TILES_PER_PAGE == 0 {
+                sheets.push(cur_doc);
+                cur_doc = svg::Document::new()
+                    .set("width", "210mm")
+                    .set("height", "297mm");
+            }
+        }
+    }
+    sheets.push(cur_doc);
+    sheets
+}
+
 /// Draws a single tile
 pub fn draw_tile<T>(tile: &T,
                  pos: &Vector2<f64>,
