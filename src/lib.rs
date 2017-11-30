@@ -7,16 +7,7 @@ use argparse::ArgumentParser;
 
 pub mod draw;
 pub mod game;
-pub mod map;
 pub mod tile;
-
-/// Orientation that hexes should be in
-pub enum Orientation {
-    /// Hexes should have a flat top
-    Horizontal,
-    /// Hexes should have apoint at the top
-    Vertical,
-}
 
 /// Place to store command line options
 struct Options {

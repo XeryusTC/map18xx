@@ -5,8 +5,8 @@ use super::svg::node;
 use super::svg::node::element;
 use super::svg::node::element::path::Data;
 use draw::consts::*;
-use Orientation;
-use map;
+use game;
+use game::Orientation;
 use tile;
 
 use super::consts::PPCM;
@@ -45,7 +45,7 @@ pub fn draw_text(text: &String,
 
 /// Draw a hexagon
 pub fn draw_hex(center: na::Vector2<f64>,
-                info: &map::MapInfo) -> element::Path {
+                info: &game::Map) -> element::Path {
     let basis = get_basis(&info.orientation);
 
     let points = [
@@ -71,7 +71,7 @@ pub fn draw_hex(center: na::Vector2<f64>,
 
 /// Draws a border around a hex
 pub fn draw_hex_edge(center: na::Vector2<f64>,
-                     info: &map::MapInfo) -> element::Path {
+                     info: &game::Map) -> element::Path {
     draw_hex(center, info)
         .set("fill", "none")
         .set("stroke", "black")
@@ -80,7 +80,7 @@ pub fn draw_hex_edge(center: na::Vector2<f64>,
 
 /// Draws the background (the color) of a hex
 pub fn draw_hex_background(center: na::Vector2<f64>,
-                       info: &map::MapInfo,
+                       info: &game::Map,
                        color: tile::colors::Color) -> element::Path {
     draw_hex(center, info)
         .set("fill", color.value())
@@ -90,7 +90,7 @@ pub fn draw_hex_background(center: na::Vector2<f64>,
 /// Draws the black inside line of a path
 pub fn draw_path(path: &tile::Path,
              center: &na::Vector2<f64>,
-             info: &map::MapInfo) -> element::Group {
+             info: &game::Map) -> element::Group {
     let mut g = element::Group::new();
     // Draw an outline if the line is a bridge
     if path.is_bridge() {
@@ -104,7 +104,7 @@ pub fn draw_path(path: &tile::Path,
 /// Helper for drawing the paths, does the actual point calculation
 pub fn draw_path_helper(path: &tile::Path,
                         center: &na::Vector2<f64>,
-                        info: &map::MapInfo) -> element::Path {
+                        info: &game::Map) -> element::Path {
     let basis = get_basis(&info.orientation);
 
     // Calculate end points and control points
@@ -129,7 +129,7 @@ pub fn draw_path_helper(path: &tile::Path,
 /// Draws the white contrast lines around a path
 pub fn draw_path_contrast(path: &tile::Path,
                           center: &na::Vector2<f64>,
-                          info: &map::MapInfo) -> element::Path {
+                          info: &game::Map) -> element::Path {
     draw_path_helper(path, center, info)
         .set("stroke", "white")
         .set("stroke-width",
@@ -138,7 +138,7 @@ pub fn draw_path_contrast(path: &tile::Path,
 
 /// Draw a small black circle in the middle of a tile to connect paths nicely
 pub fn draw_lawson(center: na::Vector2<f64>,
-                   info: &map::MapInfo) -> element::Circle {
+                   info: &game::Map) -> element::Circle {
         // Add LINE_WIDTH to compensate for stroke being half in the circle
     draw_circle(&(center * PPCM * info.scale),
                 (PATH_WIDTH + LINE_WIDTH) * 0.5 * PPCM * info.scale,
@@ -148,7 +148,7 @@ pub fn draw_lawson(center: na::Vector2<f64>,
 /// Draw a city
 pub fn draw_city<T>(city: tile::City,
                     center: na::Vector2<f64>,
-                    info: &map::MapInfo,
+                    info: &game::Map,
                     tile: &T) -> element::Group
     where
         T: tile::TileSpec
@@ -251,7 +251,7 @@ pub fn draw_city<T>(city: tile::City,
 /// Draw the constrast line around a city
 pub fn draw_city_contrast(city: tile::City,
                       center: &na::Vector2<f64>,
-                      info: &map::MapInfo) -> element::Group {
+                      info: &game::Map) -> element::Group {
     let basis = get_basis(&info.orientation);
     let mut g = element::Group::new();
     let pos = PPCM * info.scale * (basis * city.position() + center);
@@ -327,7 +327,7 @@ pub fn draw_city_contrast(city: tile::City,
 
 /// Draw a single city circle
 pub fn draw_city_circle(pos: &na::Vector2<f64>,
-                        info: &map::MapInfo) -> element::Circle {
+                        info: &game::Map) -> element::Circle {
     draw_circle(pos, TOKEN_SIZE * PPCM * info.scale, "white", "black",
                 LINE_WIDTH * PPCM * info.scale)
 }
@@ -335,7 +335,7 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
 /// Draw a stop
 pub fn draw_stop<T>(stop: tile::Stop,
                     center: na::Vector2<f64>,
-                    info: &map::MapInfo,
+                    info: &game::Map,
                     tile: &T) -> element::Group
     where
         T: tile::TileSpec

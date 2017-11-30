@@ -6,10 +6,9 @@ use std::process;
 use self::svg::node::element::Group;
 use tile;
 use tile::TileSpec;
-use map;
 use game;
 use self::na::{Vector2, Vector3};
-use super::Orientation;
+use game::Orientation;
 
 mod helpers;
 mod consts;
@@ -22,7 +21,7 @@ pub fn draw_tile_definitions(
     println!("Drawing tile definitions...");
     let mut g = Group::new();
     let mut i = 0.0;
-    let info = map::MapInfo::default();
+    let info = game::Map::default();
 
     let mut keys: Vec<_> = definitions.keys().collect();
     keys.sort_by(|a, b| a.len().cmp(&b.len()).then(a.cmp(b)));
@@ -42,7 +41,7 @@ pub fn draw_tile_definitions(
 
 /// Draw a game's tile manifest
 pub fn draw_tile_manifest(manifest: &game::Manifest,
-                          info: &map::MapInfo) -> Group {
+                          info: &game::Map) -> Group {
     let mut g = Group::new();
     let mut i = 0.0;
 
@@ -71,12 +70,12 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
 
 /// Draws sheets with tiles of them for printing
 pub fn draw_tile_sheets(manifest: &game::Manifest,
-                        info: &map::MapInfo) -> Vec<svg::Document> {
+                        info: &game::Map) -> Vec<svg::Document> {
     const TILES_PER_PAGE: u32 = 30;
     const TILES_PER_COL: u32 = 6;
     // Always draw vertical (fits more on a page)
-    let info = map::MapInfo {
-        orientation: super::Orientation::Vertical,
+    let info = game::Map {
+        orientation: Orientation::Vertical,
         ..*info
     };
     let mut drawn = 0;
@@ -119,7 +118,7 @@ pub fn draw_tile_sheets(manifest: &game::Manifest,
 /// Draws a single tile
 pub fn draw_tile<T>(tile: &T,
                  pos: &Vector2<f64>,
-                 map: &map::MapInfo) -> Group
+                 map: &game::Map) -> Group
         where T: tile::TileSpec
 {
     let mut g = Group::new();

@@ -6,20 +6,43 @@ use std::io::prelude::*;
 use std::path::PathBuf;
 use std::process;
 
-use map;
 use tile;
+
+/// Orientation that hexes should be in
+#[derive(Deserialize)]
+pub enum Orientation {
+    /// Hexes should have a flat top
+    Horizontal,
+    /// Hexes should have apoint at the top
+    Vertical,
+}
+
+#[derive(Deserialize)]
+pub struct Map {
+    pub orientation: Orientation,
+    pub scale: f64,
+}
+
+impl Map {
+    pub fn default () -> Map {
+        Map {
+            orientation: Orientation::Horizontal,
+            scale: 3.81, // Hexes are usually 3.81cm flat-to-flat
+        }
+    }
+}
 
 /// A collection of tile specificiations
 pub struct Game {
     pub manifest: Manifest,
-    pub info: map::MapInfo,
+    pub info: Map,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
             manifest: Manifest::default(),
-            info: map::MapInfo::default(),
+            info: Map::default(),
         }
     }
 
