@@ -40,26 +40,25 @@ pub fn draw_tile_definitions(
 }
 
 /// Draw a game's tile manifest
-pub fn draw_tile_manifest(manifest: &game::Manifest,
-                          info: &game::Map) -> Group {
+pub fn draw_tile_manifest(game: &game::Game) -> Group {
     let mut g = Group::new();
     let mut i = 0.0;
 
-    for tile in &manifest.tiles {
+    for tile in &game.manifest.tiles {
         let pos = Vector2::new(1.1_f64 + 2.25 * (i % TILES_PER_ROW),
                                    1.0 + 2.0 * (i / TILES_PER_ROW).floor());
-        g = g.add(draw_tile(tile, &pos, info));
+        g = g.add(draw_tile(tile, &pos, &game.map));
         i += 1.0;
 
         // Draw amount available
-        let amount = match manifest.amounts.get(tile.name()) {
+        let amount = match game.manifest.amounts.get(tile.name()) {
             None => {
                 eprintln!("No tile amount found for {}", tile.name());
                 process::exit(1);
             }
             Some(amount) => amount.to_string(),
         };
-        let text_pos = consts::PPCM * info.scale *
+        let text_pos = consts::PPCM * game.map.scale *
             Vector2::new(pos.x-1.0, pos.y-0.7);
         g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
                                      helpers::TextAnchor::Start, None, None));
@@ -69,14 +68,13 @@ pub fn draw_tile_manifest(manifest: &game::Manifest,
 }
 
 /// Draws sheets with tiles of them for printing
-pub fn draw_tile_sheets(manifest: &game::Manifest,
-                        info: &game::Map) -> Vec<svg::Document> {
+pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     const TILES_PER_PAGE: u32 = 30;
     const TILES_PER_COL: u32 = 6;
     // Always draw vertical (fits more on a page)
     let info = game::Map {
         orientation: Orientation::Vertical,
-        ..*info
+        ..game.map
     };
     let mut drawn = 0;
     let mut sheets = vec![];
@@ -88,8 +86,8 @@ pub fn draw_tile_sheets(manifest: &game::Manifest,
                                   consts::PPCM),
                                 helpers::TextAnchor::Start, Some("200%"),
                                 None));
-    for tile in manifest.tiles.iter() {
-        for _ in 0..*manifest.amounts.get(tile.name()).unwrap() {
+    for tile in game.manifest.tiles.iter() {
+        for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
             let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
             let y = (drawn % TILES_PER_COL) as f64;
             let pos = Vector2::new(3.0_f64.sqrt() * (x + 1.0),

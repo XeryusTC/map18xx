@@ -23,8 +23,8 @@ pub struct Map {
     pub scale: f64,
 }
 
-impl Map {
-    pub fn default () -> Map {
+impl Default for Map {
+    fn default() -> Map {
         Map {
             orientation: Orientation::Horizontal,
             scale: 3.81, // Hexes are usually 3.81cm flat-to-flat
@@ -35,18 +35,20 @@ impl Map {
 /// A collection of tile specificiations
 pub struct Game {
     pub manifest: Manifest,
-    pub info: Map,
+    pub map: Map,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
             manifest: Manifest::default(),
-            info: Map::default(),
+            map: Map::default(),
         }
     }
 
-    pub fn set_directory(mut self, dir: PathBuf) -> Game {
+    pub fn load(dir: PathBuf,
+                definitions: &HashMap<String, tile::TileDefinition>) -> Game {
+        let mut game = Game::new();
         let manifest_filename = dir.join("manifest.toml");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
@@ -62,10 +64,16 @@ impl Game {
             }
             Ok(mut file) => {
                 file.read_to_string(&mut contents).unwrap();
-                self.manifest = toml::from_str(&contents).unwrap();
+                game.manifest = toml::from_str(&contents).unwrap();
             }
         };
-        self
+        // Connect the manifest to the tile definitions
+        for tile in game.manifest.tiles.iter_mut() {
+            let base = tile.base_tile();
+            tile.set_definition(definitions.get(&base).unwrap());
+        }
+
+        game
     }
 }
 

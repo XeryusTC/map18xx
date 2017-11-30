@@ -61,12 +61,8 @@ fn definitions() {
 fn game_mode(name: &String, _options: &Options) {
     println!("Processing game '{}'", name);
     let definitions = tile::definitions();
-    let mut game = game::Game::new()
-        .set_directory(["games", name.as_str()].iter().collect());
-    for tile in game.manifest.tiles.iter_mut() {
-        let base = tile.base_tile();
-        tile.set_definition(definitions.get(&base).unwrap());
-    }
+    let mut game = game::Game::load(["games", name.as_str()].iter().collect(),
+                                    &definitions);
 
     println!("Exporting tile manifest...");
     let document = svg::Document::new()
@@ -74,11 +70,11 @@ fn game_mode(name: &String, _options: &Options) {
         .set("height",
              format!("{}mm",
                      (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
-        .add(draw::draw_tile_manifest(&game.manifest, &game.info));
+        .add(draw::draw_tile_manifest(&game));
     svg::save("manifest.svg", &document).unwrap();
 
     println!("Exporting tile sheets...");
-    let sheets = draw::draw_tile_sheets(&game.manifest, &game.info);
+    let sheets = draw::draw_tile_sheets(&game);
     for (i, sheet) in sheets.iter().enumerate() {
         let filename = format!("{}-sheet-{}.svg", name, i);
         svg::save(filename, sheet).unwrap();
