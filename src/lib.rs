@@ -79,4 +79,8 @@ fn game_mode(name: &String, _options: &Options) {
         let filename = format!("{}-sheet-{}.svg", name, i);
         svg::save(filename, sheet).unwrap();
     }
+
+    println!("Exporting map...");
+    let map_render = draw::draw_map(&game);
+    svg::save(format!("{}-map.svg", name), &map_render).unwrap()
 }

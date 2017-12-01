@@ -113,6 +113,57 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     sheets
 }
 
+/// Draw the map of a game
+pub fn draw_map(game: &game::Game) -> svg::Document {
+    let hor_dist: f64;
+    let ver_dist: f64;
+    let hor_offset: f64;
+    let ver_offset: f64;
+    let row_offset: f64;
+    let col_offset: f64;
+    let width: f64;
+    let height: f64;
+    match &game.map.orientation {
+        &Orientation::Horizontal => {
+            hor_dist = 1.5;
+            ver_dist = 3.0_f64.sqrt();
+            hor_offset = 2.0 / 3.0;
+            ver_offset = 0.5;
+            row_offset = 0.0;
+            col_offset = 0.5 * 3.0_f64.sqrt();
+            width = 0.3 * game.map.scale + game.map.width as f64 *
+                (0.5 * game.map.scale * 3.0_f64.sqrt());
+            height = (0.5 + game.map.height as f64) * game.map.scale;
+        }
+        &Orientation::Vertical => {
+            hor_dist = 3.0_f64.sqrt();
+            ver_dist = 1.5;
+            hor_offset = 0.5;
+            ver_offset = 2.0 / 3.0;
+            row_offset = hor_dist * 0.5;
+            col_offset = 0.0;
+            width = (0.5 + game.map.width as f64) * game.map.scale;
+            height = 0.3 * game.map.scale + game.map.height as f64 *
+                (game.map.scale * 0.5 * 3.0_f64.sqrt());
+        }
+    }
+    let mut doc = svg::Document::new()
+        .set("width", format!("{}", width * consts::PPCM * 3.0_f64.sqrt()))
+        .set("height", format!("{}", height * consts::PPCM * 3.0_f64.sqrt()));
+    for x in 0..game.map.width {
+        for y in 0..game.map.height {
+            let pos = Vector2::new(
+                (x as f64 + hor_offset) * hor_dist + (y%2) as f64 * row_offset,
+                (y as f64 + ver_offset) * ver_dist + (x%2) as f64 * col_offset
+            );
+            doc = doc.add(draw_tile(&game.manifest.tiles[0],
+                                    &pos,
+                                    &game.map));
+        }
+    }
+    doc
+}
+
 /// Draws a single tile
 pub fn draw_tile<T>(tile: &T,
                  pos: &Vector2<f64>,
