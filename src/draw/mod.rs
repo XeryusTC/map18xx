@@ -74,7 +74,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     // Always draw vertical (fits more on a page)
     let info = game::Map {
         orientation: Orientation::Vertical,
-        ..game.map
+        ..game.map.clone()
     };
     let mut drawn = 0;
     let mut sheets = vec![];
@@ -150,16 +150,15 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
     let mut doc = svg::Document::new()
         .set("width", format!("{}", width * consts::PPCM * 3.0_f64.sqrt()))
         .set("height", format!("{}", height * consts::PPCM * 3.0_f64.sqrt()));
-    for x in 0..game.map.width {
-        for y in 0..game.map.height {
-            let pos = Vector2::new(
-                (x as f64 + hor_offset) * hor_dist + (y%2) as f64 * row_offset,
-                (y as f64 + ver_offset) * ver_dist + (x%2) as f64 * col_offset
-            );
-            doc = doc.add(draw_tile(&game.manifest.tiles[0],
-                                    &pos,
-                                    &game.map));
-        }
+
+    // Draw tiles
+    for tile in game.map.tiles.iter() {
+        let (x, y) = tile.location;
+        let pos = Vector2::new(
+            (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
+            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset);
+        doc = doc.add(draw_tile(game.manifest.get_tile(&tile.tile).unwrap(),
+                                &pos, &game.map));
     }
     doc
 }

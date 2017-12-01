@@ -7,9 +7,10 @@ use std::path::PathBuf;
 use std::process;
 
 use tile;
+use tile::TileSpec;
 
 /// Orientation that hexes should be in
-#[derive(Deserialize)]
+#[derive(Clone,Deserialize)]
 pub enum Orientation {
     /// Hexes should have a flat top
     Horizontal,
@@ -17,12 +18,13 @@ pub enum Orientation {
     Vertical,
 }
 
-#[derive(Deserialize)]
+#[derive(Clone,Deserialize)]
 pub struct Map {
     pub orientation: Orientation,
     pub scale: f64,
     pub width: u32,
     pub height: u32,
+    pub tiles: Vec<MapTile>,
 }
 
 impl Default for Map {
@@ -32,6 +34,7 @@ impl Default for Map {
             scale: 3.81, // Hexes are usually 3.81cm flat-to-flat
             width: 5,
             height: 5,
+            tiles: vec![],
         }
     }
 }
@@ -123,4 +126,21 @@ impl Default for Manifest {
             amounts: HashMap::new(),
         }
     }
+}
+
+impl Manifest {
+    pub fn get_tile(&self, name: &String) -> Result<&tile::Tile, String> {
+        for tile in &self.tiles {
+            if tile.name() == name {
+                return Ok(tile);
+            }
+        }
+        Err(format!("Tile with name '{}' not found in manifest", name))
+    }
+}
+
+#[derive(Clone,Deserialize)]
+pub struct MapTile {
+    pub location: (u32, u32),
+    pub tile: String,
 }
