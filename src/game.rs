@@ -21,6 +21,8 @@ pub enum Orientation {
 pub struct Map {
     pub orientation: Orientation,
     pub scale: f64,
+    pub width: u32,
+    pub height: u32,
 }
 
 impl Default for Map {
@@ -28,7 +30,34 @@ impl Default for Map {
         Map {
             orientation: Orientation::Horizontal,
             scale: 3.81, // Hexes are usually 3.81cm flat-to-flat
+            width: 5,
+            height: 5,
         }
+    }
+}
+
+impl Map {
+    pub fn load(dir: PathBuf) -> Map {
+        let map: Map;
+        let map_filename = dir.join("map.toml");
+        if !dir.exists() {
+            eprintln!("Can't find a game in {}", dir.to_string_lossy());
+            process::exit(1);
+        }
+
+        println!("Reading map information...");
+        let mut contents = String::new();
+        match File::open(map_filename) {
+            Err(e) => {
+                eprintln!("Couldn't open map file: {}", e);
+                process::exit(1);
+            }
+            Ok(mut file) => {
+                file.read_to_string(&mut contents).unwrap();
+                map = toml::from_str(&contents).unwrap();
+            }
+        };
+        map
     }
 }
 
@@ -72,6 +101,9 @@ impl Game {
             let base = tile.base_tile();
             tile.set_definition(definitions.get(&base).unwrap());
         }
+
+        // Load the map itself
+        game.map = Map::load(dir);
 
         game
     }

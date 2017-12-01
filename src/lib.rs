@@ -61,7 +61,7 @@ fn definitions() {
 fn game_mode(name: &String, _options: &Options) {
     println!("Processing game '{}'", name);
     let definitions = tile::definitions();
-    let mut game = game::Game::load(["games", name.as_str()].iter().collect(),
+    let game = game::Game::load(["games", name.as_str()].iter().collect(),
                                     &definitions);
 
     println!("Exporting tile manifest...");
