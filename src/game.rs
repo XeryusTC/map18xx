@@ -155,6 +155,9 @@ pub struct MapTile {
     // Optional parameters
     color: Option<String>,
     code: Option<String>,
+    orientation: Option<String>,
+    #[serde(default)]
+    text: Box<[String]>,
 
     #[serde(skip)]
     definition: Option<tile::TileDefinition>,
@@ -219,7 +222,17 @@ impl TileSpec for MapTile {
        self.code.clone()
    }
 
-   fn text(&self, _id: u32) -> String {
-       String::from("NA")
+   fn text(&self, id: u32) -> String {
+       if id == 0 {
+           return String::from(self.name())
+       }
+       self.text[id as usize - 1].to_string()
+   }
+
+   fn orientation(&self) -> f64 {
+       match &self.orientation {
+           &None => 0.0,
+           &Some(ref o) => tile::direction_to_angle(o),
+       }
    }
 }

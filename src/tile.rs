@@ -98,6 +98,19 @@ fn edge_to_coordinate(edge: &str) -> na::Vector3<f64> {
     }
 }
 
+/// Converts a compass direction to a number of degrees of rotation
+pub fn direction_to_angle(direction: &str) -> f64 {
+    match direction {
+        "N"  => 0.0,
+        "NW" => 60.0,
+        "SW" => 120.0,
+        "S"  => 180.0,
+        "SE" => 240.0,
+        "NE" => 300.0,
+        c => panic!("Invalid direction {}", c),
+    }
+}
+
 /// Attributes that are common between Tile and TileDefinition
 pub trait TileSpec {
     fn color(&self) -> colors::Color;
@@ -115,6 +128,9 @@ pub trait TileSpec {
     fn text(&self, u32) -> String;
     fn code_text(&self) -> Option<String>;
     fn code_position(&self) -> Option<na::Vector3<f64>>;
+
+    /// Rotation of the tile
+    fn orientation(&self) -> f64 { 0.0 }
 }
 
 /// The specification of a tile to be used in the game

@@ -168,7 +168,11 @@ pub fn draw_tile<T>(tile: &T,
                  map: &game::Map) -> Group
         where T: tile::TileSpec
 {
-    let mut g = Group::new();
+    let mut g = Group::new()
+        .set("transform",
+             format!("rotate(-{} {} {})", tile.orientation(),
+                     pos.x * consts::PPCM * map.scale,
+                     pos.y * consts::PPCM * map.scale));
     let basis = helpers::get_basis(&map.orientation);
 
     g = g.add(helpers::draw_hex_background(*pos, &map, tile.color()));
