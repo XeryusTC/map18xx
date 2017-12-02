@@ -1,4 +1,5 @@
 extern crate toml;
+extern crate nalgebra as na;
 
 use std::collections::HashMap;
 use std::fs::File;
@@ -40,8 +41,9 @@ impl Default for Map {
 }
 
 impl Map {
-    pub fn load(dir: PathBuf) -> Map {
-        let map: Map;
+    pub fn load(dir: PathBuf,
+                definitions: &HashMap<String, tile::TileDefinition>) -> Map {
+        let mut map: Map;
         let map_filename = dir.join("map.toml");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
@@ -60,6 +62,11 @@ impl Map {
                 map = toml::from_str(&contents).unwrap();
             }
         };
+        // Connect the tiles to their definitions
+        for tile in map.tiles.iter_mut() {
+            let base = tile.tile.clone();
+            tile.set_definition(definitions.get(&base).unwrap());
+        }
         map
     }
 }
@@ -106,7 +113,7 @@ impl Game {
         }
 
         // Load the map itself
-        game.map = Map::load(dir);
+        game.map = Map::load(dir, definitions);
 
         game
     }
@@ -142,5 +149,77 @@ impl Manifest {
 #[derive(Clone,Deserialize)]
 pub struct MapTile {
     pub location: (u32, u32),
+    #[serde(default="MapTile::default_tile")]
     pub tile: String,
+
+    // Optional parameters
+    color: Option<String>,
+    code: Option<String>,
+
+    #[serde(skip)]
+    definition: Option<tile::TileDefinition>,
+}
+
+impl MapTile {
+    pub fn set_definition(&mut self, definition: &tile::TileDefinition) {
+        self.definition = Some(definition.clone())
+    }
+
+    pub fn default_tile() -> String {
+        String::from("plain")
+    }
+}
+
+impl TileSpec for MapTile {
+   fn color(&self) -> tile::colors::Color {
+       match &self.color {
+           &None => tile::colors::GROUND,
+           &Some(ref c) => tile::colors::name_to_color(&c),
+       }
+   }
+
+   fn set_name(&mut self, _name: String) { }
+
+   fn name(&self) -> &str {
+       ""
+   }
+
+   fn paths(&self) -> Vec<tile::Path> {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using paths()")
+           .paths()
+   }
+
+   fn cities(&self) -> Vec<tile::City> {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using cities()")
+           .cities()
+   }
+
+   fn stops(&self) -> Vec<tile::Stop> {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using stops()")
+           .stops()
+   }
+
+   fn is_lawson(&self) -> bool {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using is_lawson()")
+           .is_lawson()
+   }
+
+   fn code_position(&self) -> Option<na::Vector3<f64>> {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using \
+                    code_position()")
+           .code_position()
+   }
+
+   fn code_text(&self) -> Option<String> {
+       self.code.clone()
+   }
+
+   fn text(&self, _id: u32) -> String {
+       String::from("NA")
+   }
 }

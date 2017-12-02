@@ -157,8 +157,7 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
         let pos = Vector2::new(
             (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
             (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset);
-        doc = doc.add(draw_tile(game.manifest.get_tile(&tile.tile).unwrap(),
-                                &pos, &game.map));
+        doc = doc.add(draw_tile(tile, &pos, &game.map));
     }
     doc
 }
