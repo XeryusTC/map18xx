@@ -9,3 +9,4 @@ pub const TOKEN_SIZE: f64 = 0.269;
 pub const STOP_SIZE:  f64 = 0.11;
 pub const STOP_TEXT_DIST: f64 = 0.3;
 pub const REVENUE_CIRCLE_RADIUS: f64 = 0.13;
+pub const BARRIER_WIDTH: f64 = 0.15;

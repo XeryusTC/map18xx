@@ -26,6 +26,8 @@ pub struct Map {
     pub width: u32,
     pub height: u32,
     pub tiles: Vec<MapTile>,
+    #[serde(default)]
+    pub barriers: Vec<Barrier>,
 }
 
 impl Default for Map {
@@ -36,6 +38,7 @@ impl Default for Map {
             width: 5,
             height: 5,
             tiles: vec![],
+            barriers: vec![],
         }
     }
 }
@@ -235,4 +238,10 @@ impl TileSpec for MapTile {
            &Some(ref o) => tile::direction_to_angle(o),
        }
    }
+}
+
+#[derive(Clone,Deserialize)]
+pub struct Barrier {
+    pub location: (u32, u32),
+    pub side: String,
 }

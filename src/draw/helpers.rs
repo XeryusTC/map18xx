@@ -1,6 +1,7 @@
 extern crate nalgebra as na;
 
 use std::f64::consts::PI;
+use std::process;
 use super::svg::node;
 use super::svg::node::element;
 use super::svg::node::element::path::Data;
@@ -388,4 +389,41 @@ pub fn get_basis(orientation: &Orientation) -> na::Matrix2x3<f64> {
 
 pub fn point_to_tuple(p: na::Vector2<f64>) -> (f64, f64) {
     (p.x, p.y)
+}
+
+pub fn draw_barrier(barrier: &game::Barrier,
+                    pos: &na::Vector2<f64>,
+                    map: &game::Map) -> element::Line {
+    let basis = get_basis(&map.orientation);
+    let points = [
+        na::Vector3::new( 0.0,  0.0,  1.0),
+        na::Vector3::new( 0.0,  1.0,  0.0),
+        na::Vector3::new( 1.0,  0.0,  0.0),
+        na::Vector3::new( 0.0,  0.0, -1.0),
+        na::Vector3::new( 0.0, -1.0,  0.0),
+        na::Vector3::new(-1.0,  0.0,  0.0),
+    ];
+    let coords = match barrier.side.as_str() {
+        "N"  => (points[0], points[1]),
+        "NE" => (points[1], points[2]),
+        "SE" => (points[2], points[3]),
+        "S"  => (points[3], points[4]),
+        "SW" => (points[4], points[5]),
+        "NW" => (points[5], points[0]),
+        s => {
+            eprintln!("Unknown tile side {}", s);
+            process::exit(1);
+        }
+    };
+    let start = (pos + basis * coords.0) * PPCM * map.scale;
+    let end = (pos + basis * coords.1) * PPCM * map.scale;
+
+    element::Line::new()
+        .set("x1", start.x)
+        .set("y1", start.y)
+        .set("x2", end.x)
+        .set("y2", end.y)
+        .set("stroke", tile::colors::BARRIER.value())
+        .set("stroke-width", BARRIER_WIDTH * PPCM * map.scale)
+        .set("stroke-linecap", "round")
 }

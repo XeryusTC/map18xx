@@ -2,6 +2,13 @@ orientation = "Vertical"
 scale = 3.81
 width = 12
 height = 11
+barriers = [
+	{ location = [8, 2], side="N" },
+	{ location = [5, 3], side="N" },
+	{ location = [5, 3], side="NE" },
+	{ location = [3, 5], side="N" },
+]
+
 tiles = [
 	{ location = [4, 0], color="red" },
 	{ location = [5, 0], color="red" },
@@ -33,7 +40,7 @@ tiles = [
 	{ location = [3, 3] },
 	{ location = [4, 3], tile = "city2", text = [""], color = "yellow", code = "OO" },
 	{ location = [5, 3] },
-	{ location = [6, 3] },
+	{ location = [6, 3], tile="206", text = ["20"], color="grey", orientation = "SE" },
 	{ location = [7, 3] },
 	{ location = [8, 3] },
 	{ location = [9, 3] },
