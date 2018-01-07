@@ -1,0 +1,41 @@
+orientation = "Horizontal"
+scale = 3.81
+width = 11
+height = 9
+
+tiles = [
+	{ location = [0, 0], tile = "1", orientation = "N",  text = ["N"] },
+	{ location = [1, 0], tile = "1", orientation = "NE", text = ["NE"] },
+	{ location = [2, 0], tile = "1", orientation = "SE", text = ["SE"] },
+	{ location = [3, 0], tile = "1", orientation = "S",  text = ["S"] },
+	{ location = [4, 0], tile = "1", orientation = "SW", text = ["SW"] },
+	{ location = [5, 0], tile = "1", orientation = "NW", text = ["NW"] },
+
+	{ location = [0, 2], tile = "10", orientation = "N",  text = ["N"] },
+	{ location = [1, 2], tile = "10", orientation = "NE", text = ["NE"] },
+	{ location = [2, 2], tile = "10", orientation = "SE", text = ["SE"] },
+	{ location = [3, 2], tile = "10", orientation = "S",  text = ["S"] },
+	{ location = [4, 2], tile = "10", orientation = "SW", text = ["SW"] },
+	{ location = [5, 2], tile = "10", orientation = "NW", text = ["NW"] },
+
+	{ location = [0, 4], tile = "62", orientation = "N",  text = ["N"] },
+	{ location = [1, 4], tile = "62", orientation = "NE", text = ["NE"] },
+	{ location = [2, 4], tile = "62", orientation = "SE", text = ["SE"] },
+	{ location = [3, 4], tile = "62", orientation = "S",  text = ["S"] },
+	{ location = [4, 4], tile = "62", orientation = "SW", text = ["SW"] },
+	{ location = [5, 4], tile = "62", orientation = "NW", text = ["NW"] },
+
+	{ location = [0, 6], tile = "49", orientation = "N",  text = ["N"] },
+	{ location = [1, 6], tile = "49", orientation = "NE", text = ["NE"] },
+	{ location = [2, 6], tile = "49", orientation = "SE", text = ["SE"] },
+	{ location = [3, 6], tile = "49", orientation = "S",  text = ["S"] },
+	{ location = [4, 6], tile = "49", orientation = "SW", text = ["SW"] },
+	{ location = [5, 6], tile = "49", orientation = "NW", text = ["NW"] },
+
+	{ location = [0, 8], tile = "191", orientation = "N",  text = ["N"] },
+	{ location = [1, 8], tile = "191", orientation = "NE", text = ["NE"] },
+	{ location = [2, 8], tile = "191", orientation = "SE", text = ["SE"] },
+	{ location = [3, 8], tile = "191", orientation = "S",  text = ["S"] },
+	{ location = [4, 8], tile = "191", orientation = "SW", text = ["SW"] },
+	{ location = [5, 8], tile = "191", orientation = "NW", text = ["NW"] },
+]
