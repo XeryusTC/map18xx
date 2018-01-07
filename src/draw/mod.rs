@@ -189,7 +189,8 @@ pub fn draw_tile<T>(tile: &T,
                                               &tile.orientation()));
     }
     for city in tile.cities() {
-        g = g.add(helpers::draw_city_contrast(city, pos, &map));
+        g = g.add(helpers::draw_city_contrast(city, pos, &map,
+                                              &tile.orientation()));
     };
 
     // Draw elements
@@ -206,7 +207,8 @@ pub fn draw_tile<T>(tile: &T,
     }
 
     for city in tile.cities() {
-        g = g.add(helpers::draw_city(city, *pos, &map, tile));
+        g = g.add(helpers::draw_city(city, *pos, &map, tile,
+                                     &tile.orientation()));
     };
 
     // Draw tile number

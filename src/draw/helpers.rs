@@ -154,14 +154,16 @@ pub fn draw_lawson(center: na::Vector2<f64>,
 pub fn draw_city<T>(city: tile::City,
                     center: na::Vector2<f64>,
                     info: &game::Map,
-                    tile: &T) -> element::Group
+                    tile: &T,
+                    rotation: &f64) -> element::Group
     where
         T: tile::TileSpec
 {
     let basis = get_basis(&info.orientation);
+    let rot = rotate(rotation);
 
-    let text_circle_pos = PPCM * info.scale * (basis * city.revenue_position()
-                                        + center);
+    let text_circle_pos = PPCM * info.scale *
+        (rot * basis * city.revenue_position() + center);
     let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.text(city.text_id);
@@ -171,8 +173,8 @@ pub fn draw_city<T>(city: tile::City,
                          "white", "black", LINE_WIDTH * PPCM * info.scale))
         .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None));
 
-    let pos = PPCM * info.scale * (basis * city.position() + center);
-    let center = basis * city.position() + center;
+    let pos = PPCM * info.scale * (rot * basis * city.position() + center);
+    let center = rot * basis * city.position() + center;
     let mut g = element::Group::new();
     if let Orientation::Vertical = info.orientation {
         g = g.set("transform", format!("rotate(-30 {} {})", pos.x, pos.y));
@@ -180,10 +182,10 @@ pub fn draw_city<T>(city: tile::City,
     g = match city.circles {
         1 => g.add(draw_city_circle(&pos, info)),
         2 => {
-            let pos1 = pos + na::Vector2::new(-PPCM * info.scale * TOKEN_SIZE,
-                                              0.0);
-            let pos2 = pos + na::Vector2::new( PPCM * info.scale * TOKEN_SIZE,
-                                               0.0);
+            let pos1 = pos + rot * na::Vector2::new(
+                -PPCM * info.scale * TOKEN_SIZE, 0.0);
+            let pos2 = pos + rot * na::Vector2::new(
+                PPCM * info.scale * TOKEN_SIZE, 0.0);
             g.add(element::Rectangle::new()
                   .set("x", (center.x - TOKEN_SIZE) * PPCM * info.scale)
                   .set("y", (center.y - TOKEN_SIZE) * PPCM * info.scale)
@@ -191,7 +193,10 @@ pub fn draw_city<T>(city: tile::City,
                   .set("height", TOKEN_SIZE * PPCM * info.scale * 2.0)
                   .set("fill", "white")
                   .set("stroke", "black")
-                  .set("stroke-width", LINE_WIDTH * PPCM * info.scale))
+                  .set("stroke-width", LINE_WIDTH * PPCM * info.scale)
+                  .set("transform",
+                       format!("rotate({} {} {})", rotation / PI * 180.0,
+                               pos.x, pos.y)))
                 .add(draw_city_circle(&pos1, info))
                 .add(draw_city_circle(&pos2, info))
         }
@@ -256,10 +261,12 @@ pub fn draw_city<T>(city: tile::City,
 /// Draw the constrast line around a city
 pub fn draw_city_contrast(city: tile::City,
                       center: &na::Vector2<f64>,
-                      info: &game::Map) -> element::Group {
+                      info: &game::Map,
+                      rotation: &f64) -> element::Group {
     let basis = get_basis(&info.orientation);
+    let rot = rotate(rotation);
     let mut g = element::Group::new();
-    let pos = PPCM * info.scale * (basis * city.position() + center);
+    let pos = PPCM * info.scale * (rot * basis * city.position() + center);
     if let Orientation::Vertical = info.orientation {
         g = g.set("transform", format!("rotate(-30 {} {})", pos.x, pos.y));
     }
@@ -270,12 +277,12 @@ pub fn draw_city_contrast(city: tile::City,
                               LINE_WIDTH * PPCM * info.scale))
         }
         2 => {
-            let pos = pos - na::Vector2::new(
+            let center = pos - na::Vector2::new(
                 (2.0 * TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale,
                 (TOKEN_SIZE + LINE_WIDTH) * PPCM * info.scale);
             g.add(element::Rectangle::new()
-                  .set("x", pos.x)
-                  .set("y", pos.y)
+                  .set("x", center.x)
+                  .set("y", center.y)
                   .set("width",
                        (TOKEN_SIZE * 4.0 + LINE_WIDTH * 2.0) *
                         PPCM * info.scale)
@@ -284,6 +291,9 @@ pub fn draw_city_contrast(city: tile::City,
                   .set("rx", TOKEN_SIZE * PPCM * info.scale)
                   .set("stroke", "white")
                   .set("stroke-width", LINE_WIDTH * PPCM * info.scale)
+                  .set("transform",
+                       format!("rotate({} {} {})", rotation / PI * 180.0,
+                               pos.x, pos.y))
             )
         }
         3 => {
