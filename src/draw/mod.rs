@@ -201,7 +201,8 @@ pub fn draw_tile<T>(tile: &T,
     };
 
     for stop in tile.stops() {
-        g = g.add(helpers::draw_stop(stop, *pos, &map, tile));
+        g = g.add(helpers::draw_stop(stop, *pos, &map, tile,
+                                     &tile.orientation()));
     }
 
     for city in tile.cities() {

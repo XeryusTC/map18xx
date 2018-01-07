@@ -341,16 +341,17 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
 pub fn draw_stop<T>(stop: tile::Stop,
                     center: na::Vector2<f64>,
                     info: &game::Map,
-                    tile: &T) -> element::Group
+                    tile: &T,
+                    rotation: &f64) -> element::Group
     where
         T: tile::TileSpec
 {
     let basis = get_basis(&info.orientation);
+    let rot = rotate(rotation);
 
-    let pos = PPCM * info.scale * (basis * stop.position() + center);
-    let a = stop.revenue_angle as f64 * PI / 180.0;
-    let text_circle_pos = pos + PPCM * info.scale *
-        na::Matrix2::new(a.cos(), a.sin(), -a.sin(), a.cos()) *
+    let pos = PPCM * info.scale * (rot * basis * stop.position() + center);
+    let a = stop.revenue_angle as f64 * PI / 180.0 + rotation;
+    let text_circle_pos = pos + PPCM * info.scale * rotate(&a) *
         na::Vector2::new(STOP_TEXT_DIST, 0.0);
     let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
