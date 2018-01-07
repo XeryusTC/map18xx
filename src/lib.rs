@@ -4,6 +4,8 @@ extern crate serde_derive;
 extern crate svg;
 
 use argparse::ArgumentParser;
+use std::io::{stdout, stderr};
+use std::process;
 
 pub mod draw;
 pub mod game;
@@ -22,8 +24,21 @@ impl Options {
     }
 }
 
+struct GameOptions {
+    name: String,
+}
+
+impl GameOptions {
+    pub fn new() -> GameOptions {
+        GameOptions {
+            name: String::new(),
+        }
+    }
+}
+
 pub fn run() {
     let mut options = Options::new();
+    let mut args = vec![];
     { // Limit scope of ArgumentParser borrow
         let mut parser = ArgumentParser::new();
         parser.set_description("18xx tile and map designer.");
@@ -35,12 +50,20 @@ pub fn run() {
             .add_argument("mode",
                           argparse::Store,
                           "Mode to use (default: definitions)");
+        parser.refer(&mut args)
+            .add_argument("args",
+                          argparse::List,
+                          "Arguments for mode");
+        parser.stop_on_first_argument(true);
         parser.parse_args_or_exit();
     }
 
     match options.mode.as_ref() {
         "d" | "def" | "definitions" => definitions(),
-        "game" => game_mode(&String::from("1830"), &options),
+        "game" => {
+            args.insert(0, String::from("game"));
+            game_mode(&options, args)
+        }
         m => {
             println!("Unrecognized mode '{}', falling back to definitions", m);
             definitions()
@@ -58,11 +81,26 @@ fn definitions() {
     svg::save("definitions.svg", &document).unwrap();
 }
 
-fn game_mode(name: &String, _options: &Options) {
-    println!("Processing game '{}'", name);
+fn game_mode(_options: &Options, args: Vec<String>) {
+    let mut game_options = GameOptions::new();
+    { // Limit scope of ArgumentParser borrow
+        let mut parser = ArgumentParser::new();
+        parser.set_description("Game mode");
+        parser.refer(&mut game_options.name).required()
+            .add_argument("name",
+                          argparse::Store,
+                          "Game for which to generate files");
+        match parser.parse(args, &mut stdout(), &mut stderr()) {
+            Ok(()) => {}
+            Err(x) => process::exit(x),
+        }
+    }
+
+    println!("Processing game '{}'", game_options.name);
     let definitions = tile::definitions();
-    let game = game::Game::load(["games", name.as_str()].iter().collect(),
-                                    &definitions);
+    let game = game::Game::load(["games", game_options.name.as_str()]
+                                    .iter().collect(),
+                                &definitions);
 
     println!("Exporting tile manifest...");
     let document = svg::Document::new()
@@ -76,11 +114,11 @@ fn game_mode(name: &String, _options: &Options) {
     println!("Exporting tile sheets...");
     let sheets = draw::draw_tile_sheets(&game);
     for (i, sheet) in sheets.iter().enumerate() {
-        let filename = format!("{}-sheet-{}.svg", name, i);
+        let filename = format!("{}-sheet-{}.svg", game_options.name, i);
         svg::save(filename, sheet).unwrap();
     }
 
     println!("Exporting map...");
     let map_render = draw::draw_map(&game);
-    svg::save(format!("{}-map.svg", name), &map_render).unwrap()
+    svg::save(format!("{}-map.svg", game_options.name), &map_render).unwrap()
 }
