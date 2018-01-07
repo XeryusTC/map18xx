@@ -11,13 +11,13 @@ pub mod tile;
 
 /// Place to store command line options
 struct Options {
-    game: Option<String>,
+    mode: String,
 }
 
 impl Options {
     pub fn new() -> Options {
         Options {
-            game: None,
+            mode: String::from("definitions"),
         }
     }
 }
@@ -26,25 +26,25 @@ pub fn run() {
     let mut options = Options::new();
     { // Limit scope of ArgumentParser borrow
         let mut parser = ArgumentParser::new();
-        parser.set_description(
-            "18xx tile and map designer. Will generate definitions.svg when no
-            mode arguments given. Game mode can be used with --game.");
+        parser.set_description("18xx tile and map designer.");
         parser.add_option(&["-V", "--version"],
                           argparse::Print(env!("CARGO_PKG_VERSION")
                                           .to_string()),
                           "Show version");
-        parser.refer(&mut options.game)
-            .add_option(&["-g", "--game"],
-                        argparse::StoreOption,
-                        "Generate files for a game map")
-            .metavar("MAP");
+        parser.refer(&mut options.mode)
+            .add_argument("mode",
+                          argparse::Store,
+                          "Mode to use (default: definitions)");
         parser.parse_args_or_exit();
     }
 
-    if let &Some(ref name) = &options.game {
-        game_mode(name, &options);
-    } else {
-        definitions();
+    match options.mode.as_ref() {
+        "d" | "def" | "definitions" => definitions(),
+        "game" => game_mode(&String::from("1830"), &options),
+        m => {
+            println!("Unrecognized mode '{}', falling back to definitions", m);
+            definitions()
+        }
     }
 }
 
