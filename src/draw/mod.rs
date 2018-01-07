@@ -178,18 +178,15 @@ pub fn draw_tile<T>(tile: &T,
                  map: &game::Map) -> Group
         where T: tile::TileSpec
 {
-    let mut g = Group::new()
-        .set("transform",
-             format!("rotate(-{} {} {})", tile.orientation(),
-                     pos.x * consts::PPCM * map.scale,
-                     pos.y * consts::PPCM * map.scale));
+    let mut g = Group::new();
     let basis = helpers::get_basis(&map.orientation);
 
     g = g.add(helpers::draw_hex_background(*pos, &map, tile.color()));
 
     // Draw white contrast lines first
     for path in tile.paths() {
-        g = g.add(helpers::draw_path_contrast(&path, pos, &map));
+        g = g.add(helpers::draw_path_contrast(&path, pos, &map,
+                                              &tile.orientation()));
     }
     for city in tile.cities() {
         g = g.add(helpers::draw_city_contrast(city, pos, &map));
@@ -200,7 +197,7 @@ pub fn draw_tile<T>(tile: &T,
         g = g.add(helpers::draw_lawson(*pos, &map));
     }
     for path in tile.paths() {
-        g = g.add(helpers::draw_path(&path, pos, &map));
+        g = g.add(helpers::draw_path(&path, pos, &map, &tile.orientation()));
     };
 
     for stop in tile.stops() {

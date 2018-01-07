@@ -91,13 +91,14 @@ pub fn draw_hex_background(center: na::Vector2<f64>,
 /// Draws the black inside line of a path
 pub fn draw_path(path: &tile::Path,
              center: &na::Vector2<f64>,
-             info: &game::Map) -> element::Group {
+             info: &game::Map,
+             rotation: &f64) -> element::Group {
     let mut g = element::Group::new();
     // Draw an outline if the line is a bridge
     if path.is_bridge() {
-        g = g.add(draw_path_contrast(path, center, info));
+        g = g.add(draw_path_contrast(path, center, info, rotation));
     }
-    g.add(draw_path_helper(path, center, info)
+    g.add(draw_path_helper(path, center, info, rotation)
           .set("stroke", "black")
           .set("stroke-width", PATH_WIDTH * PPCM * info.scale))
 }
@@ -105,16 +106,18 @@ pub fn draw_path(path: &tile::Path,
 /// Helper for drawing the paths, does the actual point calculation
 pub fn draw_path_helper(path: &tile::Path,
                         center: &na::Vector2<f64>,
-                        info: &game::Map) -> element::Path {
+                        info: &game::Map,
+                        rotation: &f64) -> element::Path {
     let basis = get_basis(&info.orientation);
+    let rot = rotate(rotation);
 
     // Calculate end points and control points
     let (start_x, start_y) = point_to_tuple(
-        PPCM * info.scale * (basis * path.start() + center));
+        PPCM * info.scale * (rot * basis * path.start() + center));
     let (end_x, end_y) = point_to_tuple(
-        PPCM * info.scale * (basis * path.end() + center));
-    let control1 = C * basis * path.start() + center;
-    let control2 = C * basis * path.end() + center;
+        PPCM * info.scale * (rot * basis * path.end() + center));
+    let control1 = C * rot * basis * path.start() + center;
+    let control2 = C * rot * basis * path.end() + center;
     let (x1, y1) = point_to_tuple(PPCM * info.scale * control1);
     let (x2, y2) = point_to_tuple(PPCM * info.scale * control2);
 
@@ -130,8 +133,9 @@ pub fn draw_path_helper(path: &tile::Path,
 /// Draws the white contrast lines around a path
 pub fn draw_path_contrast(path: &tile::Path,
                           center: &na::Vector2<f64>,
-                          info: &game::Map) -> element::Path {
-    draw_path_helper(path, center, info)
+                          info: &game::Map,
+                          rotation: &f64) -> element::Path {
+    draw_path_helper(path, center, info, rotation)
         .set("stroke", "white")
         .set("stroke-width",
              (PATH_WIDTH + 2.0 * LINE_WIDTH) *PPCM * info.scale)
@@ -385,6 +389,10 @@ pub fn get_basis(orientation: &Orientation) -> na::Matrix2x3<f64> {
                 na::Vector2::new(-0.5 * 3.0_f64.sqrt(), -0.5),
             ]),
     }
+}
+
+pub fn rotate(theta: &f64) -> na::Matrix2<f64> {
+    na::Matrix2::new(theta.cos(), -theta.sin(), theta.sin(), theta.cos())
 }
 
 pub fn point_to_tuple(p: na::Vector2<f64>) -> (f64, f64) {

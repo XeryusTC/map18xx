@@ -25,6 +25,7 @@ extern crate toml;
 extern crate nalgebra as na;
 
 use std::collections::HashMap;
+use std::f64::consts::PI;
 use std::fs;
 use std::path::PathBuf;
 use std::fs::File;
@@ -102,11 +103,11 @@ fn edge_to_coordinate(edge: &str) -> na::Vector3<f64> {
 pub fn direction_to_angle(direction: &str) -> f64 {
     match direction {
         "N"  => 0.0,
-        "NW" => 60.0,
-        "SW" => 120.0,
-        "S"  => 180.0,
-        "SE" => 240.0,
-        "NE" => 300.0,
+        "NW" => -PI / 3.0,
+        "SW" => -PI * 2.0 / 3.0,
+        "S"  => PI,
+        "SE" => PI * 2.0 / 3.0,
+        "NE" => PI / 3.0,
         c => panic!("Invalid direction {}", c),
     }
 }
