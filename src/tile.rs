@@ -227,9 +227,9 @@ impl TileSpec for Tile {
 #[derive(Clone, Deserialize, Debug)]
 pub struct TileDefinition {
     name: Option<String>,
-    path: Option<Vec<Path>>,
-    city: Option<Vec<City>>,
-    stop: Option<Vec<Stop>>,
+    paths: Option<Vec<Path>>,
+    cities: Option<Vec<City>>,
+    stops: Option<Vec<Stop>>,
     is_lawson: Option<bool>,
     code_position: Option<Box<[f64]>>,
     code_text_id: Option<usize>,
@@ -243,21 +243,21 @@ impl TileDefinition {
 
 impl TileSpec for TileDefinition {
     fn paths(&self) -> Vec<Path> {
-        match self.path {
+        match self.paths {
             Some(ref paths) => paths.to_vec(),
             None => vec![],
         }
     }
 
     fn cities(&self) -> Vec<City> {
-        match self.city {
+        match self.cities {
             Some(ref cities) => cities.to_vec(),
             None => vec![],
         }
     }
 
     fn stops(&self) -> Vec<Stop> {
-        match self.stop {
+        match self.stops {
             Some(ref stops) => stops.to_vec(),
             None => vec![],
         }

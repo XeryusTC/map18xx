@@ -119,7 +119,6 @@ impl Game {
 
 #[derive(Deserialize)]
 pub struct Manifest {
-    #[serde(rename="tile")]
     pub tiles: Vec<tile::Tile>,
     pub amounts: HashMap<String, u32>,
 }
