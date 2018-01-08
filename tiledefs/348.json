@@ -1,0 +1,39 @@
+{
+	"is_lawson": true,
+	"paths": [
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"Named": "S"
+			}
+		},
+		{
+			"start": {
+				"Named": "NW"
+			},
+			"end": {
+				"Named": "SE"
+			},
+			"is_bridge": true
+		},
+		{
+			"start": {
+				"Named": "NE"
+			},
+			"end": {
+				"Named": "SW"
+			},
+			"is_bridge": true
+		},
+		{
+			"start": {
+				"Named": "NW"
+			},
+			"end": {
+				"Named": "SE"
+			}
+		}
+	]
+}

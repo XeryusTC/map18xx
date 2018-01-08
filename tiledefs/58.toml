@@ -1,8 +1,0 @@
-[[path]]
-start = "NE"
-end = "S"
-
-[[stop]]
-text_id = 1
-revenue_angle = 150
-position = [0.17, 0.0, -0.17]

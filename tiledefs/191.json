@@ -1,0 +1,44 @@
+{
+	"paths": [
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"Named": "S"
+			}
+		},
+		{
+			"start": {
+				"Named": "NW"
+			},
+			"end": {
+				"Named": "SE"
+			}
+		},
+		{
+			"start": {
+				"Named": "NE"
+			},
+			"end": {
+				"Named": "SW"
+			}
+		}
+	],
+	"cities": [
+		{
+			"text_id": 1,
+			"circles": 4,
+			"position": {
+				"Named": "C"
+			},
+			"revenue_position": {
+				"HexSpace": [
+					0.0,
+					0.7,
+					0.1
+				]
+			}
+		}
+	]
+}

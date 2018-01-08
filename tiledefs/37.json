@@ -1,0 +1,74 @@
+{
+	"paths": [
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"Named": "S"
+			}
+		},
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"HexSpace": [
+					-0.5,
+					-0.1,
+					-0.1
+				]
+			}
+		},
+		{
+			"start": {
+				"Named": "S"
+			},
+			"end": {
+				"HexSpace": [
+					0.5,
+					0.1,
+					0.1
+				]
+			}
+		}
+	],
+	"cities": [
+		{
+			"circles": 1,
+			"text_id": 1,
+			"position": {
+				"HexSpace": [
+					-0.5,
+					-0.1,
+					-0.1
+				]
+			},
+			"revenue_position": {
+				"HexSpace": [
+					-0.5,
+					0.2,
+					0.2
+				]
+			}
+		},
+		{
+			"circles": 1,
+			"text_id": 1,
+			"position": {
+				"HexSpace": [
+					0.5,
+					0.1,
+					0.1
+				]
+			},
+			"revenue_position": {
+				"HexSpace": [
+					0.5,
+					-0.2,
+					-0.2
+				]
+			}
+		}
+	]
+}

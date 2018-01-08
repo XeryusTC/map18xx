@@ -1,0 +1,21 @@
+{
+	"paths": [
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"Named": "S"
+			}
+		},
+		{
+			"start": {
+				"Named": "SW"
+			},
+			"end": {
+				"Named": "SE"
+			},
+			"is_bridge": true
+		}
+	]
+}

@@ -1,0 +1,36 @@
+{
+	"paths": [
+		{
+			"start": {
+				"Named": "C"
+			},
+			"end": {
+				"Named": "N"
+			}
+		},
+		{
+			"start": {
+				"Named": "C"
+			},
+			"end": {
+				"Named": "S"
+			}
+		}
+	],
+	"cities": [
+		{
+			"circles": 1,
+			"text_id": 1,
+			"position": {
+				"Named": "C"
+			},
+			"revenue_position": {
+				"HexSpace": [
+					0.0,
+					0.6,
+					0.0
+				]
+			}
+		}
+	]
+}

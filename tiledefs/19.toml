@@ -1,8 +1,0 @@
-[[path]]
-start = "N"
-end = "S"
-
-[[path]]
-start = "SW"
-end = "SE"
-is_bridge = true

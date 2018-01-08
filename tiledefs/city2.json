@@ -1,0 +1,46 @@
+{
+	"code_text_id": 2,
+	"code_position": [
+		0.6,
+		0.0,
+		0.0
+	],
+	"cities": [
+		{
+			"text_id": 1,
+			"circles": 1,
+			"position": {
+				"HexSpace": [
+					-0.25,
+					0.0,
+					0.3
+				]
+			},
+			"revenue_position": {
+				"HexSpace": [
+					0.0,
+					0.3,
+					0.0
+				]
+			}
+		},
+		{
+			"text_id": 1,
+			"circles": 1,
+			"position": {
+				"HexSpace": [
+					0.0,
+					-0.25,
+					-0.25
+				]
+			},
+			"revenue_position": {
+				"HexSpace": [
+					0.27,
+					0.0,
+					-0.5
+				]
+			}
+		}
+	]
+}

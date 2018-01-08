@@ -1,9 +1,0 @@
-is_lawson = true
-
-[[path]]
-start = "N"
-end = "S"
-
-[[path]]
-start = "NE"
-end = "C"

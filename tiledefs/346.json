@@ -1,0 +1,37 @@
+{
+	"is_lawson": true,
+	"paths": [
+		{
+			"start": {
+				"Named": "N"
+			},
+			"end": {
+				"Named": "NE"
+			}
+		},
+		{
+			"start": {
+				"Named": "NW"
+			},
+			"end": {
+				"Named": "SE"
+			}
+		},
+		{
+			"start": {
+				"Named": "SW"
+			},
+			"end": {
+				"Named": "C"
+			}
+		},
+		{
+			"start": {
+				"Named": "C"
+			},
+			"end": {
+				"Named": "S"
+			}
+		}
+	]
+}
