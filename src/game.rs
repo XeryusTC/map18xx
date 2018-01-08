@@ -1,9 +1,8 @@
-extern crate toml;
 extern crate nalgebra as na;
+extern crate serde_json;
 
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::prelude::*;
 use std::path::PathBuf;
 use std::process;
 
@@ -47,22 +46,20 @@ impl Map {
     pub fn load(dir: PathBuf,
                 definitions: &HashMap<String, tile::TileDefinition>) -> Map {
         let mut map: Map;
-        let map_filename = dir.join("map.toml");
+        let map_filename = dir.join("map.json");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
             process::exit(1);
         }
 
         println!("Reading map information...");
-        let mut contents = String::new();
         match File::open(map_filename) {
             Err(e) => {
                 eprintln!("Couldn't open map file: {}", e);
                 process::exit(1);
             }
-            Ok(mut file) => {
-                file.read_to_string(&mut contents).unwrap();
-                map = toml::from_str(&contents).unwrap();
+            Ok(file) => {
+                map = serde_json::from_reader(file).unwrap();
             }
         };
         // Connect the tiles to their definitions
@@ -91,22 +88,20 @@ impl Game {
     pub fn load(dir: PathBuf,
                 definitions: &HashMap<String, tile::TileDefinition>) -> Game {
         let mut game = Game::new();
-        let manifest_filename = dir.join("manifest.toml");
+        let manifest_filename = dir.join("manifest.json");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
             process::exit(1);
         }
 
         println!("Reading tile manifest...");
-        let mut contents = String::new();
         match File::open(manifest_filename) {
             Err(e) => {
                 eprintln!("Couldn't open manifest file: {}", e);
                 process::exit(1);
             }
-            Ok(mut file) => {
-                file.read_to_string(&mut contents).unwrap();
-                game.manifest = toml::from_str(&contents).unwrap();
+            Ok(file) => {
+                game.manifest = serde_json::from_reader(file).unwrap();
             }
         };
         // Connect the manifest to the tile definitions

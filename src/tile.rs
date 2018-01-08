@@ -21,16 +21,14 @@
 //!
 //! ![Coordinate system](../../../../axes.svg)
 
-extern crate toml;
 extern crate nalgebra as na;
+extern crate serde_json;
 
 use std::collections::HashMap;
 use std::f64::consts::PI;
 use std::fs;
 use std::path::PathBuf;
 use std::fs::File;
-use std::io::prelude::*;
-use std::process;
 
 /// Standard colors that can be used
 pub mod colors {
@@ -420,26 +418,14 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
     // Read and parse each file
     let mut definitions = HashMap::new();
     for def in &def_files {
-        // Ignore non .toml files
-        if def.extension().unwrap() != "toml" {
+        // Ignore non .json files
+        if def.extension().unwrap() != "json" {
             continue;
         }
 
-        // Read TOML file
-        let mut file = File::open(def).unwrap();
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
-
-        // Parse TOML file
-        let mut tile: TileDefinition = match toml::from_str(&contents) {
-            Ok(content) => content,
-            Err(e) => {
-                eprintln!("Invalid tile definitions {:?}: {:?}",
-                          def.file_stem().unwrap(),
-                          e);
-                process::exit(1);
-            }
-        };
+        // Read json file
+        let file = File::open(def).unwrap();
+        let mut tile: TileDefinition = serde_json::from_reader(file).unwrap();
         tile.set_name(String::from(def.file_stem()
                                    .unwrap().to_string_lossy()));
         definitions.insert(String::from(tile.name()), tile);
