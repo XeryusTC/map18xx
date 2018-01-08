@@ -110,6 +110,23 @@ pub fn direction_to_angle(direction: &str) -> f64 {
     }
 }
 
+/// Represents named or hex space coordinate
+#[derive(Clone, Deserialize, Debug)]
+pub enum Coordinate {
+    Named(String),
+    HexSpace(Box<[f64]>),
+}
+
+impl Coordinate {
+    pub fn as_vector(&self) -> na::Vector3<f64> {
+        match self {
+            &Coordinate::Named(ref name) => edge_to_coordinate(name.as_ref()),
+            &Coordinate::HexSpace(ref pos) =>
+                na::Vector3::new(pos[0], pos[1], pos[2]),
+        }
+    }
+}
+
 /// Attributes that are common between Tile and TileDefinition
 pub trait TileSpec {
     fn color(&self) -> colors::Color;
@@ -312,34 +329,20 @@ impl TileSpec for TileDefinition {
 /// version is a 3D position in hexagon-space.
 #[derive(Deserialize, Debug, Clone)]
 pub struct Path {
-    start: Option<String>,
-    start_pos: Option<Box<[f64]>>,
-    end: Option<String>,
-    end_pos: Option<Box<[f64]>>,
+    start: Coordinate,
+    end: Coordinate,
     is_bridge: Option<bool>,
 }
 
 impl Path {
     /// Getter that always returns the start coordinate in hexagon-space.
     pub fn start(&self) -> na::Vector3<f64> {
-        match &self.start_pos {
-            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
-            &None => match &self.start {
-                &Some(ref s) => edge_to_coordinate(s.as_ref()),
-                &None => panic!("No start position found"),
-            }
-        }
+        self.start.as_vector()
     }
 
     /// Getter that always returns the end coordinate in hexagon-space.
     pub fn end(&self) -> na::Vector3<f64> {
-        match &self.end_pos {
-            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
-            &None => match &self.end {
-                &Some(ref s) => edge_to_coordinate(s.as_ref()),
-                _ => panic!("No end position found"),
-            }
-        }
+        self.end.as_vector()
     }
 
     /// Whether the is_bridge flag is set
@@ -364,27 +367,18 @@ impl Path {
 pub struct City {
     pub circles: u32,
     pub text_id: u32,
-    pub revenue_pos: Box<[f64]>,
-    position: Option<String>,
-    pos: Option<Box<[f64]>>,
+    pub revenue_position: Coordinate,
+    position: Coordinate,
 }
 
 impl City {
     /// The coordinate of the city in hexagon-space.
     pub fn position(&self) -> na::Vector3<f64> {
-        match &self.pos {
-            &Some(ref pos) => na::Vector3::new(pos[0], pos[1], pos[2]),
-            &None => match &self.position {
-                &Some(ref s) => edge_to_coordinate(s.as_ref()),
-                &None => na::Vector3::new(0.0, 0.0, 0.0),
-            }
-        }
+        self.position.as_vector()
     }
 
     pub fn revenue_position(&self) -> na::Vector3<f64>{
-        na::Vector3::new(self.revenue_pos[0],
-                         self.revenue_pos[1],
-                         self.revenue_pos[2])
+        self.revenue_position.as_vector()
     }
 }
 
@@ -394,7 +388,7 @@ impl City {
 /// 3D position in hexagon-space.
 #[derive(Deserialize, Debug, Clone)]
 pub struct Stop {
-    position: Box<[f64]>,
+    position: Coordinate,
     pub text_id: u32,
     pub revenue_angle: i32,
 }
@@ -402,7 +396,7 @@ pub struct Stop {
 impl Stop {
     /// The coordinate of the stop in hexagon-space.
     pub fn position(&self) -> na::Vector3<f64> {
-        na::Vector3::new(self.position[0], self.position[1], self.position[2])
+        self.position.as_vector()
     }
 }
 
