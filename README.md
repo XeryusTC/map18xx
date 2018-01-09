@@ -178,7 +178,7 @@ A tile manifest consists of a list of tiles and a list of how often this tile
 can be used in the game. The definition of a usable tiles is given by the
 `tiles` array. A single entry looks like
 ```JSON
-[
+{
 	"color": "green",
 	"base_tile": "52",
 	"text": [
@@ -186,7 +186,7 @@ can be used in the game. The definition of a usable tiles is given by the
 		"40",
 		"OO"
 	]
-]
+}
 ```
 
 There are several elements here. The first is the `color` key, this defines
