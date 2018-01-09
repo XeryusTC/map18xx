@@ -123,6 +123,7 @@ circle. It is currently not possible to rotate a city. A city can be defined as
 	"text_id": 1,
 	"revenue_position": { "HexSpace": [0.0, 0.6, 0.0]
 }
+```
 
 The first key is the `circles` key, this determines how many token spots are
 available. This can be any number between 1 and 4 inclusive, if another
