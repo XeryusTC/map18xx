@@ -12,14 +12,16 @@ pub mod game;
 pub mod tile;
 
 /// Place to store command line options
-struct Options {
+pub struct Options {
     mode: String,
+    verbose: bool,
 }
 
 impl Options {
     pub fn new() -> Options {
         Options {
             mode: String::from("definitions"),
+            verbose: false,
         }
     }
 }
@@ -46,6 +48,10 @@ pub fn run() {
                           argparse::Print(env!("CARGO_PKG_VERSION")
                                           .to_string()),
                           "Show version");
+        parser.refer(&mut options.verbose)
+            .add_option(&["-v", "--verbose"],
+                        argparse::StoreTrue,
+                        "Print debug information");
         parser.refer(&mut options.mode)
             .add_argument("mode",
                           argparse::Store,
@@ -59,7 +65,7 @@ pub fn run() {
     }
 
     match options.mode.as_ref() {
-        "d" | "def" | "definitions" => definitions(),
+        "d" | "def" | "definitions" => definitions(&options),
         "game" => {
             args.insert(0, String::from("game"));
             game_mode(&options, args)
@@ -71,8 +77,8 @@ pub fn run() {
     }
 }
 
-fn definitions() {
-    let definitions = tile::definitions();
+fn definitions(options: &Options) {
+    let definitions = tile::definitions(options);
     let document = svg::Document::new()
         .set("width", "210mm") // A4 width
         .set("height",
@@ -81,7 +87,7 @@ fn definitions() {
     svg::save("definitions.svg", &document).unwrap();
 }
 
-fn game_mode(_options: &Options, args: Vec<String>) {
+fn game_mode(options: &Options, args: Vec<String>) {
     let mut game_options = GameOptions::new();
     { // Limit scope of ArgumentParser borrow
         let mut parser = ArgumentParser::new();
@@ -97,7 +103,7 @@ fn game_mode(_options: &Options, args: Vec<String>) {
     }
 
     println!("Processing game '{}'", game_options.name);
-    let definitions = tile::definitions();
+    let definitions = tile::definitions(options);
     let game = game::Game::load(["games", game_options.name.as_str()]
                                     .iter().collect(),
                                 &definitions);

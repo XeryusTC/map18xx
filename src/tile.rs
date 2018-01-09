@@ -401,7 +401,8 @@ impl Stop {
 }
 
 /// Reads and parses all tile definitions in ./tiledefs/
-pub fn definitions() -> HashMap<String, TileDefinition> {
+pub fn definitions(options: &super::Options)
+        -> HashMap<String, TileDefinition> {
     println!("Reading tile definitions from file...");
     let def_files: Vec<PathBuf> = match fs::read_dir("tiledefs") {
         Err(why) => panic!("! {:?}", why.kind()),
@@ -415,6 +416,10 @@ pub fn definitions() -> HashMap<String, TileDefinition> {
         // Ignore non .json files
         if def.extension().unwrap() != "json" {
             continue;
+        }
+        if options.verbose {
+            println!("Parsing definition {}",
+                     def.file_stem().unwrap().to_string_lossy());
         }
 
         // Read json file
