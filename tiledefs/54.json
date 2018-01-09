@@ -1,9 +1,11 @@
 {
-	"code_position": [
-		0.1,
-		-0.05,
-		-0.05
-	],
+	"code_position": {
+		"HexSpace": [
+			0.1,
+			-0.05,
+			-0.05
+		]
+	},
 	"code_text_id": 2,
 	"paths": [
 		{

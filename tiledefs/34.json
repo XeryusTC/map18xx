@@ -1,10 +1,12 @@
 {
 	"code_text_id": 2,
-	"code_position": [
-		0.0,
-		0.0,
-		0.6
-	],
+	"code_position": {
+		"HexSpace": [
+			0.0,
+			0.0,
+			0.6
+		]
+	},
 	"paths": [
 		{
 			"start": {

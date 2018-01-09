@@ -248,7 +248,7 @@ pub struct TileDefinition {
     cities: Option<Vec<City>>,
     stops: Option<Vec<Stop>>,
     is_lawson: Option<bool>,
-    code_position: Option<Box<[f64]>>,
+    code_position: Option<Coordinate>,
     code_text_id: Option<usize>,
 }
 
@@ -290,7 +290,7 @@ impl TileSpec for TileDefinition {
     fn code_position(&self) -> Option<na::Vector3<f64>> {
         match &self.code_position {
             &None => None,
-            &Some(ref pos) => Some(na::Vector3::new(pos[0], pos[1], pos[2])),
+            &Some(ref pos) => Some(pos.as_vector()),
         }
     }
     fn color(&self) -> colors::Color {
