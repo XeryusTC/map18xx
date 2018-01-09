@@ -65,8 +65,8 @@ pub fn run() {
             game_mode(&options, args)
         }
         m => {
-            println!("Unrecognized mode '{}', falling back to definitions", m);
-            definitions()
+            println!("Unrecognized mode '{}'. See 'map18xx --help'", m);
+            process::exit(1);
         }
     }
 }
@@ -76,7 +76,7 @@ fn definitions() {
     let document = svg::Document::new()
         .set("width", "210mm") // A4 width
         .set("height",
-             format!("{}mm", (definitions.len() as f64/3.0).ceil()*32.0+3.0))
+             format!("{}mm", (definitions.len() as f64/4.0).ceil()*42.0+0.0))
         .add(draw::draw_tile_definitions(&definitions));
     svg::save("definitions.svg", &document).unwrap();
 }
