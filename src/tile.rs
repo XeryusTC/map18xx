@@ -400,6 +400,39 @@ impl Stop {
     }
 }
 
+/// Text anchor position for text on tile
+#[derive(Deserialize, Debug, Clone)]
+pub enum TextAnchor {
+    Start,
+    Middle,
+    End,
+}
+
+/// Text on the tile
+#[derive(Deserialize, Debug, Clone)]
+pub struct Text {
+    pub id: usize,
+    position: Coordinate,
+    size: Option<String>,
+    pub weight: Option<u32>,
+    pub anchor: TextAnchor,
+}
+
+impl Text {
+    /// The coordinate of the text in hexagon-space.
+    pub fn position(&self) -> na::Vector3<f64> {
+        self.position.as_vector()
+    }
+
+    /// The font size
+    pub fn size(&self) -> Option<&str> {
+        match self.size {
+            None => None,
+            Some(ref s) => Some(s.as_str()),
+        }
+    }
+}
+
 /// Reads and parses all tile definitions in ./tiledefs/
 pub fn definitions(options: &super::Options)
         -> HashMap<String, TileDefinition> {
