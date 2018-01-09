@@ -167,11 +167,15 @@ pub fn draw_city<T>(city: tile::City,
     let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.text(city.text_id);
-    let master = element::Group::new()
-        .add(draw_circle(&text_circle_pos,
-                         REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
-                         "white", "black", LINE_WIDTH * PPCM * info.scale))
-        .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None));
+    let master = if text.is_empty() {
+        element::Group::new()
+    } else {
+        element::Group::new()
+            .add(draw_circle(&text_circle_pos,
+                             REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
+                             "white", "black", LINE_WIDTH * PPCM * info.scale))
+            .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None))
+    };
 
     let pos = PPCM * info.scale * (rot * basis * city.position() + center);
     let center = rot * basis * city.position() + center;
