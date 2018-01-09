@@ -360,8 +360,11 @@ pub fn draw_stop<T>(stop: tile::Stop,
     let rot = rotate(rotation);
 
     let pos = PPCM * info.scale * (rot * basis * stop.position() + center);
-    let a = stop.revenue_angle as f64 * PI / 180.0 + rotation;
-    let text_circle_pos = pos + PPCM * info.scale * rotate(&a) *
+    let mut angle = stop.revenue_angle as f64 * PI / 180.0 + rotation;
+    if let Orientation::Vertical = info.orientation {
+        angle -= PI / 6.0;
+    }
+    let text_circle_pos = pos + PPCM * info.scale * rotate(&angle) *
         na::Vector2::new(STOP_TEXT_DIST, 0.0);
     let text_pos = text_circle_pos + PPCM * info.scale *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
