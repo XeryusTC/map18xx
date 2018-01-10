@@ -1,4 +1,18 @@
 {
+	"text": [
+		{
+			"purpose": "cost",
+			"id": 2,
+			"position": { "HexSpace": [ 0.0, 0.25, 0.25 ] },
+			"anchor": "Middle"
+		},
+		{
+			"purpose": "name",
+			"id": 3,
+			"position": { "HexSpace": [0.0, -0.35, -0.35 ] },
+			"anchor": "Middle"
+		}
+	],
 	"stops": [
 		{
 			"position": { "HexSpace": [ 0.0, 0.0, 0.0 ] },

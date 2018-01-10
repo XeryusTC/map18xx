@@ -6,6 +6,21 @@
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
+		},
+		{
+			"id": 3,
+			"position": {"HexSpace": [0.5, 0.0, -0.2]},
+			"anchor": "Middle"
+		},
+		{
+			"id": 4,
+			"position": {"HexSpace": [-0.1, 0.2, 0.2]},
+			"anchor": "Start"
+		},
+		{
+			"id": 5,
+			"position": {"HexSpace": [0.1, -0.3, -0.3]},
+			"anchor": "End"
 		}
 	],
 	"paths": [

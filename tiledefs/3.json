@@ -1,4 +1,12 @@
 {
+	"text": [
+		{
+			"purpose": "name",
+			"id": 3,
+			"position": {"HexSpace": [0.0, 0.1, 0.0]},
+			"anchor": "Middle"
+		}
+	],
 	"paths": [
 		{
 			"start": { "Named": "SW" },

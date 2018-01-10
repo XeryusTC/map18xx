@@ -1,4 +1,11 @@
 {
+	"text": [
+		{
+			"id": 3,
+			"position": {"HexSpace": [0.0, 0.0, 0.5]},
+			"anchor": "Middle"
+		}
+	],
 	"paths": [
 		{
 			"start": { "Named": "C" },

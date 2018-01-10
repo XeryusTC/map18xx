@@ -1,10 +1,23 @@
 {
 	"text": [
 		{
+			"purpose": "code",
 			"id": 2,
 			"position": {"HexSpace": [0.0, -0.6, 0.0]},
 			"size": "120%",
 			"weight": 900,
+			"anchor": "Middle"
+		},
+		{
+			"purpose": "cost",
+			"id": 3,
+			"position": {"HexSpace": [0.0, 0.0, -0.6]},
+			"anchor": "Middle"
+		},
+		{
+			"purpose": "name",
+			"id": 4,
+			"position": {"HexSpace": [0.0, 0.0, 0.5]},
 			"anchor": "Middle"
 		}
 	],

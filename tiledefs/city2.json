@@ -6,6 +6,21 @@
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
+		},
+		{
+			"id": 3,
+			"position": {"HexSpace": [0.0, -0.05, -0.05]},
+			"anchor": "Middle"
+		},
+		{
+			"id": 4,
+			"position": {"HexSpace": [-0.25, 0.3, 0.3]},
+			"anchor": "Start"
+		},
+		{
+			"id": 5,
+			"position": {"HexSpace": [0.1, 0.0, -0.25]},
+			"anchor": "Start"
 		}
 	],
 	"cities": [
