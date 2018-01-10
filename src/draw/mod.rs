@@ -7,7 +7,7 @@ use self::svg::node::element::Group;
 use tile;
 use tile::TileSpec;
 use game;
-use self::na::{Vector2, Vector3};
+use self::na::Vector2;
 use game::Orientation;
 
 mod helpers;
@@ -211,17 +211,19 @@ pub fn draw_tile<T>(tile: &T,
                                      &tile.orientation()));
     };
 
-    // Draw tile number
-    let text_pos = consts::PPCM * map.scale *
-        (basis * Vector3::new(0.0, 0.0, -0.95) + pos);
-    let mut text = helpers::draw_text(&String::from(tile.name()), &text_pos,
-                                      helpers::TextAnchor::End, Some("80%"),
-                                      None);
-    if let Orientation::Vertical = map.orientation {
-        text = text.set("transform",
-                        format!("rotate(-30 {} {})", text_pos.x, text_pos.y));
+    // Draw text on tile
+    for text in tile.text_spec() {
+        let text_pos = consts::PPCM * map.scale *
+            (basis * text.position() + pos);
+        let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
+                                       &text.anchor, text.size(), text.weight);
+        // Rotate the tile number with the orientation of the map
+        if let Orientation::Vertical = map.orientation {
+            t = t.set("transform",
+                      format!("rotate(-30 {} {})", text_pos.x, text_pos.y));
+        }
+        g = g.add(t);
     }
-    g = g.add(text);
 
     // Draw the tile code
     match tile.code_text() {
