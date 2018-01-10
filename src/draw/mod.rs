@@ -33,7 +33,7 @@ pub fn draw_tile_definitions(
             * Vector2::new(pos.x - 1.0, pos.y - 0.7);
         g = g.add(draw_tile(definition, &pos, &info))
             .add(helpers::draw_text(&name, &text_pos,
-                                    helpers::TextAnchor::Start, None, None));
+                                    &tile::TextAnchor::Start, None, None));
         i += 1.0;
     }
     g
@@ -61,7 +61,7 @@ pub fn draw_tile_manifest(game: &game::Game) -> Group {
         let text_pos = consts::PPCM * game.map.scale *
             Vector2::new(pos.x-1.0, pos.y-0.7);
         g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
-                                     helpers::TextAnchor::Start, None, None));
+                                     &tile::TextAnchor::Start, None, None));
     }
 
     g
@@ -84,7 +84,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
         .add(helpers::draw_text(&"Tile sheet 0".to_string(),
                                 &(Vector2::new(2.0_f64, 0.5) * info.scale *
                                   consts::PPCM),
-                                helpers::TextAnchor::Start, Some("200%"),
+                                &tile::TextAnchor::Start, Some("200%"),
                                 None));
     for tile in game.manifest.tiles.iter() {
         for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
@@ -105,7 +105,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                             &format!("Tile sheet {}", drawn/TILES_PER_PAGE),
                             &(Vector2::new(2.0_f64, 0.5) * info.scale *
                               consts::PPCM),
-                            helpers::TextAnchor::Start, Some("200%"), None));
+                            &tile::TextAnchor::Start, Some("200%"), None));
             }
         }
     }
@@ -238,7 +238,7 @@ pub fn draw_tile<T>(tile: &T,
                     let text_pos = consts::PPCM * map.scale *
                         (basis * position + pos);
                     g = g.add(helpers::draw_text(&text, &text_pos,
-                                                 helpers::TextAnchor::Middle,
+                                                 &tile::TextAnchor::Middle,
                                                  Some("120%"), Some(900)));
                 }
             }

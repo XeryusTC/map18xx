@@ -12,23 +12,17 @@ use tile;
 
 use super::consts::PPCM;
 
-pub enum TextAnchor {
-    Start,
-    Middle,
-    End,
-}
-
 /// Draw text
 pub fn draw_text(text: &String,
                  pos: &na::Vector2<f64>,
-                 anchor: TextAnchor,
+                 anchor: &tile::TextAnchor,
                  size: Option<&str>,
                  weight: Option<u32>) -> element::Text {
     let mut style = String::new();
     style.push_str(match anchor {
-        TextAnchor::Start => "text-anchor:start;",
-        TextAnchor::Middle =>"text-anchor:middle;",
-        TextAnchor::End => "text-anchor:end;",
+        &tile::TextAnchor::Start => "text-anchor:start;",
+        &tile::TextAnchor::Middle =>"text-anchor:middle;",
+        &tile::TextAnchor::End => "text-anchor:end;",
     });
     match size {
         Some(size) => style.push_str(format!("font-size:{};", size).as_str()),
@@ -174,7 +168,8 @@ pub fn draw_city<T>(city: tile::City,
             .add(draw_circle(&text_circle_pos,
                              REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
                              "white", "black", LINE_WIDTH * PPCM * info.scale))
-            .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None))
+            .add(draw_text(&text, &text_pos,
+                           &tile::TextAnchor::Middle, None, None))
     };
 
     let pos = PPCM * info.scale * (rot * basis * city.position() + center);
@@ -379,7 +374,8 @@ pub fn draw_stop<T>(stop: tile::Stop,
         .add(draw_circle(&text_circle_pos,
                          REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
                          "white", "black", LINE_WIDTH * PPCM * info.scale))
-        .add(draw_text(&text, &text_pos, TextAnchor::Middle, None, None))
+        .add(draw_text(&text, &text_pos, &tile::TextAnchor::Middle, None,
+                       None))
 }
 
 /// Helper to draw circles
