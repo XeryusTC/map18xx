@@ -181,6 +181,7 @@ pub fn draw_tile<T>(tile: &T,
 {
     let mut g = Group::new();
     let basis = helpers::get_basis(&map.orientation);
+    let rotation = helpers::rotate(&tile.orientation());
 
     g = g.add(helpers::draw_hex_background(*pos, &map, tile.color()));
 
@@ -215,7 +216,7 @@ pub fn draw_tile<T>(tile: &T,
     // Draw text on tile
     for text in tile.text_spec() {
         let text_pos = consts::PPCM * map.scale *
-            (basis * text.position() + pos);
+            (rotation * basis * text.position() + pos);
         let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
                                        &text.anchor, text.size, text.weight);
         // Rotate the tile number with the orientation of the map
