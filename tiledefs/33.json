@@ -1,12 +1,13 @@
 {
-	"code_text_id": 2,
-	"code_position": {
-		"HexSpace": [
-			0.5,
-			0.0,
-			0.0
-		]
-	},
+	"text": [
+		{
+			"id": 2,
+			"position": {"HexSpace": [0.5, 0.0, 0.0]},
+			"size": "120%",
+			"weight": 900,
+			"anchor": "Middle"
+		}
+	],
 	"paths": [
 		{
 			"start": {

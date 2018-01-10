@@ -208,12 +208,15 @@ impl TileSpec for MapTile {
            .is_lawson()
    }
 
-   fn get_text(&self, id: usize) -> String {
-       if id == 0 {
-           return String::from(self.name())
-       }
-       self.text[id - 1].to_string()
-   }
+    fn get_text(&self, id: usize) -> String {
+        if id == 0 {
+            String::from(self.name())
+        } else if id > self.text.len() {
+            String::new()
+        } else {
+            self.text[id - 1].to_string()
+        }
+    }
 
    fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
        self.definition.as_ref()
