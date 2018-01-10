@@ -220,7 +220,11 @@ impl TileSpec for Tile {
     }
 
     fn get_text(&self, id: usize) -> String {
-        self.text[id].to_string()
+        if id >= self.text.len() {
+            String::new()
+        } else {
+            self.text[id].to_string()
+        }
     }
 
     fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
