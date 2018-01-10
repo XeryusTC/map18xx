@@ -144,8 +144,6 @@ pub trait TileSpec {
     fn get_text(&self, usize) -> String;
     fn text_position(&self, usize) -> Option<na::Vector3<f64>>;
     fn text_spec(&self) -> Vec<Text>;
-    fn code_text(&self) -> Option<String>;
-    fn code_position(&self) -> Option<na::Vector3<f64>>;
 
     /// Rotation of the tile
     fn orientation(&self) -> f64 { 0.0 }
@@ -238,22 +236,6 @@ impl TileSpec for Tile {
                     text_spec()")
             .text_spec()
     }
-
-    fn code_position(&self) -> Option<na::Vector3<f64>> {
-        self.definition.as_ref()
-            .expect("You must call set_definition() before using \
-                    code_position()")
-            .code_position()
-    }
-
-    fn code_text(&self) -> Option<String> {
-        match self.definition.as_ref()
-            .expect("You must call set_definition() before using code_text()")
-            .code_text_id() {
-                None => None,
-                Some(id) => Some(self.text[id].clone()),
-            }
-    }
 }
 
 /// Definition of tile layout, does not include color or name
@@ -264,15 +246,7 @@ pub struct TileDefinition {
     cities: Option<Vec<City>>,
     stops: Option<Vec<Stop>>,
     is_lawson: Option<bool>,
-    code_position: Option<Coordinate>,
-    code_text_id: Option<usize>,
     text: Option<Vec<Text>>,
-}
-
-impl TileDefinition {
-    pub fn code_text_id(&self) -> Option<usize> {
-        self.code_text_id
-    }
 }
 
 impl TileSpec for TileDefinition {
@@ -304,12 +278,6 @@ impl TileSpec for TileDefinition {
         }
     }
 
-    fn code_position(&self) -> Option<na::Vector3<f64>> {
-        match &self.code_position {
-            &None => None,
-            &Some(ref pos) => Some(pos.as_vector()),
-        }
-    }
     fn color(&self) -> colors::Color {
         colors::GROUND
     }
@@ -354,13 +322,6 @@ impl TileSpec for TileDefinition {
                 text.insert(0, tile_number);
                 text
             }
-        }
-    }
-
-    fn code_text(&self) -> Option<String> {
-        match self.code_text_id {
-            None => None,
-            Some(id) => Some(id.to_string()),
         }
     }
 }

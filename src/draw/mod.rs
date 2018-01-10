@@ -226,28 +226,6 @@ pub fn draw_tile<T>(tile: &T,
         g = g.add(t);
     }
 
-    // Draw the tile code
-    match tile.code_text() {
-        None => {}
-        Some(text) => {
-            match tile.code_position() {
-                None => {
-                    eprintln!("Tile {} must have code_position and {}",
-                              tile.name(),
-                              "code_text_id set at the same time");
-                    process::exit(1);
-                },
-                Some(ref position) => {
-                    let text_pos = consts::PPCM * map.scale *
-                        (basis * position + pos);
-                    g = g.add(helpers::draw_text(&text, &text_pos,
-                                                 &tile::TextAnchor::Middle,
-                                                 Some(String::from("120%")),
-                                                 Some(900)));
-                }
-            }
-        }
-    }
     // Draw outline last to prevent visual effects
     g.add(helpers::draw_hex_edge(*pos, &map))
 }

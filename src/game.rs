@@ -208,17 +208,6 @@ impl TileSpec for MapTile {
            .is_lawson()
    }
 
-   fn code_position(&self) -> Option<na::Vector3<f64>> {
-       self.definition.as_ref()
-           .expect("You must call set_definition() before using \
-                    code_position()")
-           .code_position()
-   }
-
-   fn code_text(&self) -> Option<String> {
-       self.code.clone()
-   }
-
    fn get_text(&self, id: usize) -> String {
        if id == 0 {
            return String::from(self.name())
