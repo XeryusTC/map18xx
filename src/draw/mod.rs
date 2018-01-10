@@ -84,8 +84,8 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
         .add(helpers::draw_text(&"Tile sheet 0".to_string(),
                                 &(Vector2::new(2.0_f64, 0.5) * info.scale *
                                   consts::PPCM),
-                                &tile::TextAnchor::Start, Some("200%"),
-                                None));
+                                &tile::TextAnchor::Start,
+                                Some(String::from("200%")), None));
     for tile in game.manifest.tiles.iter() {
         for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
             let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
@@ -105,7 +105,8 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                             &format!("Tile sheet {}", drawn/TILES_PER_PAGE),
                             &(Vector2::new(2.0_f64, 0.5) * info.scale *
                               consts::PPCM),
-                            &tile::TextAnchor::Start, Some("200%"), None));
+                            &tile::TextAnchor::Start,
+                            Some(String::from("200%")), None));
             }
         }
     }
@@ -216,7 +217,7 @@ pub fn draw_tile<T>(tile: &T,
         let text_pos = consts::PPCM * map.scale *
             (basis * text.position() + pos);
         let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
-                                       &text.anchor, text.size(), text.weight);
+                                       &text.anchor, text.size, text.weight);
         // Rotate the tile number with the orientation of the map
         if let Orientation::Vertical = map.orientation {
             t = t.set("transform",
@@ -241,7 +242,8 @@ pub fn draw_tile<T>(tile: &T,
                         (basis * position + pos);
                     g = g.add(helpers::draw_text(&text, &text_pos,
                                                  &tile::TextAnchor::Middle,
-                                                 Some("120%"), Some(900)));
+                                                 Some(String::from("120%")),
+                                                 Some(900)));
                 }
             }
         }

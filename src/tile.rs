@@ -458,7 +458,7 @@ pub enum TextAnchor {
 pub struct Text {
     pub id: usize,
     position: Coordinate,
-    size: Option<String>,
+    pub size: Option<String>,
     pub weight: Option<u32>,
     pub anchor: TextAnchor,
 }
@@ -467,14 +467,6 @@ impl Text {
     /// The coordinate of the text in hexagon-space.
     pub fn position(&self) -> na::Vector3<f64> {
         self.position.as_vector()
-    }
-
-    /// The font size
-    pub fn size(&self) -> Option<&str> {
-        match self.size {
-            None => None,
-            Some(ref s) => Some(s.as_str()),
-        }
     }
 }
 

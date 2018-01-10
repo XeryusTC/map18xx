@@ -16,7 +16,7 @@ use super::consts::PPCM;
 pub fn draw_text(text: &String,
                  pos: &na::Vector2<f64>,
                  anchor: &tile::TextAnchor,
-                 size: Option<&str>,
+                 size: Option<String>,
                  weight: Option<u32>) -> element::Text {
     let mut style = String::new();
     style.push_str(match anchor {
@@ -25,9 +25,9 @@ pub fn draw_text(text: &String,
         &tile::TextAnchor::End => "text-anchor:end;",
     });
     match size {
-        Some(size) => style.push_str(format!("font-size:{};", size).as_str()),
+        Some(size) => style += &format!("font-size:{};", size),
         None => style.push_str("font-size:80%"),
-    }
+    };
     if let Some(weight) = weight {
         style.push_str(format!("font-weight:{};", weight).as_str());
     }
