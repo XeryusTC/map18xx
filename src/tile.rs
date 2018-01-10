@@ -294,7 +294,11 @@ impl TileSpec for TileDefinition {
     }
 
     fn get_text(&self, id: usize) -> String {
-        id.to_string()
+        if id == 0 {
+            String::from(self.name())
+        } else {
+            id.to_string()
+        }
     }
 
     fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
