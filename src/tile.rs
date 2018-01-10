@@ -141,7 +141,9 @@ pub trait TileSpec {
     /// Whether a tile should be drawn as lawson track
     fn is_lawson(&self) -> bool;
 
-    fn text(&self, u32) -> String;
+    fn get_text(&self, usize) -> String;
+    fn text_position(&self, usize) -> Option<na::Vector3<f64>>;
+    fn text_spec(&self) -> Vec<Text>;
     fn code_text(&self) -> Option<String>;
     fn code_position(&self) -> Option<na::Vector3<f64>>;
 
@@ -219,8 +221,22 @@ impl TileSpec for Tile {
             .is_lawson()
     }
 
-    fn text(&self, id: u32) -> String {
-        self.text[id as usize].to_string()
+    fn get_text(&self, id: usize) -> String {
+        self.text[id].to_string()
+    }
+
+    fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using \
+                    text_position()")
+            .text_position(id)
+    }
+
+    fn text_spec(&self) -> Vec<Text> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using \
+                    text_spec()")
+            .text_spec()
     }
 
     fn code_position(&self) -> Option<na::Vector3<f64>> {
@@ -250,6 +266,7 @@ pub struct TileDefinition {
     is_lawson: Option<bool>,
     code_position: Option<Coordinate>,
     code_text_id: Option<usize>,
+    text: Option<Vec<Text>>,
 }
 
 impl TileDefinition {
@@ -308,8 +325,36 @@ impl TileSpec for TileDefinition {
         }
     }
 
-    fn text(&self, id: u32) -> String {
+    fn get_text(&self, id: usize) -> String {
         id.to_string()
+    }
+
+    fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
+        // Tile number is always in the same place
+        match &self.text {
+            &None => None,
+            &Some(ref text) => {
+                Some(text[id].position())
+            }
+        }
+    }
+
+    fn text_spec(&self) -> Vec<Text> {
+        let tile_number = Text {
+            id: 0,
+            position: Coordinate::HexSpace(Box::new([0.0, 0.0, -0.95])),
+            anchor: TextAnchor::End,
+            size: None,
+            weight: None,
+        };
+        match &self.text {
+            &None => vec![tile_number],
+            &Some(ref text) => {
+                let mut text = text.to_vec();
+                text.insert(0, tile_number);
+                text
+            }
+        }
     }
 
     fn code_text(&self) -> Option<String> {

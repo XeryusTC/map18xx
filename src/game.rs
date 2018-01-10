@@ -219,12 +219,26 @@ impl TileSpec for MapTile {
        self.code.clone()
    }
 
-   fn text(&self, id: u32) -> String {
+   fn get_text(&self, id: usize) -> String {
        if id == 0 {
            return String::from(self.name())
        }
-       self.text[id as usize - 1].to_string()
+       self.text[id - 1].to_string()
    }
+
+   fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
+       self.definition.as_ref()
+           .expect("You must call set_definition() before using \
+                   text_position")
+           .text_position(id)
+   }
+
+    fn text_spec(&self) -> Vec<tile::Text> {
+        self.definition.as_ref()
+            .expect("You must call set_definition() before using \
+                    text_spec()")
+            .text_spec()
+    }
 
    fn orientation(&self) -> f64 {
        match &self.orientation {
