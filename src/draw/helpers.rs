@@ -363,19 +363,24 @@ pub fn draw_stop<T>(stop: tile::Stop,
     if let Orientation::Vertical = info.orientation {
         angle -= PI / 6.0;
     }
-    let text_circle_pos = pos + PPCM * info.scale * rotate(&angle) *
-        na::Vector2::new(STOP_TEXT_DIST, 0.0);
-    let text_pos = text_circle_pos + PPCM * info.scale *
-        na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
-    let text = tile.get_text(stop.text_id as usize);
-    element::Group::new()
+    // Draw the stop
+    let mut g = element::Group::new()
         .add(draw_circle(&pos, STOP_SIZE * PPCM * info.scale, "black",
-                         "white", LINE_WIDTH * PPCM * info.scale))
-        .add(draw_circle(&text_circle_pos,
+                         "white", LINE_WIDTH * PPCM * info.scale));
+    // Draw the revenue if it is set
+    let text = tile.get_text(stop.text_id as usize);
+    if !text.is_empty() {
+        let text_circle_pos = pos + PPCM * info.scale * rotate(&angle) *
+            na::Vector2::new(STOP_TEXT_DIST, 0.0);
+        let text_pos = text_circle_pos + PPCM * info.scale *
+            na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
+        g = g.add(draw_circle(&text_circle_pos,
                          REVENUE_CIRCLE_RADIUS * PPCM * info.scale,
                          "white", "black", LINE_WIDTH * PPCM * info.scale))
-        .add(draw_text(&text, &text_pos, &tile::TextAnchor::Middle, None,
-                       None))
+            .add(draw_text(&text, &text_pos, &tile::TextAnchor::Middle, None,
+                           None));
+    }
+    g
 }
 
 /// Helper to draw circles
