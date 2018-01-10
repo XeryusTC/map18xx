@@ -1,24 +1,12 @@
 {
 	"stops": [
 		{
-			"position": {
-				"HexSpace": [
-					0.25,
-					0.25,
-					0.0
-				]
-			},
+			"position": { "HexSpace": [ 0.25, 0.25, 0.0 ] },
 			"text_id": 1,
 			"revenue_angle": 180
 		},
 		{
-			"position": {
-				"HexSpace": [
-					0.0,
-					-0.25,
-					-0.25
-				]
-			},
+			"position": { "HexSpace": [ 0.0, -0.25, -0.25 ] },
 			"text_id": 1,
 			"revenue_angle": 0
 		}

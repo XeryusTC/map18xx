@@ -10,66 +10,26 @@
 	],
 	"paths": [
 		{
-			"start": {
-				"Named": "S"
-			},
-			"end": {
-				"HexSpace": [
-					0.0,
-					-0.5,
-					0.0
-				]
-			}
+			"start": { "Named": "S" },
+			"end": { "HexSpace": [ 0.0, -0.5, 0.0 ] }
 		},
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"HexSpace": [
-					0.0,
-					0.5,
-					0.0
-				]
-			}
+			"start": { "Named": "N" },
+			"end": { "HexSpace": [ 0.0, 0.5, 0.0 ] }
 		}
 	],
 	"cities": [
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": {
-				"HexSpace": [
-					0.0,
-					-0.5,
-					0.0
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					-0.6,
-					0.0,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ 0.0, -0.5, 0.0 ] },
+			"revenue_position": { "HexSpace": [ -0.6, 0.0, 0.0 ] }
 		},
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": {
-				"HexSpace": [
-					0.0,
-					0.5,
-					0.0
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.6,
-					0.0,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ 0.0, 0.5, 0.0 ] },
+			"revenue_position": { "HexSpace": [ 0.6, 0.0, 0.0 ] }
 		}
 	]
 }

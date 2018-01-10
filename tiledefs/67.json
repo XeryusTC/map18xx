@@ -1,20 +1,12 @@
 {
 	"paths": [
 		{
-			"start": {
-				"Named": "S"
-			},
-			"end": {
-				"Named": "N"
-			}
+			"start": { "Named": "S" },
+			"end": { "Named": "N" }
 		},
 		{
-			"start": {
-				"Named": "SE"
-			},
-			"end": {
-				"Named": "SW"
-			},
+			"start": { "Named": "SE" },
+			"end": { "Named": "SW" },
 			"is_bridge": true
 		}
 	],
@@ -22,38 +14,14 @@
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": {
-				"HexSpace": [
-					-0.43,
-					-0.15,
-					-0.15
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					-0.45,
-					0.0,
-					0.3
-				]
-			}
+			"position": { "HexSpace": [ -0.43, -0.15, -0.15 ] },
+			"revenue_position": { "HexSpace": [ -0.45, 0.0, 0.3 ] }
 		},
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": {
-				"HexSpace": [
-					0.0,
-					0.25,
-					0.25
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.23,
-					0.55,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ 0.0, 0.25, 0.25 ] },
+			"revenue_position": { "HexSpace": [ 0.23, 0.55, 0.0 ] }
 		}
 	]
 }

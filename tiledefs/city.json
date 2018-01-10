@@ -3,16 +3,8 @@
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": {
-				"Named": "C"
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.6,
-					0.0,
-					0.0
-				]
-			}
+			"position": { "Named": "C" },
+			"revenue_position": { "HexSpace": [ 0.6, 0.0, 0.0 ] }
 		}
 	]
 }

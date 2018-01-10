@@ -2,36 +2,20 @@
 	"is_lawson": true,
 	"paths": [
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"Named": "S"
-			}
+			"start": { "Named": "N" },
+			"end": { "Named": "S" }
 		},
 		{
-			"start": {
-				"Named": "NW"
-			},
-			"end": {
-				"Named": "C"
-			}
+			"start": { "Named": "NW" },
+			"end": { "Named": "C" }
 		},
 		{
-			"start": {
-				"Named": "NE"
-			},
-			"end": {
-				"Named": "C"
-			}
+			"start": { "Named": "NE" },
+			"end": { "Named": "C" }
 		},
 		{
-			"start": {
-				"Named": "SW"
-			},
-			"end": {
-				"Named": "SE"
-			},
+			"start": { "Named": "SW" },
+			"end": { "Named": "SE" },
 			"is_bridge": true
 		}
 	]

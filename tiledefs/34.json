@@ -10,92 +10,36 @@
 	],
 	"paths": [
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"Named": "S"
-			}
+			"start": { "Named": "N" },
+			"end": { "Named": "S" }
 		},
 		{
-			"start": {
-				"Named": "NW"
-			},
-			"end": {
-				"HexSpace": [
-					-0.5,
-					0.0,
-					0.0
-				]
-			}
+			"start": { "Named": "NW" },
+			"end": { "HexSpace": [ -0.5, 0.0, 0.0 ] }
 		},
 		{
-			"start": {
-				"Named": "NE"
-			},
-			"end": {
-				"HexSpace": [
-					0.5,
-					0.0,
-					0.0
-				]
-			}
+			"start": { "Named": "NE" },
+			"end": { "HexSpace": [ 0.5, 0.0, 0.0 ] }
 		}
 	],
 	"cities": [
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": {
-				"HexSpace": [
-					0.5,
-					0.0,
-					0.0
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.0,
-					0.6,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ 0.5, 0.0, 0.0 ] },
+			"revenue_position": { "HexSpace": [ 0.0, 0.6, 0.0 ] }
 		},
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": {
-				"HexSpace": [
-					-0.5,
-					0.0,
-					0.0
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.0,
-					0.6,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ -0.5, 0.0, 0.0 ] },
+			"revenue_position": { "HexSpace": [ 0.0, 0.6, 0.0 ] }
 		},
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": {
-				"HexSpace": [
-					0.0,
-					-0.2,
-					-0.2
-				]
-			},
-			"revenue_position": {
-				"HexSpace": [
-					0.0,
-					0.6,
-					0.0
-				]
-			}
+			"position": { "HexSpace": [ 0.0, -0.2, -0.2 ] },
+			"revenue_position": { "HexSpace": [ 0.0, 0.6, 0.0 ] }
 		}
 	]
 }

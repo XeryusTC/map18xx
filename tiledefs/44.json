@@ -1,37 +1,21 @@
 {
 	"paths": [
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"Named": "S"
-			}
+			"start": { "Named": "N" },
+			"end": { "Named": "S" }
 		},
 		{
-			"start": {
-				"Named": "NE"
-			},
-			"end": {
-				"Named": "SW"
-			},
+			"start": { "Named": "NE" },
+			"end": { "Named": "SW" },
 			"is_bridge": true
 		},
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"Named": "NE"
-			}
+			"start": { "Named": "N" },
+			"end": { "Named": "NE" }
 		},
 		{
-			"start": {
-				"Named": "SW"
-			},
-			"end": {
-				"Named": "S"
-			}
+			"start": { "Named": "SW" },
+			"end": { "Named": "S" }
 		}
 	]
 }

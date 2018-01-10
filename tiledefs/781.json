@@ -1,28 +1,16 @@
 {
 	"paths": [
 		{
-			"start": {
-				"Named": "N"
-			},
-			"end": {
-				"Named": "NE"
-			}
+			"start": { "Named": "N" },
+			"end": { "Named": "NE" }
 		},
 		{
-			"start": {
-				"Named": "SE"
-			},
-			"end": {
-				"Named": "S"
-			}
+			"start": { "Named": "SE" },
+			"end": { "Named": "S" }
 		},
 		{
-			"start": {
-				"Named": "SW"
-			},
-			"end": {
-				"Named": "NW"
-			}
+			"start": { "Named": "SW" },
+			"end": { "Named": "NW" }
 		}
 	]
 }
