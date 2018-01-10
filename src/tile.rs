@@ -358,6 +358,27 @@ impl Path {
             None => false,
         }
     }
+
+    /// The radius of the corner made by the path
+    pub fn radius(&self) -> f64 {
+        let gentle_curve = 2.0_f64.sqrt() / 2.0;
+        // Gentle curves have a different radius
+        if let (&Coordinate::Named(ref start), &Coordinate::Named(ref end))
+                = (&self.start, &self.end) {
+            if start.len() == 2 && end.len() == 2 &&
+                start.chars().nth(0) == end.chars().nth(0) {
+                // NW-NE, SW-SE
+                return gentle_curve
+            } else if ((start.len() == 2 && end.len() == 1) ||
+                       (start.len() == 1 && end.len() == 2)) &&
+                      start.chars().nth(0) != end.chars().nth(0) {
+                // N-SE, N-SW, etc.
+                return gentle_curve
+            }
+        }
+        // Everything else has a radius of one
+        1.0
+    }
 }
 
 /// City on the tile

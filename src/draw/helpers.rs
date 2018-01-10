@@ -110,8 +110,8 @@ pub fn draw_path_helper(path: &tile::Path,
         PPCM * info.scale * (rot * basis * path.start() + center));
     let (end_x, end_y) = point_to_tuple(
         PPCM * info.scale * (rot * basis * path.end() + center));
-    let control1 = C * rot * basis * path.start() + center;
-    let control2 = C * rot * basis * path.end() + center;
+    let control1 = path.radius() * C * rot * basis * path.start() + center;
+    let control2 = path.radius() * C * rot * basis * path.end() + center;
     let (x1, y1) = point_to_tuple(PPCM * info.scale * control1);
     let (x2, y2) = point_to_tuple(PPCM * info.scale * control2);
 
