@@ -112,6 +112,7 @@ pub fn direction_to_angle(direction: &str) -> f64 {
 
 /// Represents named or hex space coordinate
 #[derive(Clone, Deserialize, Debug)]
+#[serde(untagged)]
 pub enum Coordinate {
     Named(String),
     HexSpace(Box<[f64]>),
