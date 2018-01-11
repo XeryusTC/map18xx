@@ -454,3 +454,43 @@ pub fn draw_barrier(barrier: &game::Barrier,
         .set("stroke-width", BARRIER_WIDTH * PPCM * map.scale)
         .set("stroke-linecap", "round")
 }
+
+pub fn draw_arrow(arrow: &tile::Coordinate,
+                  center: &na::Vector2<f64>,
+                  map: &game::Map) -> element::Group {
+    let basis = get_basis(&map.orientation);
+
+    // Arrow
+    let pos1 = (1.0 - ARROW_SIZE * ARROW_LENGTH) * arrow.as_vector();
+    let pos2 = arrow.as_vector() + ARROW_SIZE * arrow.as_vector().map(
+        |x| if x != 0.0 { 0.0 } else {0.5});
+    let pos3 = arrow.as_vector() - ARROW_SIZE * arrow.as_vector().map(
+        |x| if x != 0.0 { 0.0 } else {0.5});
+    let path = Data::new()
+        .move_to(point_to_tuple(PPCM * map.scale * (basis * pos1 + center)))
+        .line_to(point_to_tuple(PPCM * map.scale * (basis * pos2 + center)))
+        .line_to(point_to_tuple(PPCM * map.scale * (basis * pos3 + center)))
+        .close();
+
+    // Contrast
+    let pos1 = (1.0 - ARROW_SIZE * ARROW_LENGTH - 2.0 * LINE_WIDTH) *
+        arrow.as_vector();
+    let pos2 = arrow.as_vector() + arrow.as_vector().map(
+        |x| if x != 0.0 { 0.0 } else {0.5}) * (ARROW_SIZE + 2.0 * LINE_WIDTH);
+    let pos3 = arrow.as_vector() - arrow.as_vector().map(
+        |x| if x != 0.0 { 0.0 } else {0.5}) * (ARROW_SIZE + 2.0 * LINE_WIDTH);
+    let contrast = Data::new()
+        .move_to(point_to_tuple(PPCM * map.scale * (basis * pos1 + center)))
+        .line_to(point_to_tuple(PPCM * map.scale * (basis * pos2 + center)))
+        .line_to(point_to_tuple(PPCM * map.scale * (basis * pos3 + center)))
+        .close();
+
+
+    element::Group::new()
+        .add(element::Path::new()
+            .set("d", contrast)
+            .set("fill", "white"))
+        .add(element:: Path::new()
+             .set("d", path)
+             .set("fill", "black"))
+}

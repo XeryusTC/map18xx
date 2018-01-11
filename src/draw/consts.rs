@@ -10,3 +10,5 @@ pub const STOP_SIZE:  f64 = 0.11;
 pub const STOP_TEXT_DIST: f64 = 0.3;
 pub const REVENUE_CIRCLE_RADIUS: f64 = 0.13;
 pub const BARRIER_WIDTH: f64 = 0.15;
+pub const ARROW_SIZE: f64 = PATH_WIDTH;
+pub const ARROW_LENGTH: f64 = 3.0;

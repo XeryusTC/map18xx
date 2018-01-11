@@ -211,7 +211,11 @@ pub fn draw_tile<T>(tile: &T,
     for city in tile.cities() {
         g = g.add(helpers::draw_city(city, *pos, &map, tile,
                                      &tile.orientation()));
-    };
+    }
+
+    for arrow in tile.arrows() {
+        g = g.add(helpers::draw_arrow(&arrow, pos, &map));
+    }
 
     // Draw text on tile
     for text in tile.text_spec() {
