@@ -1,30 +1,30 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "S" }
+			"start": "N",
+			"end": "S"
 		},
 		{
-			"start": { "Named": "N" },
-			"end": { "HexSpace": [ -0.5, -0.1, -0.1 ] }
+			"start": "N",
+			"end": [ -0.5, -0.1, -0.1 ]
 		},
 		{
-			"start": { "Named": "S" },
-			"end": { "HexSpace": [ 0.5, 0.1, 0.1 ] }
+			"start": "S",
+			"end": [ 0.5, 0.1, 0.1 ]
 		}
 	],
 	"cities": [
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ -0.5, -0.1, -0.1 ] },
-			"revenue_position": { "HexSpace": [ -0.5, 0.2, 0.2 ] }
+			"position": [ -0.5, -0.1, -0.1 ],
+			"revenue_position": [ -0.5, 0.2, 0.2 ]
 		},
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ 0.5, 0.1, 0.1 ] },
-			"revenue_position": { "HexSpace": [ 0.5, -0.2, -0.2 ] }
+			"position": [ 0.5, 0.1, 0.1 ],
+			"revenue_position": [ 0.5, -0.2, -0.2 ]
 		}
 	]
 }

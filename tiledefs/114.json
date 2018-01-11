@@ -1,39 +1,39 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "SW" }
+			"start": "N",
+			"end": "SW"
 		},
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "SE" }
+			"start": "N",
+			"end": "SE"
 		},
 		{
-			"start": { "Named": "SE" },
-			"end": { "Named": "SW" }
+			"start": "SE",
+			"end": "SW"
 		},
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "S" },
+			"start": "NW",
+			"end": "S",
 			"is_bridge": true
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "S" },
+			"start": "NE",
+			"end": "S",
 			"is_bridge": true
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "NW" },
+			"start": "NE",
+			"end": "NW",
 			"is_bridge": true
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "S" }
+			"start": "NE",
+			"end": "S"
 		},
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "S" }
+			"start": "NW",
+			"end": "S"
 		}
 	]
 }

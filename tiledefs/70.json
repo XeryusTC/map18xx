@@ -1,21 +1,21 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "SW" }
+			"start": "N",
+			"end": "SW"
 		},
 		{
-			"start": { "Named": "S" },
-			"end": { "Named": "NW" },
+			"start": "S",
+			"end": "NW",
 			"is_bridge": true
 		},
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "NW" }
+			"start": "N",
+			"end": "NW"
 		},
 		{
-			"start": { "Named": "SW" },
-			"end": { "Named": "S" }
+			"start": "SW",
+			"end": "S"
 		}
 	]
 }

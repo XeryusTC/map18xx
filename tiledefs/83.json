@@ -2,12 +2,12 @@
 	"is_lawson": true,
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "S" }
+			"start": "N",
+			"end": "S"
 		},
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "C" }
+			"start": "NW",
+			"end": "C"
 		}
 	]
 }

@@ -2,7 +2,7 @@
 	"text": [
 		{
 			"id": 2,
-			"position": {"HexSpace": [0.05, -0.4, 0.0]},
+			"position": [0.05, -0.4, 0.0],
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
@@ -10,12 +10,12 @@
 	],
 	"paths": [
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "S" }
+			"start": "NW",
+			"end": "S"
 		},
 		{
-			"start": { "Named": "SW" },
-			"end": { "Named": "SE" },
+			"start": "SW",
+			"end": "SE",
 			"is_bridge": true
 		}
 	],
@@ -23,14 +23,14 @@
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ -0.3, 0.0, 0.2 ] },
-			"revenue_position": { "HexSpace": [ -0.1, 0.35, 0.35 ] }
+			"position": [ -0.3, 0.0, 0.2 ],
+			"revenue_position": [ -0.1, 0.35, 0.35 ]
 		},
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ 0.2, 0.0, -0.3 ] },
-			"revenue_position": { "HexSpace": [ 0.35, 0.35, -0.1 ] }
+			"position": [ 0.2, 0.0, -0.3 ],
+			"revenue_position": [ 0.35, 0.35, -0.1 ]
 		}
 	]
 }

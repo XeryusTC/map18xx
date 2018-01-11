@@ -2,7 +2,7 @@
 	"text": [
 		{
 			"id": 2,
-			"position": {"HexSpace": [0.0, -0.05, -0.05]},
+			"position": [0.0, -0.05, -0.05],
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
@@ -10,26 +10,26 @@
 	],
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "NW" }
+			"start": "N",
+			"end": "NW"
 		},
 		{
-			"start": { "Named": "SW" },
-			"end": { "Named": "S" }
+			"start": "SW",
+			"end": "S"
 		}
 	],
 	"cities": [
 		{
 			"text_id": 1,
 			"circles": 2,
-			"position": { "HexSpace": [ 0.0, 0.23, 0.23 ] },
-			"revenue_position": { "HexSpace": [ -0.7, 0.0, 0.0 ] }
+			"position": [ 0.0, 0.23, 0.23 ],
+			"revenue_position": [ -0.7, 0.0, 0.0 ]
 		},
 		{
 			"text_id": 1,
 			"circles": 2,
-			"position": { "HexSpace": [ 0.0, -0.23, -0.23 ] },
-			"revenue_position": { "HexSpace": [ 0.7, 0.0, 0.0 ] }
+			"position": [ 0.0, -0.23, -0.23 ],
+			"revenue_position": [ 0.7, 0.0, 0.0 ]
 		}
 	]
 }

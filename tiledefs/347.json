@@ -2,20 +2,20 @@
 	"is_lawson": true,
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "S" }
+			"start": "N",
+			"end": "S"
 		},
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "C" }
+			"start": "NW",
+			"end": "C"
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "C" }
+			"start": "NE",
+			"end": "C"
 		},
 		{
-			"start": { "Named": "SW" },
-			"end": { "Named": "SE" },
+			"start": "SW",
+			"end": "SE",
 			"is_bridge": true
 		}
 	]

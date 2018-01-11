@@ -1,22 +1,22 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "SW" }
+			"start": "N",
+			"end": "SW"
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "S" }
+			"start": "NE",
+			"end": "S"
 		}
 	],
 	"stops": [
 		{
-			"position": { "HexSpace": [ -0.04, 0.3, 0.3 ] },
+			"position": [ -0.04, 0.3, 0.3 ],
 			"text_id": 1,
 			"revenue_angle": -10
 		},
 		{
-			"position": { "HexSpace": [ 0.04, -0.3, -0.3 ] },
+			"position": [ 0.04, -0.3, -0.3 ],
 			"text_id": 1,
 			"revenue_angle": 170
 		}

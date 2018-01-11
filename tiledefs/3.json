@@ -3,21 +3,21 @@
 		{
 			"purpose": "name",
 			"id": 3,
-			"position": {"HexSpace": [0.0, 0.1, 0.0]},
+			"position": [0.0, 0.1, 0.0],
 			"anchor": "Middle"
 		}
 	],
 	"paths": [
 		{
-			"start": { "Named": "SW" },
-			"end": { "Named": "S" }
+			"start": "SW",
+			"end": "S"
 		}
 	],
 	"stops": [
 		{
 			"text_id": 1,
 			"revenue_angle": -60,
-			"position": { "HexSpace": [ 0.0, -0.5, 0.0 ] }
+			"position": [ 0.0, -0.5, 0.0 ]
 		}
 	]
 }

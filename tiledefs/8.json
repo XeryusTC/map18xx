@@ -1,8 +1,8 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "S" },
-			"end": { "Named": "NE" }
+			"start": "S",
+			"end": "NE"
 		}
 	]
 }

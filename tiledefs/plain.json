@@ -3,13 +3,13 @@
 		{
 			"purpose": "cost",
 			"id": 1,
-			"position": { "Named": "C" },
+			"position": "C",
 			"anchor": "Middle"
 		},
 		{
 			"purpose": "name",
 			"id": 2,
-			"position": { "HexSpace": [ 0.0, 0.14, 0.14] },
+			"position": [ 0.0, 0.14, 0.14],
 			"anchor": "Middle"
 		}
 	]

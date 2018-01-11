@@ -1,26 +1,26 @@
 {
 	"paths": [
 		{
-			"start": { "Named": "N" },
-			"end": { "Named": "SW" }
+			"start": "N",
+			"end": "SW"
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "S" }
+			"start": "NE",
+			"end": "S"
 		}
 	],
 	"cities": [
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ -0.3, -0.3, 0.05 ] },
-			"revenue_position": { "HexSpace": [ -0.35, 0.0, 0.35 ] }
+			"position": [ -0.3, -0.3, 0.05 ],
+			"revenue_position": [ -0.35, 0.0, 0.35 ]
 		},
 		{
 			"circles": 1,
 			"text_id": 1,
-			"position": { "HexSpace": [ 0.3, 0.3, -0.05 ] },
-			"revenue_position": { "HexSpace": [ 0.35, 0.0, -0.35 ] }
+			"position": [ 0.3, 0.3, -0.05 ],
+			"revenue_position": [ 0.35, 0.0, -0.35 ]
 		}
 	]
 }

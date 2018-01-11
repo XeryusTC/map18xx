@@ -2,16 +2,16 @@
 	"is_lawson": true,
 	"paths": [
 		{
-			"start": { "Named": "NW" },
-			"end": { "Named": "C" }
+			"start": "NW",
+			"end": "C"
 		},
 		{
-			"start": { "Named": "NE" },
-			"end": { "Named": "C" }
+			"start": "NE",
+			"end": "C"
 		},
 		{
-			"start": { "Named": "S" },
-			"end": { "Named": "C" }
+			"start": "S",
+			"end": "C"
 		}
 	]
 }

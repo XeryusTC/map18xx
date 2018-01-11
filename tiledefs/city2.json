@@ -2,24 +2,24 @@
 	"text": [
 		{
 			"id": 2,
-			"position": {"HexSpace": [0.6, 0.0, 0.0]},
+			"position": [0.6, 0.0, 0.0],
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
 		},
 		{
 			"id": 3,
-			"position": {"HexSpace": [0.0, -0.05, -0.05]},
+			"position": [0.0, -0.05, -0.05],
 			"anchor": "Middle"
 		},
 		{
 			"id": 4,
-			"position": {"HexSpace": [-0.25, 0.3, 0.3]},
+			"position": [-0.25, 0.3, 0.3],
 			"anchor": "Start"
 		},
 		{
 			"id": 5,
-			"position": {"HexSpace": [0.1, 0.0, -0.25]},
+			"position": [0.1, 0.0, -0.25],
 			"anchor": "Start"
 		}
 	],
@@ -27,14 +27,14 @@
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": { "HexSpace": [ -0.25, 0.0, 0.3 ] },
-			"revenue_position": { "HexSpace": [ 0.0, 0.3, 0.0 ] }
+			"position": [ -0.25, 0.0, 0.3 ],
+			"revenue_position": [ 0.0, 0.3, 0.0 ]
 		},
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": { "HexSpace": [ 0.0, -0.25, -0.25 ] },
-			"revenue_position": { "HexSpace": [ 0.27, 0.0, -0.5 ] }
+			"position": [ 0.0, -0.25, -0.25 ],
+			"revenue_position": [ 0.27, 0.0, -0.5 ]
 		}
 	]
 }

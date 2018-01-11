@@ -2,49 +2,49 @@
 	"text": [
 		{
 			"id": 2,
-			"position": {"HexSpace": [0.0, -0.05, -0.05]},
+			"position": [0.0, -0.05, -0.05],
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
 		},
 		{
 			"id": 3,
-			"position": {"HexSpace": [0.5, 0.0, -0.2]},
+			"position": [0.5, 0.0, -0.2],
 			"anchor": "Middle"
 		},
 		{
 			"id": 4,
-			"position": {"HexSpace": [-0.1, 0.2, 0.2]},
+			"position": [-0.1, 0.2, 0.2],
 			"anchor": "Start"
 		},
 		{
 			"id": 5,
-			"position": {"HexSpace": [0.1, -0.3, -0.3]},
+			"position": [0.1, -0.3, -0.3],
 			"anchor": "End"
 		}
 	],
 	"paths": [
 		{
-			"start": { "Named": "S" },
-			"end": { "HexSpace": [ 0.0, -0.5, 0.0 ] }
+			"start": "S",
+			"end": [ 0.0, -0.5, 0.0 ]
 		},
 		{
-			"start": { "Named": "N" },
-			"end": { "HexSpace": [ 0.0, 0.5, 0.0 ] }
+			"start": "N",
+			"end": [ 0.0, 0.5, 0.0 ]
 		}
 	],
 	"cities": [
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": { "HexSpace": [ 0.0, -0.5, 0.0 ] },
-			"revenue_position": { "HexSpace": [ -0.6, 0.0, 0.0 ] }
+			"position": [ 0.0, -0.5, 0.0 ],
+			"revenue_position": [ -0.6, 0.0, 0.0 ]
 		},
 		{
 			"text_id": 1,
 			"circles": 1,
-			"position": { "HexSpace": [ 0.0, 0.5, 0.0 ] },
-			"revenue_position": { "HexSpace": [ 0.6, 0.0, 0.0 ] }
+			"position": [ 0.0, 0.5, 0.0 ],
+			"revenue_position": [ 0.6, 0.0, 0.0 ]
 		}
 	]
 }

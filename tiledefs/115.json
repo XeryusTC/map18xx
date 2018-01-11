@@ -2,22 +2,22 @@
 	"text": [
 		{
 			"id": 3,
-			"position": {"HexSpace": [0.0, 0.0, 0.5]},
+			"position": [0.0, 0.0, 0.5],
 			"anchor": "Middle"
 		}
 	],
 	"paths": [
 		{
-			"start": { "Named": "C" },
-			"end": { "Named": "S" }
+			"start": "C",
+			"end": "S"
 		}
 	],
 	"cities": [
 		{
 			"circles": 1,
-			"position": { "Named": "C" },
+			"position": "C",
 			"text_id": 1,
-			"revenue_position": { "HexSpace": [ 0.0, 0.6, 0.0 ] }
+			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}
 	]
 }
