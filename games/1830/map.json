@@ -11,8 +11,9 @@
 	],
 
 	"tiles": [
-		{"location": [4, 0], "color": "red", "text": ["", "Canadian West"]},
-		{"location": [5, 0], "color": "red"},
+		{"location": [4, 0], "color": "red", "text": ["", "Canadian West"],
+			"arrows": ["S"]},
+		{"location": [5, 0], "color": "red", "arrows": ["SW", "S"]},
 		{"location": [8, 0], "tile": "7", "color": "grey",
 			"orientation": "NE"},
 		{"location": [9, 0], "tile": "5", "color": "grey",
@@ -27,7 +28,7 @@
 			"text": ["", "C&amp;St.L", "Berlington"]},
 		{"location": [10, 1]},
 		{"location": [11, 1], "color": "red",
-			"text": ["", "Maritime Provinces"]},
+			"text": ["", "Maritime Provinces"], "arrows": ["NW", "SW"]},
 
 		{"location": [3, 2]},
 		{"location": [4, 2]},
@@ -76,7 +77,8 @@
 			"text": ["30", "B", "$30", "Boston"], "color": "yellow",
 			"orientation": "N"},
 		
-		{"location": [0, 5], "color": "red", "text": ["", "Chicago"]},
+		{"location": [0, 5], "color": "red", "text": ["", "Chicago"],
+			"arrows": ["NE", "SE", "S"]},
 		{"location": [1, 5], "tile": "city", "text": ["", "$80", "Toledo"]},
 		{"location": [2, 5], "tile": "5", "text": ["30", "", "Cleveland"],
 			"color": "grey", "orientation": "NE"},
@@ -120,7 +122,8 @@
 			"text": ["", "", "Trenton", "Philadelphia", "C&amp;A"],
 			"orientation": "SW"},
 
-		{"location": [0, 8], "color": "red"},
+		{"location": [0, 8], "color": "red", "text": ["", "Gulf of Mexico"],
+			"arrows": ["SE"]},
 		{"location": [1, 8]},
 		{"location": [2, 8]},
 		{"location": [3, 8]},
@@ -133,7 +136,8 @@
 		{"location": [9, 8], "tile": "3", "text": ["10", "", "Atlanta City"],
 			"color": "grey", "orientation": "SE"},
 
-		{"location": [0, 9], "color": "red"},
+		{"location": [0, 9], "color": "red",
+			"arrows": ["NE", "SE"]},
 		{"location": [1, 9]},
 		{"location": [2, 9]},
 		{"location": [3, 9]},
@@ -143,7 +147,8 @@
 		{"location": [7, 9], "tile": "city",
 			"text": ["", "$80", "Washington"]},
 
-		{"location": [7, 10], "color": "red", "text": ["", "Deep South"]},
+		{"location": [7, 10], "color": "red", "text": ["", "Deep South"],
+			"arrows": ["N", "NE"]},
 		{"location": [8, 10], "tile": "115", "color": "grey",
 			"text": ["20", "", "Richmond"], "orientation": "S"}
 	]
