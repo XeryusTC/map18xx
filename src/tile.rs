@@ -54,7 +54,7 @@ pub mod colors {
     pub const RUSSET:  Color  = Color { value: "#CD7F32" }; // Bronze
     pub const GREY:    Color  = Color { value: "#ACACAC" }; // Silver Chalice
     pub const BROWN:   Color  = Color { value: "#7B3F00" }; // Chocolate
-    pub const RED:     Color  = Color { value: "#C80815" }; // Venetian Red
+    pub const RED:     Color  = Color { value: "#DC143C" }; // Crimson
     pub const BLUE:    Color  = Color { value: "#007FFF" }; // Azure
     pub const BARRIER: Color  = Color { value: "#660000" }; // Blood Red
     pub const WHITE:   Color  = Color { value: "#FFFFFF" };
