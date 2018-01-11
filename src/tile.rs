@@ -141,6 +141,8 @@ pub trait TileSpec {
     fn stops(&self) -> Vec<Stop>;
     /// Whether a tile should be drawn as lawson track
     fn is_lawson(&self) -> bool;
+    /// Arrows on the edge of a tile
+    fn arrows(&self) -> Vec<Coordinate> { vec![] }
 
     fn get_text(&self, usize) -> String;
     fn text_position(&self, usize) -> Option<na::Vector3<f64>>;

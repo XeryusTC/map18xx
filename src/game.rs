@@ -154,6 +154,7 @@ pub struct MapTile {
     orientation: Option<String>,
     #[serde(default)]
     text: Box<[String]>,
+    arrows: Option<Vec<tile::Coordinate>>,
 
     #[serde(skip)]
     definition: Option<tile::TileDefinition>,
@@ -235,6 +236,13 @@ impl TileSpec for MapTile {
        match &self.orientation {
            &None => 0.0,
            &Some(ref o) => tile::direction_to_angle(o),
+       }
+   }
+
+   fn arrows(&self) -> Vec<tile::Coordinate> {
+       match &self.arrows {
+           &None => vec![],
+           &Some(ref arrows) => arrows.to_vec(),
        }
    }
 }
