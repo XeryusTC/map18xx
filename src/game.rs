@@ -151,7 +151,6 @@ pub struct MapTile {
 
     // Optional parameters
     color: Option<String>,
-    code: Option<String>,
     orientation: Option<String>,
     #[serde(default)]
     text: Box<[String]>,
