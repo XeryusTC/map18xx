@@ -350,6 +350,8 @@ impl TileSpec for TileDefinition {
 pub struct Path {
     start: Coordinate,
     end: Coordinate,
+    pub start_control: Option<Coordinate>,
+    pub end_control: Option<Coordinate>,
     is_bridge: Option<bool>,
 }
 
