@@ -155,6 +155,7 @@ pub struct MapTile {
     #[serde(default)]
     text: Box<[String]>,
     arrows: Option<Vec<tile::Coordinate>>,
+    revenue: Option<tile::RevenueTrack>,
 
     #[serde(skip)]
     definition: Option<tile::TileDefinition>,
@@ -244,6 +245,10 @@ impl TileSpec for MapTile {
            &None => vec![],
            &Some(ref arrows) => arrows.to_vec(),
        }
+   }
+
+   fn revenue_track(&self) -> Option<tile::RevenueTrack> {
+       self.revenue.clone()
    }
 }
 

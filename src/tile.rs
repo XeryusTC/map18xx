@@ -143,6 +143,8 @@ pub trait TileSpec {
     fn is_lawson(&self) -> bool;
     /// Arrows on the edge of a tile
     fn arrows(&self) -> Vec<Coordinate> { vec![] }
+    /// Revenue track on the tile
+    fn revenue_track(&self) -> Option<RevenueTrack> { None }
 
     fn get_text(&self, usize) -> String;
     fn text_position(&self, usize) -> Option<na::Vector3<f64>>;
@@ -458,6 +460,23 @@ pub struct Text {
 
 impl Text {
     /// The coordinate of the text in hexagon-space.
+    pub fn position(&self) -> na::Vector3<f64> {
+        self.position.as_vector()
+    }
+}
+
+/// Track which shows revenue for different phases
+#[derive(Deserialize, Debug, Clone)]
+pub struct RevenueTrack {
+    position: Coordinate,
+    pub yellow: String,
+    pub green: Option<String>,
+    pub russet: Option<String>,
+    pub grey: Option<String>,
+}
+
+impl RevenueTrack {
+    /// The coordinate of the track in hexagon-space.
     pub fn position(&self) -> na::Vector3<f64> {
         self.position.as_vector()
     }
