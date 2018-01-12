@@ -115,7 +115,7 @@ pub fn direction_to_angle(direction: &str) -> f64 {
 #[serde(untagged)]
 pub enum Coordinate {
     Named(String),
-    HexSpace(Box<[f64]>),
+    HexSpace((f64, f64, f64)),
 }
 
 impl Coordinate {
@@ -123,7 +123,7 @@ impl Coordinate {
         match self {
             &Coordinate::Named(ref name) => edge_to_coordinate(name.as_ref()),
             &Coordinate::HexSpace(ref pos) =>
-                na::Vector3::new(pos[0], pos[1], pos[2]),
+                na::Vector3::new(pos.0, pos.1, pos.2),
         }
     }
 }
@@ -323,7 +323,7 @@ impl TileSpec for TileDefinition {
     fn text_spec(&self) -> Vec<Text> {
         let tile_number = Text {
             id: 0,
-            position: Coordinate::HexSpace(Box::new([0.0, 0.0, -0.95])),
+            position: Coordinate::HexSpace((0.0, 0.0, -0.95)),
             anchor: TextAnchor::End,
             size: None,
             weight: None,
