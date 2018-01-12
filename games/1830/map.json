@@ -141,15 +141,14 @@
 		{"location": [1, 9]},
 		{"location": [2, 9]},
 		{"location": [3, 9]},
-		{"location": [4, 9]},
+		{"location": [4, 9], "text": ["$120"]},
 		{"location": [5, 9], "text": ["$120"]},
-		{"location": [6, 9], "text": ["$120"]},
-		{"location": [7, 9], "tile": "city",
-			"text": ["", "$80", "Washington"]},
+		{"location": [6, 9], "tile": "city",
+			"text": ["", "", "Washington"]},
 
-		{"location": [7, 10], "color": "red", "text": ["", "Deep South"],
+		{"location": [6, 10], "color": "red", "text": ["", "Deep South"],
 			"arrows": ["N", "NE"]},
-		{"location": [8, 10], "tile": "115", "color": "grey",
+		{"location": [7, 10], "tile": "115", "color": "grey",
 			"text": ["20", "", "Richmond"], "orientation": "S"}
 	]
 }
