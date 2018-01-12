@@ -1,0 +1,33 @@
+{
+	"text": [
+		{
+			"id": 2,
+			"position": [0.0, -0.6, 0.0],
+			"anchor": "Middle"
+		}
+	],
+	"paths": [
+		{
+			"start": "NW",
+			"end": "SE"
+		},
+		{
+			"start": "NW",
+			"end": [0.0, 0.5, 0.0],
+			"end_control": [-0.2, 0.5, 0.2]
+		},
+		{
+			"start": "SE",
+			"end": [0.0, 0.5, 0.0],
+			"end_control": [0.2, 0.5, -0.2]
+		}
+	],
+	"cities": [
+		{
+			"position": "C",
+			"text_id": 1,
+			"circles": 1,
+			"revenue_position": [0.0, 0.75, 0.0]
+		}
+	]
+}
