@@ -231,6 +231,11 @@ pub fn draw_tile<T>(tile: &T,
         g = g.add(t);
     }
 
+    // Draw revenue track
+    if let Some(track) = tile.revenue_track() {
+        g = g.add(helpers::draw_revenue_track(&track, pos, &map));
+    }
+
     // Draw outline last to prevent visual effects
     g.add(helpers::draw_hex_edge(*pos, &map))
 }

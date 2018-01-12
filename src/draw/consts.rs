@@ -12,3 +12,5 @@ pub const REVENUE_CIRCLE_RADIUS: f64 = 0.13;
 pub const BARRIER_WIDTH: f64 = 0.15;
 pub const ARROW_SIZE: f64 = PATH_WIDTH;
 pub const ARROW_LENGTH: f64 = 3.0;
+pub const REVENUE_WIDTH: f64 = 0.35;
+pub const REVENUE_HEIGHT: f64 = 0.2;

@@ -494,3 +494,62 @@ pub fn draw_arrow(arrow: &tile::Coordinate,
              .set("d", path)
              .set("fill", "black"))
 }
+
+pub fn draw_revenue_track(track: &tile::RevenueTrack,
+                          center: &na::Vector2<f64>,
+                          map: &game::Map) -> element::Group {
+    let basis = get_basis(&map.orientation);
+    // Determine position
+    let mut blocks = 1.0;
+    if let Some(_) = track.green {
+        blocks += 1.0;
+    }
+    if let Some(_) = track.russet {
+        blocks += 1.0;
+    }
+    if let Some(_) = track.grey {
+        blocks += 1.0;
+    }
+    let topleft = PPCM * map.scale *
+        ((basis * track.position() + center) -
+         na::Vector2::new(blocks / 2.0 * REVENUE_WIDTH, REVENUE_HEIGHT / 2.0));
+
+    // Draw the track
+    let textpos = topleft + PPCM * map.scale *
+        na::Vector2::new(REVENUE_WIDTH / 2.0, REVENUE_HEIGHT * 0.8);
+    let mut g = element::Group::new()
+        .add(element::Rectangle::new()
+             .set("x", topleft.x)
+             .set("y", topleft.y)
+             .set("width", REVENUE_WIDTH * PPCM * map.scale)
+             .set("height", REVENUE_HEIGHT * PPCM * map.scale)
+             .set("fill", tile::colors::YELLOW.value()))
+        .add(draw_text(&track.yellow.to_string(), &textpos,
+                       &tile::TextAnchor::Middle, None, None));
+    if let Orientation::Vertical = map.orientation {
+        let center = PPCM * map.scale * center;
+        g = g.set("transform",
+                  format!("rotate(-30 {} {})", center.x, center.y));
+    }
+
+    let blocks = [(&track.green,  tile::colors::GREEN),
+                  (&track.russet, tile::colors::RUSSET),
+                  (&track.grey,   tile::colors::GREY)];
+    let offset = PPCM * map.scale * na::Vector2::new(REVENUE_WIDTH, 0.0);
+    let mut i = 1.0;
+    for block in blocks.iter() {
+        if let &(&Some(ref text), ref color) = block {
+            g = g.add(element::Rectangle::new()
+                  .set("x", topleft.x + i * offset.x)
+                  .set("y", topleft.y)
+                  .set("width", REVENUE_WIDTH * PPCM * map.scale)
+                  .set("height", REVENUE_HEIGHT * PPCM * map.scale)
+                  .set("fill", color.value()))
+                .add(draw_text(&text.to_string(), &(textpos + i * offset),
+                               &tile::TextAnchor::Middle, None, None));
+            i += 1.0;
+        }
+    }
+
+    g
+}
