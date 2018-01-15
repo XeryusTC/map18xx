@@ -115,7 +115,8 @@ fn game_mode(options: &Options, args: Vec<String>) {
              format!("{}mm",
                      (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_manifest(&game));
-    svg::save("manifest.svg", &document).unwrap();
+    svg::save(format!("{}-manifest.svg", game_options.name), &document)
+        .unwrap();
 
     println!("Exporting tile sheets...");
     let sheets = draw::draw_tile_sheets(&game);
