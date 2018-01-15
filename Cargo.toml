@@ -1,7 +1,13 @@
 [package]
 name = "map18xx"
-version = "0.1.0"
-authors = ["Xeryus Stokkel <armadillo@onenetbeyond.org>"]
+description = "18xx tile and map designer"
+version = "0.0.1"
+authors = ["Xeryus Stokkel <brontitall@dds.nl>"]
+license = "MIT"
+repository = "https://github.com/XeryusTC/map18xx"
+exclude = [
+	"games/debug/*",
+]
 
 [dependencies]
 svg = "0.5.7"
