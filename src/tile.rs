@@ -29,6 +29,7 @@ use std::f64::consts::PI;
 use std::fs;
 use std::path::PathBuf;
 use std::fs::File;
+use std::process;
 
 /// Standard colors that can be used
 pub mod colors {
@@ -489,7 +490,11 @@ pub fn definitions(options: &super::Options)
         -> HashMap<String, TileDefinition> {
     println!("Reading tile definitions from file...");
     let def_files: Vec<PathBuf> = match fs::read_dir("tiledefs") {
-        Err(why) => panic!("! {:?}", why.kind()),
+        Err(err) => {
+            eprintln!("Couldn't open tile definitions directory: {:?}",
+                      err.kind());
+            process::exit(1);
+        }
         Ok(paths) => {
             paths.map(|path| path.unwrap().path()).collect()
         },
@@ -507,8 +512,16 @@ pub fn definitions(options: &super::Options)
         }
 
         // Read json file
-        let file = File::open(def).unwrap();
-        let mut tile: TileDefinition = serde_json::from_reader(file).unwrap();
+        let file = File::open(def).unwrap_or_else(|err| {
+            eprintln!("Couldn't open {}: {:?}", def.to_string_lossy(),
+                      err.kind());
+            process::exit(1);
+        });
+        let mut tile: TileDefinition = serde_json::from_reader(file)
+            .unwrap_or_else(|err| {
+                eprintln!("Error parsing {}: {}", def.to_string_lossy(), err);
+                process::exit(1);
+        });
         tile.set_name(String::from(def.file_stem()
                                    .unwrap().to_string_lossy()));
         definitions.insert(String::from(tile.name()), tile);

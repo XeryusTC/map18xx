@@ -59,13 +59,23 @@ impl Map {
                 process::exit(1);
             }
             Ok(file) => {
-                map = serde_json::from_reader(file).unwrap();
+                map = serde_json::from_reader(file).unwrap_or_else(|err| {
+                    eprintln!("Failed to parse map: {}", err);
+                    process::exit(1);
+                });
             }
         };
         // Connect the tiles to their definitions
         for tile in map.tiles.iter_mut() {
             let base = tile.tile.clone();
-            tile.set_definition(definitions.get(&base).unwrap());
+            match definitions.get(&base) {
+                Some(def) => tile.set_definition(def),
+                None => {
+                    eprintln!("Invalid tile for location {:?}: Unknown tile \
+                              definition '{}'", &tile.location, &tile.tile);
+                    process::exit(1);
+                }
+            }
         }
         map
     }
@@ -101,13 +111,23 @@ impl Game {
                 process::exit(1);
             }
             Ok(file) => {
-                game.manifest = serde_json::from_reader(file).unwrap();
+                game.manifest = serde_json::from_reader(file)
+                    .unwrap_or_else(|err| {
+                        eprintln!("Failed to parse manifest: {}", err);
+                        process::exit(1);
+                });
             }
         };
         // Connect the manifest to the tile definitions
         for tile in game.manifest.tiles.iter_mut() {
             let base = tile.base_tile();
-            tile.set_definition(definitions.get(&base).unwrap());
+            match definitions.get(&base) {
+                Some(def) => tile.set_definition(def),
+                None => {
+                    eprintln!("Unknown base_tile '{}'", base);
+                    process::exit(1);
+                }
+            }
         }
 
         // Load the map itself

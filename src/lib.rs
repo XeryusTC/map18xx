@@ -84,7 +84,10 @@ fn definitions(options: &Options) {
         .set("height",
              format!("{}mm", (definitions.len() as f64/4.0).ceil()*42.0+0.0))
         .add(draw::draw_tile_definitions(&definitions));
-    svg::save("definitions.svg", &document).unwrap();
+    svg::save("definitions.svg", &document).unwrap_or_else(|err| {
+        eprintln!("Failed to write definitions.svg: {:?}", err.kind());
+        process::exit(1);
+    });
 }
 
 fn game_mode(options: &Options, args: Vec<String>) {
@@ -116,16 +119,29 @@ fn game_mode(options: &Options, args: Vec<String>) {
                      (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_manifest(&game));
     svg::save(format!("{}-manifest.svg", game_options.name), &document)
-        .unwrap();
+        .unwrap_or_else(|err| {
+            eprintln!("Failed to write {}-manifest.svg: {:?}",
+                      game_options.name, err.kind());
+            process::exit(1);
+    });
 
     println!("Exporting tile sheets...");
     let sheets = draw::draw_tile_sheets(&game);
     for (i, sheet) in sheets.iter().enumerate() {
         let filename = format!("{}-sheet-{}.svg", game_options.name, i);
-        svg::save(filename, sheet).unwrap();
+        svg::save(filename, sheet).unwrap_or_else(|err| {
+            eprintln!("Failed to write {}-sheet-{}.svg: {:?}",
+                      game_options.name, i, err.kind());
+            process::exit(1);
+        });
     }
 
     println!("Exporting map...");
     let map_render = draw::draw_map(&game);
-    svg::save(format!("{}-map.svg", game_options.name), &map_render).unwrap()
+    svg::save(format!("{}-map.svg", game_options.name), &map_render)
+        .unwrap_or_else(|err| {
+            eprintln!("Failed to write {}-map.svg: {:?}", game_options.name,
+                      err.kind());
+            process::exit(1);
+    });
 }
