@@ -26,13 +26,13 @@ impl Options {
     }
 }
 
-struct GameOptions {
+struct AssetOptions {
     name: String,
 }
 
-impl GameOptions {
-    pub fn new() -> GameOptions {
-        GameOptions {
+impl AssetOptions {
+    pub fn new() -> AssetOptions {
+        AssetOptions {
             name: String::new(),
         }
     }
@@ -66,9 +66,9 @@ pub fn run() {
 
     match options.mode.as_ref() {
         "d" | "def" | "definitions" => definitions(&options),
-        "game" => {
+        "a" | "asset" | "assets" => {
             args.insert(0, String::from("game"));
-            game_mode(&options, args)
+            asset_mode(&options, args)
         }
         m => {
             println!("Unrecognized mode '{}'. See 'map18xx --help'", m);
@@ -90,12 +90,12 @@ fn definitions(options: &Options) {
     });
 }
 
-fn game_mode(options: &Options, args: Vec<String>) {
-    let mut game_options = GameOptions::new();
+fn asset_mode(options: &Options, args: Vec<String>) {
+    let mut asset_options = AssetOptions::new();
     { // Limit scope of ArgumentParser borrow
         let mut parser = ArgumentParser::new();
         parser.set_description("Game mode");
-        parser.refer(&mut game_options.name).required()
+        parser.refer(&mut asset_options.name).required()
             .add_argument("name",
                           argparse::Store,
                           "Game for which to generate files");
@@ -105,9 +105,9 @@ fn game_mode(options: &Options, args: Vec<String>) {
         }
     }
 
-    println!("Processing game '{}'", game_options.name);
+    println!("Processing game '{}'", asset_options.name);
     let definitions = tile::definitions(options);
-    let game = game::Game::load(["games", game_options.name.as_str()]
+    let game = game::Game::load(["games", asset_options.name.as_str()]
                                     .iter().collect(),
                                 &definitions);
 
@@ -118,29 +118,29 @@ fn game_mode(options: &Options, args: Vec<String>) {
              format!("{}mm",
                      (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
         .add(draw::draw_tile_manifest(&game));
-    svg::save(format!("{}-manifest.svg", game_options.name), &document)
+    svg::save(format!("{}-manifest.svg", asset_options.name), &document)
         .unwrap_or_else(|err| {
             eprintln!("Failed to write {}-manifest.svg: {:?}",
-                      game_options.name, err.kind());
+                      asset_options.name, err.kind());
             process::exit(1);
     });
 
     println!("Exporting tile sheets...");
     let sheets = draw::draw_tile_sheets(&game);
     for (i, sheet) in sheets.iter().enumerate() {
-        let filename = format!("{}-sheet-{}.svg", game_options.name, i);
+        let filename = format!("{}-sheet-{}.svg", asset_options.name, i);
         svg::save(filename, sheet).unwrap_or_else(|err| {
             eprintln!("Failed to write {}-sheet-{}.svg: {:?}",
-                      game_options.name, i, err.kind());
+                      asset_options.name, i, err.kind());
             process::exit(1);
         });
     }
 
     println!("Exporting map...");
     let map_render = draw::draw_map(&game);
-    svg::save(format!("{}-map.svg", game_options.name), &map_render)
+    svg::save(format!("{}-map.svg", asset_options.name), &map_render)
         .unwrap_or_else(|err| {
-            eprintln!("Failed to write {}-map.svg: {:?}", game_options.name,
+            eprintln!("Failed to write {}-map.svg: {:?}", asset_options.name,
                       err.kind());
             process::exit(1);
     });
