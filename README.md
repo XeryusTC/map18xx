@@ -8,7 +8,7 @@ A4 paper.
 
 ## Hexagon space
 Items within a hex are usually given in hexagon-space. This is a 3 dimensional
-space where the axis are at 60° to each other. An example of the axis is given
+space where the axis are at 60° to each other. An example of the axes is given
 below. Note that the orientation of the axis when the hexagons are oriented
 with horizontal edges differs from when the hexagons are oriented with vertical
 edges.
@@ -28,13 +28,26 @@ vertically.
 
 ![Coordinate system](axes.svg)
 
-When specifying coordinates a position code can be used by inserting
-`{"Named": "<code>"}` in the appropriate location. `<code>` is one of the
-above position codes. When specifying a coordinate in hexagon-space it done
-done by setting the coordinate to `{"HexSpace": [<x>, <y>, <z>]}` where `<x>`,
-`<y>` and `<z>` are floating point numbers. It is important to always include
-at least one decimal even when not required (so 10.0 instead of 10). Otherwise
-map18xx will not be able to understand it.
+When specifying coordinates a position code can be used by inserting one of
+the six codes above as a string (`"N"`, `"NE"`, etc.) in the appropriate
+location. As an alternative you can specify hexagon-space coordinates by using
+`[<x>, <y>, <z>]` where `<x>`, `<y>` and `<z>` are floating point numbers.
+These two methods of specifying coordinates are freely interchangeable.
+
+## Colors
+Here is a list of the colors that can be used, any other color string will be
+black.
+
+* `ground`
+* `yellow`
+* `green`
+* `russet`
+* `grey`
+* `brown`
+* `red`
+* `blue`
+* `barrier`
+* `white`
 
 ## Modes
 The program can operate in several different modes, they are described here.
@@ -45,7 +58,7 @@ all currently known tile definitions to a single file `definitions.svg`. The
 output contains a list of tiles without a colour that can be used to define
 other tiles in a game.
 
-### Game mode
+### Asset mode
 Generates a tile manifest (lists each tile in the game and how many there are
 in total) and sheets with tiles to print and play and play a specific game of
 18xx. It will also generate a map on which the tiles can be placed.
@@ -53,7 +66,8 @@ in total) and sheets with tiles to print and play and play a specific game of
 # Command line arguments
 A list of command line options is given below:
 
-* `-h` and `--help`: display usage and help
+* `-h` and `--help`: display usage and help. When you specify a mode followed
+  by `-h` then help is given for that mode.
 * `-V` and `--version`: display version information and exit
 
 # Tile definitions
@@ -69,34 +83,57 @@ refered to from other files. The contents of the file can include:
 * An array called `cities`, defining the tokenable places on the tile.
 * An array called `stops`, defining the non-tokenable revenue locations on the
   tile.
+* An array called `text`, defining additional text that can occur on the tile.
 * A `is_lawson` parameter that makes the centre of a tile prettier.
-* A code that allows further specifications to put large letters like `B` or
-  `NY` on the tile.
 
 The `is_lawson` parameter is a boolean that is `false` by default. It will draw
 the centre of a tile neatly when multiple lines meet there. The tile number is
 always drawn at the bottom right corner and has `text_id = 0`.
 
-## `text_id` keys
+## Text IDs
 Before discussing what can be defined on a tile it is necessary to know how to
-specify text. To reduce the number of definitions required a consumer like a
-tile manifest can determine what text goes on the tile. The tile definition can
-specify where the text should go on the tile. To link these the consumer has
-to supply an array of strings, the definition can then pick the string to use
-from that array using the `text_id` (or similar) key. These IDs represent a
-0-based index in the array of strings. The 0th element of the string array is
-reserved for the tile number. It is recommended to keep the id of the `text_id`
-field as small as possible, otherwise the consumer will have to specify a lot
-of empty strings. Multiple elements on a tile can use the same `text_id`, these
-will all use the same string.
+specify text. For simplicity sake a tile definition specifies where text on the
+tile is supposed to go. A tile manifest can then simply define an array of text
+which dictates what the text for each respective entry in the `text` array
+should be. IDs start counting at 0, but this first ID is always reserved for
+the tile number. It is allowed for texts to share IDs, these will then be
+assigned the same string. It is recommended to make the ID for a text field as
+low as possible to avoid a consumer to define a needlessly long array. By
+convention the revenue on a tile has ID 1, the label of a tile has ID 2, the
+cost of building on a tile has ID 3, the name of a city has ID 4. Some tiles
+leave any of these out.
+
+## `text` array
+Free text on a tile can be specified by the `text array`. Each entry defines a
+single place to write text to. The usually look like
+```JSON
+{
+	"id": 2,
+	"position": [0.5, 0.0, 0.0],
+	"anchor": "Start",
+	"size": "120%"
+	"weight": 900,
+}
+```
+
+The `id`, `position`, and `anchor` fields are required. The `size` and `weight`
+fields can be ommitted, they define the size of the letters and their boldness
+respectively. The default `size` is 80% while the default weight is determined
+by the SVG renderer. The `id` field is the text ID as described above. The
+`position` can be a hex-space coordinate or a coordinate code as specified in
+the 'Hexagon space' section above. The `anchor` field can be any of `Start`,
+`Middle`, and `End`. It determines how the text is aligned to the `position`
+that was specified. Because just having a list of text can be confusing it is
+possible to add a `purpose` field. This field is ignored but is useful for
+human readers.
 
 ## `paths` array
 To define the lines that run across a tile you can use the `paths` array. Each
 entry defines a single path. They usually look like
 ```JSON
 {
-	"start": { "Named": "N" },
-	"end": { "HexSpace": [0.1, 0.2, 0.3] },
+	"start": "N",
+	"end": [0.1, 0.2, 0.3],
 	"is_bridge": true
 }
 ```
@@ -119,9 +156,9 @@ circle. It is currently not possible to rotate a city. A city can be defined as
 ```JSON
 {
 	"circles": 2,
-	"position": { "Named": "C" },
+	"position": "C",
 	"text_id": 1,
-	"revenue_position": { "HexSpace": [0.0, 0.6, 0.0]
+	"revenue_position": [0.0, 0.6, 0.0]
 }
 ```
 
@@ -129,8 +166,8 @@ The first key is the `circles` key, this determines how many token spots are
 available. This can be any number between 1 and 4 inclusive, if another
 amount is specified then a red circle will be drawn to indicate that it is an
 invalid amount. The `position` key specifies where to put the city. Usually it
-doesn't make sense to use a position code other than `{ "Named": "C" }`
-because the city would be drawn half off the tile.
+doesn't make sense to use a position code other than `C` because the city would
+be drawn half off the tile.
 
 To define where the revenue should be located the `revenue_position` key can be
 used. It is recommended to use a hexagon-space coordinate. Along with
@@ -143,7 +180,7 @@ Small cities are always rendered as small black circles. In the future it may
 become possible to render them as dashes as well. A stop is defined as
 ```JSON
 {
-	"position": { "HexSpace": [0.0, 0.0, 0.0] },
+	"position": [0.0, 0.0, 0.0],
 	"text_id": 1,
 	"revenue_angle": 30
 }
@@ -156,27 +193,23 @@ distance from a stop. You can specify where it goes with the `revenue_angle`
 key. This is the angle in degrees at which the revenue circle should be drawn
 relative to the stop.
 
-## Tile `code`
-Some tiles have a letter or code on them to restrict the upgrade path. Think
-of `B` and `OO` tiles in 1830 for example. The string that is used for this
-can be defined with `code_text_id` and its position is defined with the
-`code_position` key. The `code_position` can be a position code or a coordinate
-in hexagon-space.
-
-# Game definition
-By using `game` for the mode option mode you can put the program into game mode
-that will generate all files to PnP a game. The game mode requires an
+# Game asset mode
+By using `assets` for the mode option mode you can put the program into game
+mode that will generate all files to PnP a game. The asset mode requires an
 additional `NAME` parameter; this is the name of the game to generate files
-for. The available games are the sub directories in the `games` directory. Thisoutputs a tile manifest in `manifest.svg` and a list of files called
+for. The available games are the sub directories in the `games` directory. This
+outputs a tile manifest in `manifest.svg` and a list of files called
 `NAME-sheet-x.svg` where NAME is the name of the game and x is a sequence
-number. Each of these sheet files can be directly printed on A4 paper. The
-manifest file contains an example of each tile in the game together with a
-number that indicates how many of those tiles are available during play.
+number.  The manifest file contains an example of each tile in the game
+together with a number that indicates how many of those tiles are available
+during play. The numbered sheets can be printed directly on A4 paper to create
+all the tiles required to play the game.
 
 ## Tile manifest
-A tile manifest consists of a list of tiles and a list of how often this tile
-can be used in the game. The definition of a usable tiles is given by the
-`tiles` array. A single entry looks like
+The tile manifest of a game is specified in games/GAME/manifest.json. The tile
+manifest consists of a list of tiles and a list of how often this tile can be
+used in the game. The definition of a usable tiles is given by the `tiles`
+array. A single entry looks like
 ```JSON
 {
 	"color": "green",
@@ -193,10 +226,10 @@ There are several elements here. The first is the `color` key, this defines
 which color the tile is. Usual picks are yellow, green, russet and grey. The
 next key is `base_tile` which specifies which tile definition is used. This
 can be any JSON file in the `tiledefs/` directory. Finally is the `text`
-array, it specifies the string that the `text_id`s in the tile definition
-refer to. The first entry is always the displayed tile number, this does not
-have to be the same as the `base_tile` key. The meaning of other entries
-depends on what the tile definition used as `text_id`.
+array, it specifies the string that the text IDs in the tile definition refer
+to. The first entry is always the displayed tile number, this does not have to
+be the same as the `base_tile` key. The meaning of other entries depends on
+what the tile definition used as `text_id`.
 
 To specify the amounts available of each tile there is an `amounts` array, it
 looks like
@@ -213,3 +246,80 @@ looks like
 It has a number of string keys, these are the tile number that were defined
 in the first element of a tile's `text` array. After the colon is the amount of
 tiles that are available for placement during the game.
+
+## Game map
+The map of the game is defined in games/GAME/map.json. It specifies several
+fields
+```JSON
+{
+	"orientation": "Horizontal",
+	"scale": 3.81,
+	"width": 12,
+	"height": 11,
+	"barriers": [ ... ]
+	"tiles": [ ... ]
+}
+```
+
+The only field that is not required to be specified is the `barriers` array.
+The `orientation` field can either be set to `Horizontal` or to `Vertical`,
+this determines whether the hexagons have a flat edge or a corner on top. The
+`scale` field determines the size of the hexagons in centimeters. This is
+measured from one flat side to its opposing side. Most 18xx use a value of
+3.81. The `width` and `height` fields determine how many hexagons there are to
+each row and column respectively. The `barriers` array specifies impassible
+hex-sides. Each entry in the array looks like
+```JSON
+{
+	"location": [8, 2],
+	"side": "N"
+}
+```
+The `location` specifies the tile on which the barrier should appear, it
+consists of a `x` and a `y` coordinate. [0, 0] is the top left tile. The `side`
+field determines on which edge the barrier should appear. Only names can be
+used here, it is not allowed to use hex-space coordinates. Because each edge is
+shared between two tiles the barrier can be specified to be on either of them.
+
+Finally there is the `tiles` array, its entries look like
+```JSON
+{
+	"location": [4, 0],
+	"color": "red",
+	"tile": "8,
+	"text": [ ... ],
+	"orientation": "S",
+	"revenue": { ... },
+	"arrows": [ ... ]
+}
+```
+Of all these fields only the `location` is required, it defines the x and y
+coordinate of tile being specified. The coordinate [0, 0] is the top left tile.
+The `color` field specifies the color of the tile, it can be any of the colors
+that are available (see 'Colors'). The default color is `ground`. The `tile`
+field changes which tile definition is used. This should be a number as in the
+`tiledefs/` directory, not as specified in the game's manifest. The default
+tile is the `plain` tile. The `text` array defines the text to use for each
+text entry in the tile definition. The field which specifies the tile number is
+ignored so the first element in this array is the string to be used for text ID
+1. The `orientation` field rotates the tile as necessary. It can be any of the
+tile edge codes, but not a hex-space coordinate. The rotation indicates which
+edge of the tile should be placed at the north edge. The `revenue` object
+specifies an optional revenue track, more details on this later. The `arrows`
+array specifies where track continuation arrows, as those found on off-boards,
+should be placed. Each of its elements can be a coordinate but it makes little
+sense to place them anywhere other than the edge.
+
+A `revenue` object looks like
+```JSON
+{
+	"position": "C",
+	"yellow": "20",
+	"green": "30",
+	"russet": "40",
+	"grey": "50"
+}
+```
+Of these fields only the `position` and `yellow` are required. The `position`
+field specifies the coordinate that is the centre of the revenue track. The
+other fields all define the value that should be in the field of that color.
