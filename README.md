@@ -69,6 +69,9 @@ A list of command line options is given below:
 * `-h` and `--help`: display usage and help. When you specify a mode followed
   by `-h` then help is given for that mode.
 * `-V` and `--version`: display version information and exit
+* `-v` and `--verbose`: output debug information.
+* `--pretty-coordinates`: put coordinates at each row/column instead of every
+  other column/row.
 
 # Tile definitions
 To build a game you first need to know what tiles are available. To simplify
