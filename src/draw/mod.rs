@@ -4,6 +4,7 @@ extern crate nalgebra as na;
 use std::collections::HashMap;
 use std::process;
 use self::svg::node::element::Group;
+use self::svg::node::element;
 use tile;
 use tile::TileSpec;
 use game;
@@ -124,6 +125,10 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
     let col_offset: f64;
     let width: f64;
     let height: f64;
+    let hor_nums: u32;
+    let ver_nums: u32;
+    let border_offset = 0.5;
+    let border = na::Vector2::new(border_offset, border_offset);
     match &game.map.orientation {
         &Orientation::Horizontal => {
             hor_dist = 1.5;
@@ -135,6 +140,8 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
             width = 0.3 * game.map.scale + game.map.width as f64 *
                 (0.5 * game.map.scale * 3.0_f64.sqrt());
             height = (0.5 + game.map.height as f64) * game.map.scale;
+            hor_nums = 1;
+            ver_nums = 2;
         }
         &Orientation::Vertical => {
             hor_dist = 3.0_f64.sqrt();
@@ -146,18 +153,25 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
             width = (0.5 + game.map.width as f64) * game.map.scale;
             height = 0.3 * game.map.scale + game.map.height as f64 *
                 (game.map.scale * 0.5 * 3.0_f64.sqrt());
+            hor_nums = 2;
+            ver_nums = 1;
         }
     }
+    let page_width = (width * 3.0_f64.sqrt() + 2.0 * border_offset *
+                      game.map.scale) * consts::PPCM;
+    let page_height = (height * 3.0_f64.sqrt() + 2.0 * border_offset *
+                       game.map.scale) * consts::PPCM;
     let mut doc = svg::Document::new()
-        .set("width", format!("{}", width * consts::PPCM * 3.0_f64.sqrt()))
-        .set("height", format!("{}", height * consts::PPCM * 3.0_f64.sqrt()));
+        .set("width", format!("{}", page_width))
+        .set("height", format!("{}", page_height));
 
     // Draw tiles
     for tile in game.map.tiles.iter() {
         let (x, y) = tile.location;
         let pos = Vector2::new(
             (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
-            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset);
+            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset)
+            + border;
         doc = doc.add(draw_tile(tile, &pos, &game.map));
     }
 
@@ -166,11 +180,63 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
         let (x, y) = barrier.location;
         let pos = na::Vector2::new(
             (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
-            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset);
+            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset)
+            + border;
         doc = doc.add(helpers::draw_barrier(barrier, &pos, &game.map));
     }
 
-    doc
+    // Draw coordinate system
+    let mut border = element::Group::new()
+        .add(element::Rectangle::new()
+            .set("x", border_offset * consts::PPCM * game.map.scale)
+            .set("y", border_offset * consts::PPCM * game.map.scale)
+            .set("width", width * consts:: PPCM * 3.0_f64.sqrt())
+            .set("height", height * consts::PPCM * 3.0_f64.sqrt())
+            .set("fill", "none")
+            .set("stroke", "black")
+            .set("stroke-width",
+                 consts::LINE_WIDTH * consts::PPCM * game.map.scale));
+    for x in 0..(game.map.width * hor_nums) {
+        let x_off = border_offset + hor_offset * hor_dist;
+        let pos = na::Vector2::new(
+            x as f64 * hor_dist / hor_nums as f64 + x_off,
+            0.75 * border_offset) * consts::PPCM * game.map.scale;
+        border = border.add(helpers::draw_text(&(x + 1).to_string(),
+                                               &pos,
+                                               &tile::TextAnchor::Middle,
+                                               Some(String::from("16pt")),
+                                               Some(600)));
+        let pos = pos + na::Vector2::new(0.0, (height * 3.0_f64.sqrt() +
+                            border_offset * game.map.scale) * consts::PPCM);
+        border = border.add(helpers::draw_text(&(x + 1).to_string(),
+                                               &pos,
+                                               &tile::TextAnchor::Middle,
+                                               Some(String::from("16pt")),
+                                               Some(600)));
+    }
+    for y in 0..(game.map.height * ver_nums) {
+        let y_off = border_offset + ver_offset * ver_dist;
+        let pos = na::Vector2::new(
+            0.5 * border_offset,
+            y as f64 * ver_dist / ver_nums as f64 + y_off)
+            * consts::PPCM * game.map.scale;
+        border = border.add(helpers::draw_text(&(y + 1).to_string(),
+                                               &pos,
+                                               &tile::TextAnchor::Middle,
+                                               Some(String::from("16pt")),
+                                               Some(600)));
+        let pos = pos + na::Vector2::new(
+            (width * 3.0_f64.sqrt() + border_offset * game.map.scale) *
+                consts::PPCM,
+            0.0);
+        border = border.add(helpers::draw_text(&(y + 1).to_string(),
+                                               &pos,
+                                               &tile::TextAnchor::Middle,
+                                               Some(String::from("16pt")),
+                                               Some(600)));
+    }
+
+    doc.add(border)
 }
 
 /// Draws a single tile
