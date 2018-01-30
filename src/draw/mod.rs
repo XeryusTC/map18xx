@@ -116,7 +116,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
 }
 
 /// Draw the map of a game
-pub fn draw_map(game: &game::Game) -> svg::Document {
+pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
     let hor_dist: f64;
     let ver_dist: f64;
     let hor_offset: f64;
@@ -125,8 +125,8 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
     let col_offset: f64;
     let width: f64;
     let height: f64;
-    let hor_nums: u32;
-    let ver_nums: u32;
+    let mut hor_nums: u32 = 1;
+    let mut ver_nums: u32 = 1;
     let border_offset = 0.5;
     let border = na::Vector2::new(border_offset, border_offset);
     match &game.map.orientation {
@@ -141,7 +141,9 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
                 (0.5 * game.map.scale * 3.0_f64.sqrt());
             height = (0.5 + game.map.height as f64) * game.map.scale;
             hor_nums = 1;
-            ver_nums = 2;
+            if options.pretty_coordinates {
+                ver_nums = 2;
+            }
         }
         &Orientation::Vertical => {
             hor_dist = 3.0_f64.sqrt();
@@ -153,7 +155,9 @@ pub fn draw_map(game: &game::Game) -> svg::Document {
             width = (0.5 + game.map.width as f64) * game.map.scale;
             height = 0.3 * game.map.scale + game.map.height as f64 *
                 (game.map.scale * 0.5 * 3.0_f64.sqrt());
-            hor_nums = 2;
+            if options.pretty_coordinates {
+                hor_nums = 2;
+            }
             ver_nums = 1;
         }
     }

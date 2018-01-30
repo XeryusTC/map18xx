@@ -15,6 +15,7 @@ pub mod tile;
 pub struct Options {
     mode: String,
     verbose: bool,
+    pretty_coordinates: bool,
 }
 
 impl Options {
@@ -22,6 +23,7 @@ impl Options {
         Options {
             mode: String::from("definitions"),
             verbose: false,
+            pretty_coordinates: false,
         }
     }
 }
@@ -52,6 +54,10 @@ pub fn run() {
             .add_option(&["-v", "--verbose"],
                         argparse::StoreTrue,
                         "Print debug information");
+        parser.refer(&mut options.pretty_coordinates)
+            .add_option(&["--pretty-coordinates"],
+                        argparse::StoreTrue,
+                        "Show coordinates on each row/column");
         parser.refer(&mut options.mode)
             .add_argument("mode",
                           argparse::Store,
@@ -137,7 +143,7 @@ fn asset_mode(options: &Options, args: Vec<String>) {
     }
 
     println!("Exporting map...");
-    let map_render = draw::draw_map(&game);
+    let map_render = draw::draw_map(&game, &options);
     svg::save(format!("{}-map.svg", asset_options.name), &map_render)
         .unwrap_or_else(|err| {
             eprintln!("Failed to write {}-map.svg: {:?}", asset_options.name,
