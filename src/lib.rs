@@ -17,7 +17,6 @@ pub struct Options {
 impl Options {
     pub fn new() -> Options {
         Options {
-            mode: String::from("definitions"),
             verbose: false,
             pretty_coordinates: false,
         }
