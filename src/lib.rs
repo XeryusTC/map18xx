@@ -1,10 +1,7 @@
-extern crate argparse;
 #[macro_use]
 extern crate serde_derive;
 extern crate svg;
 
-use argparse::ArgumentParser;
-use std::io::{stdout, stderr};
 use std::process;
 
 pub mod draw;
@@ -13,9 +10,8 @@ pub mod tile;
 
 /// Place to store command line options
 pub struct Options {
-    mode: String,
-    verbose: bool,
-    pretty_coordinates: bool,
+    pub verbose: bool,
+    pub pretty_coordinates: bool,
 }
 
 impl Options {
@@ -28,8 +24,8 @@ impl Options {
     }
 }
 
-struct AssetOptions {
-    name: String,
+pub struct AssetOptions {
+    pub name: String,
 }
 
 impl AssetOptions {
@@ -40,50 +36,7 @@ impl AssetOptions {
     }
 }
 
-pub fn run() {
-    let mut options = Options::new();
-    let mut args = vec![];
-    { // Limit scope of ArgumentParser borrow
-        let mut parser = ArgumentParser::new();
-        parser.set_description("18xx tile and map designer.");
-        parser.add_option(&["-V", "--version"],
-                          argparse::Print(env!("CARGO_PKG_VERSION")
-                                          .to_string()),
-                          "Show version");
-        parser.refer(&mut options.verbose)
-            .add_option(&["-v", "--verbose"],
-                        argparse::StoreTrue,
-                        "Print debug information");
-        parser.refer(&mut options.pretty_coordinates)
-            .add_option(&["--pretty-coordinates"],
-                        argparse::StoreTrue,
-                        "Show coordinates on each row/column");
-        parser.refer(&mut options.mode)
-            .add_argument("mode",
-                          argparse::Store,
-                          "Mode to use (default: definitions)");
-        parser.refer(&mut args)
-            .add_argument("args",
-                          argparse::List,
-                          "Arguments for mode");
-        parser.stop_on_first_argument(true);
-        parser.parse_args_or_exit();
-    }
-
-    match options.mode.as_ref() {
-        "d" | "def" | "definitions" => definitions(&options),
-        "a" | "asset" | "assets" => {
-            args.insert(0, String::from("game"));
-            asset_mode(&options, args)
-        }
-        m => {
-            println!("Unrecognized mode '{}'. See 'map18xx --help'", m);
-            process::exit(1);
-        }
-    }
-}
-
-fn definitions(options: &Options) {
+pub fn definitions(options: &Options) {
     let definitions = tile::definitions(options);
     let document = svg::Document::new()
         .set("width", "210mm") // A4 width
@@ -96,21 +49,7 @@ fn definitions(options: &Options) {
     });
 }
 
-fn asset_mode(options: &Options, args: Vec<String>) {
-    let mut asset_options = AssetOptions::new();
-    { // Limit scope of ArgumentParser borrow
-        let mut parser = ArgumentParser::new();
-        parser.set_description("Game mode");
-        parser.refer(&mut asset_options.name).required()
-            .add_argument("name",
-                          argparse::Store,
-                          "Game for which to generate files");
-        match parser.parse(args, &mut stdout(), &mut stderr()) {
-            Ok(()) => {}
-            Err(x) => process::exit(x),
-        }
-    }
-
+pub fn asset_mode(options: &Options, asset_options: &AssetOptions) {
     println!("Processing game '{}'", asset_options.name);
     let definitions = tile::definitions(options);
     let game = game::Game::load(["games", asset_options.name.as_str()]
