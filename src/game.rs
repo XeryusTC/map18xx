@@ -93,6 +93,7 @@ pub struct Game {
     pub manifest: Manifest,
     pub map: Map,
     pub log: Option<Log>,
+    pub companies: HashMap<String, Company>,
 }
 
 impl Game {
@@ -101,6 +102,7 @@ impl Game {
             manifest: Manifest::default(),
             map: Map::default(),
             log: None,
+            companies: HashMap::new(),
         }
     }
 
@@ -108,6 +110,7 @@ impl Game {
                 definitions: &HashMap<String, tile::TileDefinition>) -> Game {
         let mut game = Game::new();
         let manifest_filename = dir.join("manifest.json");
+        let companies_filename = dir.join("companies.json");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
             process::exit(1);
@@ -136,6 +139,21 @@ impl Game {
                     eprintln!("Unknown base_tile '{}'", base);
                     process::exit(1);
                 }
+            }
+        }
+
+        println!("Reading companies...");
+        match File::open(companies_filename) {
+            Err(e) => {
+                eprintln!("Couldn't open company definitions: {}", e);
+                process::exit(1);
+            }
+            Ok(file) => {
+                game.companies = serde_json::from_reader(file)
+                    .unwrap_or_else(|err| {
+                        eprintln!("Failed to parse companies: {}", err);
+                        process::exit(1);
+                    });
             }
         }
 
@@ -432,4 +450,18 @@ impl Log {
 pub enum Action {
     TileLay { location: (u32, u32), tile: String, orientation: String },
     Token { location: (u32, u32), company: String, city: Option<u32> },
+}
+
+#[derive(Clone,Deserialize)]
+#[serde(untagged)]
+pub enum Home {
+    PositionOnly(u32, u32),
+    PositionStation(u32, u32, usize),
+}
+
+#[derive(Clone, Deserialize)]
+pub struct Company {
+    pub name: String,
+    pub color: String,
+    pub home: Home,
 }
