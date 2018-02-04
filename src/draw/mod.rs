@@ -115,56 +115,47 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     sheets
 }
 
-/// Draw the map of a game
-pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
-    let hor_dist: f64;
-    let ver_dist: f64;
-    let hor_offset: f64;
-    let ver_offset: f64;
-    let row_offset: f64;
-    let col_offset: f64;
-    let width: f64;
-    let height: f64;
-    let mut hor_nums: u32 = 1;
-    let mut ver_nums: u32 = 1;
-    let border_offset = 0.5;
-    let border = na::Vector2::new(border_offset, border_offset);
-    match &game.map.orientation {
-        &Orientation::Horizontal => {
-            hor_dist = 1.5;
-            ver_dist = 3.0_f64.sqrt();
-            hor_offset = 2.0 / 3.0;
-            ver_offset = 0.5;
-            row_offset = 0.0;
-            col_offset = 0.5 * 3.0_f64.sqrt();
-            width = 0.3 * game.map.scale + game.map.width as f64 *
-                (0.5 * game.map.scale * 3.0_f64.sqrt());
-            height = (0.5 + game.map.height as f64) * game.map.scale;
-            hor_nums = 1;
-            if options.pretty_coordinates {
-                ver_nums = 2;
-            }
+/// Convert location to cube coordinate
+fn convert_coord(col: i32, row: i32, game: &game::Game) -> [f64; 3] {
+    match game.map.orientation {
+        Orientation::Vertical => {
+            let x = (col - (row - (row % 2)) / 2) as f64;
+            let z = row as f64;
+            [x, -x-z, -z]
         }
-        &Orientation::Vertical => {
-            hor_dist = 3.0_f64.sqrt();
-            ver_dist = 1.5;
-            hor_offset = 0.5;
-            ver_offset = 2.0 / 3.0;
-            row_offset = hor_dist * 0.5;
-            col_offset = 0.0;
-            width = (0.5 + game.map.width as f64) * game.map.scale;
-            height = 0.3 * game.map.scale + game.map.height as f64 *
-                (game.map.scale * 0.5 * 3.0_f64.sqrt());
-            if options.pretty_coordinates {
-                hor_nums = 2;
-            }
-            ver_nums = 1;
+        Orientation::Horizontal => {
+            let x = col as f64;
+            let z = (row - (col - (col % 2)) / 2) as f64;
+            [x, -x-z, -z]
         }
     }
-    let page_width = (width * 3.0_f64.sqrt() + 2.0 * border_offset *
-                      game.map.scale) * consts::PPCM;
-    let page_height = (height * 3.0_f64.sqrt() + 2.0 * border_offset *
-                       game.map.scale) * consts::PPCM;
+}
+
+/// Draw the map of a game
+pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
+    let width: f64;
+    let height: f64;
+    let border_offset = 0.5;
+    let offset: Vector2<f64>;
+    match &game.map.orientation {
+        &Orientation::Horizontal => {
+            width = 0.3 * 3.0_f64.sqrt() + game.map.width as f64 * 1.5;
+            height = (0.5 + game.map.height as f64) * 3.0_f64.sqrt();
+            offset = Vector2::new(border_offset + 1.0,
+                                  border_offset + 3.0_f64.sqrt() / 2.0);
+        }
+        &Orientation::Vertical => {
+            width = (0.5 + game.map.width as f64) * 3.0_f64.sqrt();
+            height = 0.3 * 3.0_f64.sqrt() + game.map.height as f64 * 1.5;
+            offset = Vector2::new(border_offset + 3.0_f64.sqrt() / 2.0,
+                                  border_offset + 1.0);
+        }
+    }
+    let page_width = (width + 2.0 * border_offset) *
+                      game.map.scale * consts::PPCM;
+    let page_height = (height + 2.0 * border_offset) *
+                       game.map.scale * consts::PPCM;
+    let basis = helpers::get_basis(&game.map.orientation);
     let mut doc = svg::Document::new()
         .set("width", format!("{}", page_width))
         .set("height", format!("{}", page_height));
@@ -172,72 +163,91 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
     // Draw tiles
     for tile in game.map.tiles.iter() {
         let (x, y) = tile.location;
-        let pos = Vector2::new(
-            (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
-            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset)
-            + border;
+        let pos = offset + basis
+            * na::Vector3::from(convert_coord(x as i32, y as i32, game))
+                .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
         doc = doc.add(draw_tile(tile, &pos, &game.map));
     }
 
     // Draw borders
     for barrier in game.map.barriers.iter() {
         let (x, y) = barrier.location;
-        let pos = na::Vector2::new(
-            (x as f64 + hor_offset) * hor_dist + (y % 2) as f64 * row_offset,
-            (y as f64 + ver_offset) * ver_dist + (x % 2) as f64 * col_offset)
-            + border;
+        let pos = offset + basis
+            * na::Vector3::from(convert_coord(x as i32, y as i32, game))
+                .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
         doc = doc.add(helpers::draw_barrier(barrier, &pos, &game.map));
     }
 
     // Draw coordinate system
+    let hoffset: f64;
+    let voffset: f64 = border_offset + 1.0;
+    let hstride: f64;
+    let vstride: f64;
+    let mut hnums: u32 = 1;
+    let mut vnums: u32 = 1;
+    match game.map.orientation {
+        Orientation::Horizontal => {
+            if !options.debug_coordinates {
+                vnums = 2;
+            }
+            hoffset = border_offset + 1.0;
+            hstride = 1.5;
+            vstride = 3.0_f64.sqrt() / vnums as f64;
+        }
+        Orientation::Vertical => {
+            if !options.debug_coordinates {
+                hnums = 2;
+            }
+            hoffset = border_offset + 0.5 * 3.0_f64.sqrt();
+            hstride = 3.0_f64.sqrt() / hnums as f64;
+            vstride = 1.5;
+        }
+    }
     let mut border = element::Group::new()
         .add(element::Rectangle::new()
             .set("x", border_offset * consts::PPCM * game.map.scale)
             .set("y", border_offset * consts::PPCM * game.map.scale)
-            .set("width", width * consts:: PPCM * 3.0_f64.sqrt())
-            .set("height", height * consts::PPCM * 3.0_f64.sqrt())
+            .set("width", width * consts:: PPCM * game.map.scale)
+            .set("height", height * consts::PPCM * game.map.scale)
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width",
                  consts::LINE_WIDTH * consts::PPCM * game.map.scale));
-    for x in 0..(game.map.width * hor_nums) {
-        let x_off = border_offset + hor_offset * hor_dist;
-        let pos = na::Vector2::new(
-            x as f64 * hor_dist / hor_nums as f64 + x_off,
-            0.75 * border_offset) * consts::PPCM * game.map.scale;
-        border = border.add(helpers::draw_text(&(x + 1).to_string(),
-                                               &pos,
-                                               &tile::TextAnchor::Middle,
-                                               Some(String::from("16pt")),
-                                               Some(600)));
-        let pos = pos + na::Vector2::new(0.0, (height * 3.0_f64.sqrt() +
-                            border_offset * game.map.scale) * consts::PPCM);
-        border = border.add(helpers::draw_text(&(x + 1).to_string(),
-                                               &pos,
-                                               &tile::TextAnchor::Middle,
-                                               Some(String::from("16pt")),
-                                               Some(600)));
-    }
-    for y in 0..(game.map.height * ver_nums) {
-        let y_off = border_offset + ver_offset * ver_dist;
-        let pos = na::Vector2::new(
-            0.5 * border_offset,
-            y as f64 * ver_dist / ver_nums as f64 + y_off)
+    for x in 0..(game.map.width * hnums) {
+        let text = if options.debug_coordinates {
+            x.to_string()
+        } else {
+            (x + 1).to_string()
+        };
+        let x1 = Vector2::new(x as f64 * hstride + hoffset,
+                              0.75 * border_offset)
             * consts::PPCM * game.map.scale;
-        border = border.add(helpers::draw_text(&(y + 1).to_string(),
-                                               &pos,
-                                               &tile::TextAnchor::Middle,
-                                               Some(String::from("16pt")),
-                                               Some(600)));
-        let pos = pos + na::Vector2::new(
-            (width * 3.0_f64.sqrt() + border_offset * game.map.scale) *
-                consts::PPCM,
-            0.0);
-        border = border.add(helpers::draw_text(&(y + 1).to_string(),
-                                               &pos,
-                                               &tile::TextAnchor::Middle,
-                                               Some(String::from("16pt")),
-                                               Some(600)));
+        let x2 = Vector2::new(x as f64 * hstride + hoffset,
+                              1.75 * border_offset + height)
+            * consts::PPCM * game.map.scale;
+        border = border
+            .add(helpers::draw_text(&text, &x1, &tile::TextAnchor::Middle,
+                                    Some(String::from("16pt")), Some(600)))
+            .add(helpers::draw_text(&text, &x2, &tile::TextAnchor::Middle,
+                                    Some(String::from("16pt")), Some(600)));
+    }
+    for y in 0..(game.map.height * vnums) {
+        let text = if options.debug_coordinates {
+            y.to_string()
+        } else {
+            (y + 1).to_string()
+        };
+        let y1 = Vector2::new(0.5 * border_offset,
+                              y as f64 * vstride + voffset)
+            * consts::PPCM * game.map.scale;
+        let y2 = Vector2::new(1.5 * border_offset + width,
+                              y as f64 * vstride + voffset)
+            * consts::PPCM * game.map.scale;
+        border = border
+            .add(helpers::draw_text(&text, &y1, &tile::TextAnchor::Middle,
+                                    Some(String::from("16pt")), Some(600)))
+            .add(helpers::draw_text(&text, &y2, &tile::TextAnchor::Middle,
+                                    Some(String::from("16pt")), Some(600)));
     }
 
     doc.add(border)
