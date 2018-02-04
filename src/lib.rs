@@ -11,14 +11,14 @@ pub mod tile;
 /// Place to store command line options
 pub struct Options {
     pub verbose: bool,
-    pub pretty_coordinates: bool,
+    pub debug_coordinates: bool,
 }
 
 impl Options {
     pub fn new() -> Options {
         Options {
             verbose: false,
-            pretty_coordinates: false,
+            debug_coordinates: false,
         }
     }
 }

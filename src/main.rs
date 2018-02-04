@@ -12,11 +12,13 @@ fn main() {
         .arg(Arg::with_name("verbose")
              .help("Print debug information")
              .short("v")
-             .long("verbose"))
-        .arg(Arg::with_name("pretty_coordinates")
+             .long("verbose")
+             .global(true))
+        .arg(Arg::with_name("debug_coordinates")
              .help("Show coordinates on each row/column")
-             .long("pretty_coordinates")
-             .aliases(&["pc"]))
+             .short("c")
+             .long("debug_coordinates")
+             .global(true))
         .subcommand(SubCommand::with_name("asset")
                     .about("Generate assets to PnP game")
                     .aliases(&["a", "assets"])
@@ -28,7 +30,7 @@ fn main() {
 
     let mut options = map18xx::Options::new();
     options.verbose = matches.is_present("verbose");
-    options.pretty_coordinates = matches.is_present("pretty_coordinates");
+    options.debug_coordinates = matches.is_present("debug_coordinates");
 
     // Determine subcommand
     match matches.subcommand() {
