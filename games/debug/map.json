@@ -1,7 +1,7 @@
 {
 	"orientation": "Horizontal",
 	"scale": 3.81,
-	"width": 11,
+	"width": 6,
 	"height": 9,
 	"tiles": [
 		{"location": [0, 0], "tile": "1", "orientation": "N", "text": ["N"]},
