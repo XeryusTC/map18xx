@@ -86,7 +86,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                                 &(Vector2::new(2.0_f64, 0.5) * info.scale *
                                   consts::PPCM),
                                 &tile::TextAnchor::Start,
-                                Some(String::from("200%")), None));
+                                Some("200%"), None));
     for tile in game.manifest.tiles.iter() {
         for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
             let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
@@ -107,7 +107,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                             &(Vector2::new(2.0_f64, 0.5) * info.scale *
                               consts::PPCM),
                             &tile::TextAnchor::Start,
-                            Some(String::from("200%")), None));
+                            Some("200%"), None));
             }
         }
     }
@@ -227,9 +227,9 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
             * consts::PPCM * game.map.scale;
         border = border
             .add(helpers::draw_text(&text, &x1, &tile::TextAnchor::Middle,
-                                    Some(String::from("16pt")), Some(600)))
+                                    Some("16pt"), Some(600)))
             .add(helpers::draw_text(&text, &x2, &tile::TextAnchor::Middle,
-                                    Some(String::from("16pt")), Some(600)));
+                                    Some("16pt"), Some(600)));
     }
     for y in 0..(game.map.height * vnums) {
         let text = if options.debug_coordinates {
@@ -245,9 +245,9 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
             * consts::PPCM * game.map.scale;
         border = border
             .add(helpers::draw_text(&text, &y1, &tile::TextAnchor::Middle,
-                                    Some(String::from("16pt")), Some(600)))
+                                    Some("16pt"), Some(600)))
             .add(helpers::draw_text(&text, &y2, &tile::TextAnchor::Middle,
-                                    Some(String::from("16pt")), Some(600)));
+                                    Some("16pt"), Some(600)));
     }
 
     doc.add(border)
@@ -302,7 +302,7 @@ pub fn draw_tile<T>(tile: &T,
         let text_pos = consts::PPCM * map.scale *
             (rotation * basis * text.position() + pos);
         let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
-                                       &text.anchor, text.size, text.weight);
+                                       &text.anchor, text.size(), text.weight);
         // Rotate the tile number with the orientation of the map
         if let Orientation::Vertical = map.orientation {
             t = t.set("transform",

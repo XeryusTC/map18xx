@@ -13,10 +13,10 @@ use tile;
 use super::consts::PPCM;
 
 /// Draw text
-pub fn draw_text(text: &String,
+pub fn draw_text(text: &str,
                  pos: &na::Vector2<f64>,
                  anchor: &tile::TextAnchor,
-                 size: Option<String>,
+                 size: Option<&str>,
                  weight: Option<u32>) -> element::Text {
     let mut style = String::new();
     style.push_str(match anchor {
