@@ -1,7 +1,7 @@
 {
 	"text": [
 		{
-			"id": 2,
+			"id": "2",
 			"position": [-0.3, -0.4, 0.0],
 			"size": "120%",
 			"weight": 900,
@@ -24,7 +24,7 @@
 	],
 	"cities": [
 		{
-			"text_id": 1,
+			"text_id": "1",
 			"position": "C",
 			"circles": 1,
 			"revenue_position": [ 0.0, 0.6, 0.0 ]

@@ -17,7 +17,7 @@
 		{
 			"circles": 3,
 			"position": "C",
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_position": [ -0.37, 0.0, 0.4 ]
 		}
 	]

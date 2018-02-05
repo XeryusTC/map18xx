@@ -2,7 +2,7 @@
 	"text": [
 		{
 			"purpose": "name",
-			"id": 3,
+			"id": "3",
 			"position": [-0.5, 0.0, 0.0],
 			"anchor": "Middle"
 		}
@@ -21,7 +21,7 @@
 		{
 			"position": "C",
 			"circles": 1,
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}
 	]

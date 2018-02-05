@@ -1,7 +1,7 @@
 {
 	"text": [
 		{
-			"id": 2,
+			"id": "2",
 			"position": [0.5, 0.0, 0.0],
 			"size": "120%",
 			"weight": 900,
@@ -25,19 +25,19 @@
 	"cities": [
 		{
 			"circles": 1,
-			"text_id": 1,
+			"text_id": "1",
 			"position": [ 0.1, 0.0, 0.5 ],
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		},
 		{
 			"circles": 1,
-			"text_id": 1,
+			"text_id": "1",
 			"position": [ -0.2, -0.2, 0.0 ],
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		},
 		{
 			"circles": 1,
-			"text_id": 1,
+			"text_id": "1",
 			"position": [ 0.0, 0.1, -0.5 ],
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}

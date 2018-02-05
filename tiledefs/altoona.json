@@ -1,7 +1,7 @@
 {
 	"text": [
 		{
-			"id": 2,
+			"id": "2",
 			"position": [0.0, -0.6, 0.0],
 			"anchor": "Middle"
 		}
@@ -25,7 +25,7 @@
 	"cities": [
 		{
 			"position": "C",
-			"text_id": 1,
+			"text_id": "1",
 			"circles": 1,
 			"revenue_position": [0.0, 0.75, 0.0]
 		}

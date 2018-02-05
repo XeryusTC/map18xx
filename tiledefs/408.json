@@ -19,13 +19,13 @@
 	],
 	"cities": [
 		{
-			"text_id": 1,
+			"text_id": "1",
 			"circles": 1,
 			"position": [ 0.0, -0.2, -0.2 ],
 			"revenue_position": [ 0.0, -0.8, 0.1 ]
 		},
 		{
-			"text_id": 1,
+			"text_id": "1",
 			"circles": 2,
 			"position": [ 0.0, 0.2, 0.2 ],
 			"revenue_position": [ 0.7, 0.0, 0.0 ]

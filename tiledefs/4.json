@@ -7,7 +7,7 @@
 	],
 	"stops": [
 		{
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_angle": 0,
 			"position": [ 0.0, 0.0, 0.0 ]
 		}

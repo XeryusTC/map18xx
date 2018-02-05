@@ -16,7 +16,7 @@
 	"cities": [
 		{
 			"circles": 2,
-			"text_id": 1,
+			"text_id": "1",
 			"position": "C",
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}

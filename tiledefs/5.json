@@ -2,13 +2,13 @@
 	"text": [
 		{
 			"purpose": "cost",
-			"id": 2,
+			"id": "2",
 			"position": [ 0.5, 0.0, 0.0 ],
 			"anchor": "Start"
 		},
 		{
 			"purpose": "name",
-			"id": 3,
+			"id": "3",
 			"position": [ 0.0, 0.0, 0.5 ],
 			"anchor": "Middle"
 		}
@@ -27,7 +27,7 @@
 		{
 			"circles": 1,
 			"position": "C",
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}
 	]

@@ -12,12 +12,12 @@
 	"stops": [
 		{
 			"position": [ 0.04, -0.3, -0.3 ],
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_angle": -170
 		},
 		{
 			"position": [ 0.0, 0.0, 0.5 ],
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_angle": 30
 		}
 	]

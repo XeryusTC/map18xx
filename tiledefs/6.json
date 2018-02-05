@@ -2,7 +2,7 @@
 	"text": [
 		{
 			"purpose": "code",
-			"id": 2,
+			"id": "2",
 			"position": [0.0, -0.6, 0.0],
 			"size": "120%",
 			"weight": 900,
@@ -10,13 +10,13 @@
 		},
 		{
 			"purpose": "cost",
-			"id": 3,
+			"id": "3",
 			"position": [0.0, 0.0, -0.6],
 			"anchor": "Middle"
 		},
 		{
 			"purpose": "name",
-			"id": 4,
+			"id": "4",
 			"position": [0.0, 0.0, 0.5],
 			"anchor": "Middle"
 		}
@@ -35,7 +35,7 @@
 		{
 			"circles": 1,
 			"position": "C",
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_position": [ 0.0, 0.6, 0.0 ]
 		}
 	]

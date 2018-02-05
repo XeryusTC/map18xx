@@ -1,7 +1,7 @@
 {
 	"text": [
 		{
-			"id": 2,
+			"id": "2",
 			"position": [0.0, 0.3, 0.3],
 			"size": "120%",
 			"weight": 900,
@@ -24,7 +24,7 @@
 	],
 	"stops": [
 		{
-			"text_id": 1,
+			"text_id": "1",
 			"revenue_angle": 90,
 			"position": [ 0.0, 0.14, 0.14 ]
 		}
