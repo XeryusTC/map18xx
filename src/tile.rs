@@ -249,58 +249,37 @@ impl TileSpec for Tile {
 
 /// Definition of tile layout, does not include color or name
 #[derive(Clone, Deserialize, Debug)]
+#[serde(default)]
 pub struct TileDefinition {
-    name: Option<String>,
-    paths: Option<Vec<Path>>,
-    cities: Option<Vec<City>>,
-    stops: Option<Vec<Stop>>,
-    is_lawson: Option<bool>,
-    text: Option<Vec<Text>>,
+    name: String,
+    paths: Vec<Path>,
+    cities: Vec<City>,
+    stops: Vec<Stop>,
+    is_lawson: bool,
+    text: Vec<Text>,
+}
+
+impl Default for TileDefinition {
+    fn default() -> TileDefinition {
+        TileDefinition {
+            name: "NoName".to_string(),
+            paths: vec![],
+            cities: vec![],
+            stops: vec![],
+            is_lawson: false,
+            text: vec![],
+        }
+    }
 }
 
 impl TileSpec for TileDefinition {
-    fn paths(&self) -> Vec<Path> {
-        match self.paths {
-            Some(ref paths) => paths.to_vec(),
-            None => vec![],
-        }
-    }
-
-    fn cities(&self) -> Vec<City> {
-        match self.cities {
-            Some(ref cities) => cities.to_vec(),
-            None => vec![],
-        }
-    }
-
-    fn stops(&self) -> Vec<Stop> {
-        match self.stops {
-            Some(ref stops) => stops.to_vec(),
-            None => vec![],
-        }
-    }
-
-    fn is_lawson(&self) -> bool {
-        match self.is_lawson {
-            Some(lawson) => lawson,
-            None => false,
-        }
-    }
-
-    fn color(&self) -> colors::Color {
-        colors::GROUND
-    }
-
-    fn set_name(&mut self, name: String) {
-        self.name = Some(name);
-    }
-
-    fn name(&self) -> &str {
-        match &self.name {
-            &Some(ref s) => &s.as_str(),
-            &None => "NA",
-        }
-    }
+    fn paths(&self) -> Vec<Path> { self.paths.clone() }
+    fn cities(&self) -> Vec<City> { self.cities.clone() }
+    fn stops(&self) -> Vec<Stop> { self.stops.clone() }
+    fn is_lawson(&self) -> bool { self.is_lawson }
+    fn color(&self) -> colors::Color { colors::GROUND }
+    fn set_name(&mut self, name: String) { self.name = name; }
+    fn name(&self) -> &str { self.name.as_str() }
 
     fn get_text<'a>(&'a self, id: &'a str) -> &'a str {
         match id {
@@ -310,13 +289,7 @@ impl TileSpec for TileDefinition {
     }
 
     fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
-        // Tile number is always in the same place
-        match &self.text {
-            &None => None,
-            &Some(ref text) => {
-                Some(text[id].position())
-            }
-        }
+        Some(self.text[id].position())
     }
 
     fn text_spec(&self) -> Vec<Text> {
@@ -327,14 +300,9 @@ impl TileSpec for TileDefinition {
             size: None,
             weight: None,
         };
-        match &self.text {
-            &None => vec![tile_number],
-            &Some(ref text) => {
-                let mut text = text.to_vec();
-                text.insert(0, tile_number);
-                text
-            }
-        }
+        let mut text = self.text.clone();
+        text.insert(0, tile_number);
+        text
     }
 }
 
@@ -351,7 +319,8 @@ pub struct Path {
     end: Coordinate,
     pub start_control: Option<Coordinate>,
     pub end_control: Option<Coordinate>,
-    is_bridge: Option<bool>,
+    #[serde(default)]
+    is_bridge: bool,
 }
 
 impl Path {
@@ -367,10 +336,7 @@ impl Path {
 
     /// Whether the is_bridge flag is set
     pub fn is_bridge(&self) -> bool {
-        match self.is_bridge {
-            Some(is_bridge) => is_bridge,
-            None => false,
-        }
+        self.is_bridge
     }
 
     /// The radius of the corner made by the path
