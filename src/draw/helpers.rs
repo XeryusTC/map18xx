@@ -168,7 +168,7 @@ pub fn draw_city<T>(city: tile::City,
         (rot * basis * city.revenue_position() + center);
     let text_pos = text_circle_pos + scale(&info) *
         na::Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
-    let text = tile.get_text(city.text_id as usize);
+    let text = tile.get_text(&city.text_id);
     let master = if text.is_empty() {
         element::Group::new()
     } else {
@@ -374,7 +374,7 @@ pub fn draw_stop<T>(stop: tile::Stop,
         .add(draw_circle(&pos, STOP_SIZE * scale(&info), "black",
                          "white", LINE_WIDTH * scale(&info)));
     // Draw the revenue if it is set
-    let text = tile.get_text(stop.text_id as usize);
+    let text = tile.get_text(&stop.text_id);
     if !text.is_empty() {
         let text_circle_pos = pos + scale(&info) * rotate(&angle) *
             na::Vector2::new(STOP_TEXT_DIST, 0.0);

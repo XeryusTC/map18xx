@@ -298,7 +298,7 @@ pub fn draw_tile<T>(tile: &T,
     for text in tile.text_spec() {
         let text_pos = helpers::scale(&map) *
             (rotation * basis * text.position() + pos);
-        let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
+        let mut t = helpers::draw_text(&tile.get_text(&text.id), &text_pos,
                                        &text.anchor, text.size(), text.weight);
         // Rotate the tile number with the orientation of the map
         if let Orientation::Vertical = map.orientation {

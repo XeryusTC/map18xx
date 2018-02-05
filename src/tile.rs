@@ -147,7 +147,7 @@ pub trait TileSpec {
     /// Revenue track on the tile
     fn revenue_track(&self) -> Option<RevenueTrack> { None }
 
-    fn get_text(&self, usize) -> String;
+    fn get_text<'a>(&'a self, &'a str) -> &'a str;
     fn text_position(&self, usize) -> Option<na::Vector3<f64>>;
     fn text_spec(&self) -> Vec<Text>;
 
@@ -160,7 +160,7 @@ pub trait TileSpec {
 pub struct Tile {
     base_tile: String,
     color: String,
-    text: Box<[String]>,
+    text: HashMap<String, String>,
 
     #[serde(skip)]
     definition: Option<TileDefinition>,
@@ -181,7 +181,7 @@ impl Default for Tile {
         Tile {
             base_tile: String::new(),
             color: String::new(),
-            text: Box::new([]),
+            text: HashMap::new(),
             definition: None,
         }
     }
@@ -194,11 +194,11 @@ impl TileSpec for Tile {
 
     /// The number of the tile, should be the first text specified
     fn name(&self) -> &str {
-        self.text[0].as_str()
+        self.text.get("number").unwrap()
     }
 
     fn set_name(&mut self, name: String) {
-        self.text[0] = name;
+        self.text.insert("number".to_string(), name);
     }
 
     fn paths(&self) -> Vec<Path> {
@@ -225,11 +225,10 @@ impl TileSpec for Tile {
             .is_lawson()
     }
 
-    fn get_text(&self, id: usize) -> String {
-        if id >= self.text.len() {
-            String::new()
-        } else {
-            self.text[id].to_string()
+    fn get_text(&self, id: &str) -> &str {
+        match self.text.get(id) {
+            Some(s) => s,
+            None => "",
         }
     }
 
@@ -303,11 +302,10 @@ impl TileSpec for TileDefinition {
         }
     }
 
-    fn get_text(&self, id: usize) -> String {
-        if id == 0 {
-            String::from(self.name())
-        } else {
-            id.to_string()
+    fn get_text<'a>(&'a self, id: &'a str) -> &'a str {
+        match id {
+            "number" => self.name(),
+            x => x,
         }
     }
 
@@ -323,7 +321,7 @@ impl TileSpec for TileDefinition {
 
     fn text_spec(&self) -> Vec<Text> {
         let tile_number = Text {
-            id: 0,
+            id: "number".to_string(),
             position: Coordinate::HexSpace((0.0, 0.0, -0.95)),
             anchor: TextAnchor::End,
             size: None,
@@ -409,7 +407,7 @@ impl Path {
 #[derive(Deserialize, Debug, Clone)]
 pub struct City {
     pub circles: u32,
-    pub text_id: u32,
+    pub text_id: String,
     pub revenue_position: Coordinate,
     position: Coordinate,
 }
@@ -432,7 +430,7 @@ impl City {
 #[derive(Deserialize, Debug, Clone)]
 pub struct Stop {
     position: Coordinate,
-    pub text_id: u32,
+    pub text_id: String,
     pub revenue_angle: i32,
 }
 
@@ -454,7 +452,7 @@ pub enum TextAnchor {
 /// Text on the tile
 #[derive(Deserialize, Debug, Clone)]
 pub struct Text {
-    pub id: usize,
+    pub id: String,
     position: Coordinate,
     size: Option<String>,
     pub weight: Option<u32>,

@@ -173,7 +173,7 @@ pub struct MapTile {
     color: Option<String>,
     orientation: Option<String>,
     #[serde(default)]
-    text: Box<[String]>,
+    text: HashMap<String, String>,
     arrows: Option<Vec<tile::Coordinate>>,
     revenue: Option<tile::RevenueTrack>,
 
@@ -229,13 +229,10 @@ impl TileSpec for MapTile {
            .is_lawson()
    }
 
-    fn get_text(&self, id: usize) -> String {
-        if id == 0 {
-            String::from(self.name())
-        } else if id > self.text.len() {
-            String::new()
-        } else {
-            self.text[id - 1].to_string()
+    fn get_text(&self, id: &str) -> &str {
+        match self.text.get(id) {
+            Some(s) => s,
+            None => "", // Undefined text should be invisible
         }
     }
 
