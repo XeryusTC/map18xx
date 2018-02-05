@@ -30,7 +30,7 @@ pub fn draw_tile_definitions(
         let definition = &definitions[name];
         let pos = Vector2::new(1.1_f64 + 2.25 * (i % TILES_PER_ROW),
                                    1.0 + 2.0 * (i / TILES_PER_ROW).floor());
-        let text_pos = consts::PPCM * info.scale
+        let text_pos = helpers::scale(&info)
             * Vector2::new(pos.x - 1.0, pos.y - 0.7);
         g = g.add(draw_tile(definition, &pos, &info))
             .add(helpers::draw_text(&name, &text_pos,
@@ -59,7 +59,7 @@ pub fn draw_tile_manifest(game: &game::Game) -> Group {
             }
             Some(amount) => amount.to_string(),
         };
-        let text_pos = consts::PPCM * game.map.scale *
+        let text_pos = helpers::scale(&game.map) *
             Vector2::new(pos.x-1.0, pos.y-0.7);
         g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
                                      &tile::TextAnchor::Start, None, None));
@@ -82,11 +82,11 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     let mut cur_doc = svg::Document::new()
         .set("width", "210mm")
         .set("height", "297mm")
-        .add(helpers::draw_text(&"Tile sheet 0".to_string(),
-                                &(Vector2::new(2.0_f64, 0.5) * info.scale *
-                                  consts::PPCM),
-                                &tile::TextAnchor::Start,
-                                Some("200%"), None));
+        .add(helpers::draw_text(
+                "Tile sheet 0",
+                &(Vector2::new(2.0_f64, 0.5) * helpers::scale(&info)),
+                &tile::TextAnchor::Start,
+                Some("200%"), None));
     for tile in game.manifest.tiles.iter() {
         for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
             let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
@@ -104,8 +104,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                     .set("height", "297mm")
                     .add(helpers::draw_text(
                             &format!("Tile sheet {}", drawn/TILES_PER_PAGE),
-                            &(Vector2::new(2.0_f64, 0.5) * info.scale *
-                              consts::PPCM),
+                            &(Vector2::new(2.0, 0.5) * helpers::scale(&info)),
                             &tile::TextAnchor::Start,
                             Some("200%"), None));
             }
@@ -151,10 +150,8 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
                                   border_offset + 1.0);
         }
     }
-    let page_width = (width + 2.0 * border_offset) *
-                      game.map.scale * consts::PPCM;
-    let page_height = (height + 2.0 * border_offset) *
-                       game.map.scale * consts::PPCM;
+    let page_width = (width + 2.0 * border_offset) * helpers::scale(&game.map);
+    let page_height = (height + 2.0 * border_offset)*helpers::scale(&game.map);
     let basis = helpers::get_basis(&game.map.orientation);
     let mut doc = svg::Document::new()
         .set("width", format!("{}", page_width))
@@ -205,14 +202,14 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
     }
     let mut border = element::Group::new()
         .add(element::Rectangle::new()
-            .set("x", border_offset * consts::PPCM * game.map.scale)
-            .set("y", border_offset * consts::PPCM * game.map.scale)
-            .set("width", width * consts:: PPCM * game.map.scale)
-            .set("height", height * consts::PPCM * game.map.scale)
+            .set("x", border_offset * helpers::scale(&game.map))
+            .set("y", border_offset * helpers::scale(&game.map))
+            .set("width", width * helpers::scale(&game.map))
+            .set("height", height * helpers::scale(&game.map))
             .set("fill", "none")
             .set("stroke", "black")
             .set("stroke-width",
-                 consts::LINE_WIDTH * consts::PPCM * game.map.scale));
+                 consts::LINE_WIDTH * helpers::scale(&game.map)));
     for x in 0..(game.map.width * hnums) {
         let text = if options.debug_coordinates {
             x.to_string()
@@ -221,10 +218,10 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
         };
         let x1 = Vector2::new(x as f64 * hstride + hoffset,
                               0.75 * border_offset)
-            * consts::PPCM * game.map.scale;
+            * helpers::scale(&game.map);
         let x2 = Vector2::new(x as f64 * hstride + hoffset,
                               1.75 * border_offset + height)
-            * consts::PPCM * game.map.scale;
+            * helpers::scale(&game.map);
         border = border
             .add(helpers::draw_text(&text, &x1, &tile::TextAnchor::Middle,
                                     Some("16pt"), Some(600)))
@@ -239,10 +236,10 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
         };
         let y1 = Vector2::new(0.5 * border_offset,
                               y as f64 * vstride + voffset)
-            * consts::PPCM * game.map.scale;
+            * helpers::scale(&game.map);
         let y2 = Vector2::new(1.5 * border_offset + width,
                               y as f64 * vstride + voffset)
-            * consts::PPCM * game.map.scale;
+            * helpers::scale(&game.map);
         border = border
             .add(helpers::draw_text(&text, &y1, &tile::TextAnchor::Middle,
                                     Some("16pt"), Some(600)))
@@ -299,7 +296,7 @@ pub fn draw_tile<T>(tile: &T,
 
     // Draw text on tile
     for text in tile.text_spec() {
-        let text_pos = consts::PPCM * map.scale *
+        let text_pos = helpers::scale(&map) *
             (rotation * basis * text.position() + pos);
         let mut t = helpers::draw_text(&tile.get_text(text.id), &text_pos,
                                        &text.anchor, text.size(), text.weight);
