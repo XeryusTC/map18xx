@@ -179,18 +179,14 @@ pub fn draw_city(city: tile::City,
     };
 
     let pos = scale(&info) * (rot * basis * city.position() + center);
-    let center = rot * basis * city.position() + center;
     let mut g = element::Group::new();
     if let Orientation::Vertical = info.orientation {
         g = g.set("transform", format!("rotate(-30 {} {})", pos.x, pos.y));
     }
     g = match city.circles {
-        1 => g.add(draw_city_circle(&pos, info)),
+        1 => g, // Ignore this, the circle is drawn at the end
         2 => {
-            let pos1 = pos + rot * na::Vector2::new(
-                -scale(&info) * TOKEN_SIZE, 0.0);
-            let pos2 = pos + rot * na::Vector2::new(
-                scale(&info) * TOKEN_SIZE, 0.0);
+            let center = rot * basis * city.position() + center;
             g.add(element::Rectangle::new()
                   .set("x", (center.x - TOKEN_SIZE) * scale(&info))
                   .set("y", (center.y - TOKEN_SIZE) * scale(&info))
@@ -202,15 +198,10 @@ pub fn draw_city(city: tile::City,
                   .set("transform",
                        format!("rotate({} {} {})", rotation / PI * 180.0,
                                pos.x, pos.y)))
-                .add(draw_city_circle(&pos1, info))
-                .add(draw_city_circle(&pos2, info))
         }
         3 => {
             let sq3 = 3.0_f64.sqrt();
             let size = scale(&info) * TOKEN_SIZE;
-            let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
-            let pos2 = pos + na::Vector2::new(-size, size / sq3);
-            let pos3 = pos + na::Vector2::new( size, size / sq3);
             let data = Data::new()
                 .move_to((-size + pos.x, size / sq3 + size + pos.y))
                 .line_to((size + pos.x, size / sq3 + size + pos.y))
@@ -228,16 +219,8 @@ pub fn draw_city(city: tile::City,
                     .set("fill", "white")
                     .set("stroke", "black")
                     .set("stroke-width", LINE_WIDTH * scale(&info)))
-                .add(draw_city_circle(&pos1, info))
-                .add(draw_city_circle(&pos2, info))
-                .add(draw_city_circle(&pos3, info))
         }
         4 => {
-            let size = scale(&info) * TOKEN_SIZE;
-            let pos1 = pos + na::Vector2::new(-size, -size);
-            let pos2 = pos + na::Vector2::new(-size,  size);
-            let pos3 = pos + na::Vector2::new( size, -size);
-            let pos4 = pos + na::Vector2::new( size,  size);
             g.add(element::Rectangle::new()
                   .set("x", (center.x - 2.0 * TOKEN_SIZE) * scale(&info))
                   .set("y", (center.y - 2.0 * TOKEN_SIZE) * scale(&info))
@@ -247,11 +230,6 @@ pub fn draw_city(city: tile::City,
                   .set("fill", "white")
                   .set("stroke", "black")
                   .set("stroke-width", LINE_WIDTH * scale(&info)))
-                .add(draw_city_circle(&pos1, info))
-                .add(draw_city_circle(&pos1, info))
-                .add(draw_city_circle(&pos2, info))
-                .add(draw_city_circle(&pos3, info))
-                .add(draw_city_circle(&pos4, info))
         }
         x => {
             println!("A tile has an unknown number of circles: {}", x);
@@ -259,6 +237,10 @@ pub fn draw_city(city: tile::City,
                               0.0))
         }
     };
+    for i in 0..city.circles {
+        g = g.add(draw_city_circle(&city_circle_pos(&city, i, &center, info,
+                                                   rotation), info));
+    }
     master.add(g)
 }
 
@@ -277,7 +259,9 @@ pub fn draw_city_contrast(city: tile::City,
     match city.circles {
         1 => {
             let size = (TOKEN_SIZE + LINE_WIDTH) * scale(&info);
-            g.add(draw_circle(&pos, size, "none", "white",
+            g.add(draw_circle(
+                    &(city_circle_pos(&city, 0, center, info, rotation)),
+                              size, "none", "white",
                               LINE_WIDTH * scale(&info)))
         }
         2 => {
@@ -303,9 +287,9 @@ pub fn draw_city_contrast(city: tile::City,
             let sq3 = 3.0_f64.sqrt();
             let size = scale(&info) * TOKEN_SIZE;
             let radius = (TOKEN_SIZE + 1.5 * LINE_WIDTH) * scale(&info);
-            let pos1 = pos + na::Vector2::new(0.0, -2.0 * size / sq3);
-            let pos2 = pos + na::Vector2::new(-size, size / sq3);
-            let pos3 = pos + na::Vector2::new( size, size / sq3);
+            let pos1 = city_circle_pos(&city, 0, center, info, rotation);
+            let pos2 = city_circle_pos(&city, 1, center, info, rotation);
+            let pos3 = city_circle_pos(&city, 2, center, info, rotation);
             let data = Data::new()
                 .move_to((-size + pos.x, size / sq3 + size + pos.y))
                 .line_to((size + pos.x, size / sq3 + size + pos.y))
@@ -348,6 +332,41 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
                         info: &game::Map) -> element::Circle {
     draw_circle(pos, TOKEN_SIZE * scale(&info), "white", "black",
                 LINE_WIDTH * scale(&info))
+}
+
+/// Calculate the position of a single circle in a city
+fn city_circle_pos(city: &tile::City,
+                   circle: u32,
+                   center: &na::Vector2<f64>,
+                   info: &game::Map,
+                   rotation: &f64) -> na::Vector2<f64> {
+    let basis = get_basis(&info.orientation);
+    let rot = rotate(rotation);
+    let pos = rot * basis * city.position() + center;
+    let pos = match city.circles {
+        1 => pos,
+        2 => match circle {
+            0 => pos - rot * na::Vector2::new(TOKEN_SIZE, 0.0),
+            1 => pos + rot * na::Vector2::new(TOKEN_SIZE, 0.0),
+            n => panic!("Illegal circle id {} for city of size 2", n),
+        },
+        3 => match circle {
+            0 => pos + na::Vector2::new(0.0, -2.0 * TOKEN_SIZE/3.0_f64.sqrt()),
+            1 => pos + na::Vector2::new(-TOKEN_SIZE,
+                                        TOKEN_SIZE / 3.0_f64.sqrt()),
+            2 => pos + na::Vector2::new(TOKEN_SIZE, TOKEN_SIZE/3.0_f64.sqrt()),
+            n => panic!("Illegal circle id {} for city of size 3", n),
+        },
+        4 => match circle {
+            0 => pos + na::Vector2::new(-TOKEN_SIZE, -TOKEN_SIZE),
+            1 => pos + na::Vector2::new(-TOKEN_SIZE,  TOKEN_SIZE),
+            2 => pos + na::Vector2::new( TOKEN_SIZE, -TOKEN_SIZE),
+            3 => pos + na::Vector2::new( TOKEN_SIZE,  TOKEN_SIZE),
+            n => panic!("Illegal circle id {} for city of size 3", n),
+        }
+        n => panic!("Cities of {} not supported!", n),
+    };
+    pos * scale(&info)
 }
 
 /// Draw a stop
