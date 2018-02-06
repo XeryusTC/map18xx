@@ -3,6 +3,7 @@ extern crate serde_derive;
 extern crate serde_json;
 extern crate svg;
 
+use std::fs;
 use std::fs::OpenOptions;
 use std::process;
 
@@ -109,7 +110,22 @@ pub fn asset_mode(options: &Options, asset_options: &AssetOptions) {
 }
 
 pub fn newgame_mode(_options: &Options, newgame_options: &NewGameOptions) {
-    println!("Starting new game of {}", newgame_options.game);
+    // Validate that the game exists
+    let games: Vec<String> = match fs::read_dir("games") {
+        Err(e) => {
+            eprintln!("Couldn't open games directory: {}", e);
+            process::exit(1);
+        }
+        Ok(paths) => {
+            paths.map(|path| path.unwrap().file_name().into_string().unwrap())
+                .collect()
+        }
+    };
+    if !games.contains(&newgame_options.game) {
+        eprintln!("Game '{}' does not exist", newgame_options.game);
+        process::exit(1);
+    }
+
     let log = game::Log::new_game(newgame_options.game.clone());
     let file = OpenOptions::new()
         .write(true)
