@@ -54,6 +54,18 @@ impl NewGameOptions {
     }
 }
 
+pub struct StateOptions {
+    pub name: String,
+}
+
+impl StateOptions {
+    pub fn new() -> StateOptions {
+        StateOptions {
+            name: String::new(),
+        }
+    }
+}
+
 pub fn definitions(options: &Options) {
     let definitions = tile::definitions(options);
     let document = svg::Document::new()
@@ -144,4 +156,36 @@ pub fn newgame_mode(_options: &Options, newgame_options: &NewGameOptions) {
             serde_json::to_writer_pretty(file, &log).unwrap();
         }
     }
+}
+
+pub fn game_state_mode(options: &Options, state_options: &StateOptions) {
+    let log = game::Log::load(state_options, options);
+    let definitions = tile::definitions(options);
+    let game = game::Game::load(
+            ["games", log.game_name.as_str()].iter().collect(),
+            &definitions)
+        .set_log(log);
+
+    println!("Exporting tile manifest...");
+    let document = svg::Document::new()
+        .set("width", "210mm") // A4 width
+        .set("height",
+             format!("{}mm",
+                     (game.manifest.tiles.len() as f64 / 3.0).ceil()*30.0+3.0))
+        .add(draw::draw_tile_manifest(&game));
+    svg::save(format!("{}-manifest.svg", state_options.name), &document)
+        .unwrap_or_else(|err| {
+            eprintln!("Failed to write {}-manifest.svg: {}",
+                      state_options.name, err);
+            process::exit(1);
+        });
+
+    println!("Exporting map...");
+    let map_render = draw::draw_map(&game.map, &options);
+    svg::save(format!("{}-map.svg", state_options.name), &map_render)
+        .unwrap_or_else(|err| {
+            eprintln!("Failed to write {}-map.svg: {}",
+                      state_options.name, err);
+            process::exit(1);
+        });
 }

@@ -92,6 +92,7 @@ impl Map {
 pub struct Game {
     pub manifest: Manifest,
     pub map: Map,
+    log: Option<Log>,
 }
 
 impl Game {
@@ -99,6 +100,7 @@ impl Game {
         Game {
             manifest: Manifest::default(),
             map: Map::default(),
+            log: None,
         }
     }
 
@@ -141,6 +143,11 @@ impl Game {
         game.map = Map::load(dir, definitions);
 
         game
+    }
+
+    pub fn set_log(mut self, log: Log) -> Self {
+        self.log = Some(log);
+        self
     }
 }
 
@@ -301,6 +308,26 @@ impl Log {
             game_name: game,
             log: Box::new([]),
         }
+    }
+
+    pub fn load(state_options: &super::StateOptions,
+                _options: &super::Options) -> Log {
+        let log: Log;
+        let log_filename = format!("{}.json", state_options.name);
+        println!("Reading log from file...");
+        match File::open(log_filename) {
+            Err(e) => {
+                eprintln!("Failed to find game file: {}", e);
+                process::exit(1);
+            }
+            Ok(file) => {
+                log = serde_json::from_reader(file).unwrap_or_else(|err| {
+                    eprintln!("Failed to load game: {}", err);
+                    process::exit(1);
+                });
+            }
+        }
+        log
     }
 }
 

@@ -41,6 +41,13 @@ fn main() {
                          .help("Overwrite existing game file if it exists")
                          .short("o")
                          .long("ignore_existing")))
+        .subcommand(SubCommand::with_name("state")
+                    .about("Generate current state of a game in progress")
+                    .aliases(&["s"])
+                    .arg(Arg::with_name("name")
+                         .help("Name of the game to generate the state for")
+                         .required(true)
+                         .index(1)))
         .get_matches();
 
     let mut options = map18xx::Options::new();
@@ -62,6 +69,11 @@ fn main() {
                 .to_string();
             newgame.overwrite = matches.is_present("overwrite");
             map18xx::newgame_mode(&options, &newgame);
+        }
+        ("state", Some(ref matches)) => {
+            let mut state_options = map18xx::StateOptions::new();
+            state_options.name = matches.value_of("name").unwrap().to_string();
+            map18xx::game_state_mode(&options, &state_options);
         }
         ("", _) => map18xx::definitions(&options),
         (name, _) => eprintln!("Unkown subcommand {}.", name),
