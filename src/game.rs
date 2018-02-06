@@ -149,6 +149,23 @@ impl Game {
         self.log = Some(log);
         self
     }
+
+    pub fn placed_tiles(&self) -> HashMap<(u32, u32), PlacedTile> {
+        let mut placed = HashMap::new();
+        if let Some(ref log) = self.log {
+            for action in log.log.iter() {
+                if let &Action::TileLay { location, ref tile,
+                                          ref orientation } = action {
+                    let t = PlacedTile::new_from(self.manifest.tiles.iter()
+                            .find(|t| t.name() == tile).unwrap())
+                        .set_orientation(
+                            tile::direction_to_angle(orientation));
+                    placed.insert(location, t);
+                }
+            }
+        }
+        placed
+    }
 }
 
 #[derive(Deserialize)]
@@ -305,6 +322,51 @@ impl TileSpec for MapTile {
    fn revenue_track(&self) -> Option<tile::RevenueTrack> {
        self.revenue.clone()
    }
+}
+
+pub struct PlacedTile<'a> {
+    base_tile: &'a tile::TileSpec,
+    orientation: f64,
+}
+
+impl<'a> PlacedTile<'a> {
+    pub fn new_from(tile: &'a tile::TileSpec) -> PlacedTile {
+        PlacedTile {
+            base_tile: tile,
+            orientation: 0.0,
+        }
+    }
+
+    pub fn set_orientation(mut self, orientation: f64) -> Self {
+        self.orientation = orientation;
+        self
+    }
+}
+
+impl<'a> TileSpec for PlacedTile<'a> {
+    fn color(&self) -> tile::colors::Color { self.base_tile.color() }
+    fn set_name(&mut self, _name:String) {
+        panic!("Cannot change name of a PlacedTile");
+    }
+    fn name(&self) -> &str { self.base_tile.name() }
+    fn paths(&self) -> Vec<tile::Path> { self.base_tile.paths() }
+    fn cities(&self) -> Vec<tile::City> { self.base_tile.cities() }
+    fn stops(&self) -> Vec<tile::Stop> { self.base_tile.stops() }
+    fn is_lawson(&self) -> bool { self.base_tile.is_lawson() }
+    fn arrows(&self) -> Vec<tile::Coordinate> { self.base_tile.arrows() }
+    fn revenue_track(&self) -> Option<tile::RevenueTrack> {
+        self.base_tile.revenue_track()
+    }
+    fn get_text<'b>(&'b self, id: &'b str) -> &'b str {
+        self.base_tile.get_text(id)
+    }
+    fn text_position(&self, id: usize) -> Option<na::Vector3<f64>> {
+        self.base_tile.text_position(id)
+    }
+    fn text_spec(&self) -> Vec<tile::Text> { self.base_tile.text_spec() }
+    fn orientation(&self) -> f64 {
+        self.orientation
+    }
 }
 
 #[derive(Clone,Deserialize)]
