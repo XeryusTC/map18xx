@@ -112,7 +112,7 @@ pub fn asset_mode(options: &Options, asset_options: &AssetOptions) {
     }
 
     println!("Exporting map...");
-    let map_render = draw::draw_map(&game.map, &options);
+    let map_render = draw::draw_map(&game, &options);
     svg::save(format!("{}-map.svg", asset_options.name), &map_render)
         .unwrap_or_else(|err| {
             eprintln!("Failed to write {}-map.svg: {:?}", asset_options.name,
@@ -181,7 +181,7 @@ pub fn game_state_mode(options: &Options, state_options: &StateOptions) {
         });
 
     println!("Exporting map...");
-    let map_render = draw::draw_map(&game.map, &options);
+    let map_render = draw::draw_map(&game, &options);
     svg::save(format!("{}-map.svg", state_options.name), &map_render)
         .unwrap_or_else(|err| {
             eprintln!("Failed to write {}-map.svg: {}",
