@@ -157,18 +157,14 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
         .set("height", format!("{}", page_height));
 
     // Draw tiles
-    for (&(x, y), tile) in game.map.tiles().iter() {
+    let placed = game.placed_tiles();
+    let tiles = game.map.tiles();
+    let tiles = game::top_tiles(&placed, &tiles);
+    for (&(x, y), tile) in tiles.iter() {
         let pos = offset + basis
             * na::Vector3::from(convert_coord(x as i32, y as i32, &game.map))
                 .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
         doc = doc.add(draw_tile(tile.deref(), &pos, &game.map));
-    }
-    // Draw placed tiles
-    for (&(x, y), tile) in game.placed_tiles().iter() {
-        let pos = offset + basis
-            * na::Vector3::from(convert_coord(x as i32, y as i32, &game.map))
-                .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
-        doc = doc.add(draw_tile(tile, &pos, &game.map));
     }
 
     // Draw borders

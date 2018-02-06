@@ -168,6 +168,16 @@ impl Game {
     }
 }
 
+pub fn top_tiles<'a>(placed: &'a HashMap<(u32, u32), PlacedTile>,
+                     tiles: &'a HashMap<(u32, u32), &tile::TileSpec>)
+    -> HashMap<(u32, u32), &'a tile::TileSpec>
+{
+    let mut map: HashMap<(u32, u32), &tile::TileSpec> = HashMap::new();
+    map.extend(tiles);
+    placed.iter().map(|(k, t)| map.insert(*k, t as &tile::TileSpec)).count();
+    map
+}
+
 #[derive(Deserialize)]
 pub struct Manifest {
     pub tiles: Vec<tile::Tile>,
