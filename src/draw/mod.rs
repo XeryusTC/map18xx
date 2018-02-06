@@ -53,7 +53,7 @@ pub fn draw_tile_manifest(game: &game::Game) -> Group {
         i += 1.0;
 
         // Draw amount available
-        let amount = match game.manifest.amounts.get(tile.name()) {
+        let amount = match game.manifest.amounts(&game.log).get(tile.name()) {
             None => {
                 eprintln!("No tile amount found for {}", tile.name());
                 process::exit(1);
@@ -87,7 +87,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                 &tile::TextAnchor::Start,
                 Some("200%"), None));
     for tile in game.manifest.tiles.iter() {
-        for _ in 0..*game.manifest.amounts.get(tile.name()).unwrap() {
+        for _ in 0..*game.manifest.amounts(&None).get(tile.name()).unwrap() {
             let x = ((drawn % TILES_PER_PAGE) / TILES_PER_COL) as f64;
             let y = (drawn % TILES_PER_COL) as f64;
             let pos = Vector2::new(3.0_f64.sqrt() * (x + 1.0),

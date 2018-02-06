@@ -92,7 +92,7 @@ impl Map {
 pub struct Game {
     pub manifest: Manifest,
     pub map: Map,
-    log: Option<Log>,
+    pub log: Option<Log>,
 }
 
 impl Game {
@@ -154,7 +154,7 @@ impl Game {
 #[derive(Deserialize)]
 pub struct Manifest {
     pub tiles: Vec<tile::Tile>,
-    pub amounts: HashMap<String, u32>,
+    amounts: HashMap<String, u32>,
 }
 
 impl Default for Manifest {
@@ -174,6 +174,30 @@ impl Manifest {
             }
         }
         Err(format!("Tile with name '{}' not found in manifest", name))
+    }
+
+    pub fn amounts(&self, log: &Option<Log>) -> HashMap<String, u32> {
+        match log {
+            // Don't bother with the amount if there is no log
+            &None => self.amounts.clone(),
+            &Some(ref log) => {
+                let mut placed: HashMap<(u32, u32), &String> = HashMap::new();
+                let mut used: HashMap<&String, u32> = HashMap::new();
+                for action in log.log.iter() {
+                    if let &Action::TileLay{ location, ref tile, ..} = action {
+                        let old_tile = placed.insert(location, tile);
+                        if let Some(old_tile) = old_tile {
+                            *used.entry(old_tile).or_insert(0) -= 1;
+                        }
+                        *used.entry(tile).or_insert(0) += 1;
+                    }
+                }
+                self.amounts.iter()
+                    .map(|(k, v)| (k.clone(), v - *used.get(k).unwrap_or(&0)))
+                    .collect()
+            }
+
+        }
     }
 }
 
@@ -332,8 +356,8 @@ impl Log {
 }
 
 #[derive(Deserialize, Serialize)]
-#[serde(rename_all="lowercase")]
+#[serde(rename_all="lowercase", tag="type")]
 pub enum Action {
-    TileLay((u32, u32), String, String),
-    Token((u32, u32), String, u32),
+    TileLay { location: (u32, u32), tile: String, orientation: String },
+    Token { location: (u32, u32), company: String, city: Option<u32> },
 }
