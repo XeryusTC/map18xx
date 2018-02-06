@@ -2,6 +2,7 @@ extern crate svg;
 extern crate nalgebra as na;
 
 use std::collections::HashMap;
+use std::ops::Deref;
 use std::process;
 use self::svg::node::element::Group;
 use self::svg::node::element;
@@ -73,10 +74,8 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     const TILES_PER_PAGE: u32 = 30;
     const TILES_PER_COL: u32 = 6;
     // Always draw vertical (fits more on a page)
-    let info = game::Map {
-        orientation: Orientation::Vertical,
-        ..game.map.clone()
-    };
+    let mut info = game.map.clone();
+    info.orientation = Orientation::Vertical;
     let mut drawn = 0;
     let mut sheets = vec![];
     let mut cur_doc = svg::Document::new()
@@ -158,12 +157,11 @@ pub fn draw_map(map: &game::Map, options: &super::Options) -> svg::Document {
         .set("height", format!("{}", page_height));
 
     // Draw tiles
-    for tile in map.tiles.iter() {
-        let (x, y) = tile.location;
+    for (&(x, y), tile) in map.tiles().iter() {
         let pos = offset + basis
             * na::Vector3::from(convert_coord(x as i32, y as i32, map))
                 .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
-        doc = doc.add(draw_tile(tile, &pos, &map));
+        doc = doc.add(draw_tile(tile.deref(), &pos, &map));
     }
 
     // Draw borders
@@ -251,10 +249,9 @@ pub fn draw_map(map: &game::Map, options: &super::Options) -> svg::Document {
 }
 
 /// Draws a single tile
-pub fn draw_tile<T>(tile: &T,
+pub fn draw_tile(tile: &tile::TileSpec,
                  pos: &Vector2<f64>,
                  map: &game::Map) -> Group
-        where T: tile::TileSpec
 {
     let mut g = Group::new();
     let basis = helpers::get_basis(&map.orientation);

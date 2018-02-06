@@ -18,13 +18,14 @@ pub enum Orientation {
     Vertical,
 }
 
-#[derive(Clone,Deserialize)]
+#[derive(Clone, Deserialize)]
 pub struct Map {
     pub orientation: Orientation,
     pub scale: f64,
     pub width: u32,
     pub height: u32,
-    pub tiles: Vec<MapTile>,
+    #[serde(rename="tiles")]
+    raw_tiles: Vec<MapTile>,
     #[serde(default)]
     pub barriers: Vec<Barrier>,
 }
@@ -36,7 +37,7 @@ impl Default for Map {
             scale: 3.81, // Hexes are usually 3.81cm flat-to-flat
             width: 5,
             height: 5,
-            tiles: vec![],
+            raw_tiles: vec![],
             barriers: vec![],
         }
     }
@@ -66,7 +67,7 @@ impl Map {
             }
         };
         // Connect the tiles to their definitions
-        for tile in map.tiles.iter_mut() {
+        for tile in map.raw_tiles.iter_mut() {
             let base = tile.tile.clone();
             match definitions.get(&base) {
                 Some(def) => tile.set_definition(def),
@@ -78,6 +79,12 @@ impl Map {
             }
         }
         map
+    }
+
+    pub fn tiles(&self) -> HashMap<(u32, u32), &tile::TileSpec> {
+        self.raw_tiles.iter()
+            .map(|t| (t.location, t as &tile::TileSpec))
+            .collect()
     }
 }
 

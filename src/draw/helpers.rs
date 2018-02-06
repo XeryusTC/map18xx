@@ -153,13 +153,11 @@ pub fn draw_lawson(center: na::Vector2<f64>,
 }
 
 /// Draw a city
-pub fn draw_city<T>(city: tile::City,
+pub fn draw_city(city: tile::City,
                     center: na::Vector2<f64>,
                     info: &game::Map,
-                    tile: &T,
+                    tile: &tile::TileSpec,
                     rotation: &f64) -> element::Group
-    where
-        T: tile::TileSpec
 {
     let basis = get_basis(&info.orientation);
     let rot = rotate(rotation);
@@ -353,13 +351,11 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
 }
 
 /// Draw a stop
-pub fn draw_stop<T>(stop: tile::Stop,
+pub fn draw_stop(stop: tile::Stop,
                     center: na::Vector2<f64>,
                     info: &game::Map,
-                    tile: &T,
+                    tile: &tile::TileSpec,
                     rotation: &f64) -> element::Group
-    where
-        T: tile::TileSpec
 {
     let basis = get_basis(&info.orientation);
     let rot = rotate(rotation);
