@@ -285,18 +285,28 @@ pub struct Barrier {
 #[derive(Deserialize, Serialize)]
 pub struct Log {
     pub game_name: String,
+    pub log: Box<[Action]>,
 }
 
 impl Log {
     pub fn new() -> Log {
         Log {
             game_name: "1830".to_string(),
+            log: Box::new([]),
         }
     }
 
     pub fn new_game(game: String) -> Log {
         Log {
             game_name: game,
+            log: Box::new([]),
         }
     }
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(rename_all="lowercase")]
+pub enum Action {
+    TileLay((u32, u32), String, String),
+    Token((u32, u32), String, u32),
 }
