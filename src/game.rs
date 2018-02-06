@@ -281,3 +281,22 @@ pub struct Barrier {
     pub location: (u32, u32),
     pub side: String,
 }
+
+#[derive(Deserialize, Serialize)]
+pub struct Log {
+    pub game_name: String,
+}
+
+impl Log {
+    pub fn new() -> Log {
+        Log {
+            game_name: "1830".to_string(),
+        }
+    }
+
+    pub fn new_game(game: String) -> Log {
+        Log {
+            game_name: game,
+        }
+    }
+}

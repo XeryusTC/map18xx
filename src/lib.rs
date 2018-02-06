@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate serde_derive;
+extern crate serde_json;
 extern crate svg;
 
+use std::fs::OpenOptions;
 use std::process;
 
 pub mod draw;
@@ -30,6 +32,20 @@ pub struct AssetOptions {
 impl AssetOptions {
     pub fn new() -> AssetOptions {
         AssetOptions {
+            name: String::new(),
+        }
+    }
+}
+
+pub struct NewGameOptions {
+    pub game: String,
+    pub name: String,
+}
+
+impl NewGameOptions {
+    pub fn new() -> NewGameOptions {
+        NewGameOptions {
+            game: String::new(),
             name: String::new(),
         }
     }
@@ -88,4 +104,24 @@ pub fn asset_mode(options: &Options, asset_options: &AssetOptions) {
                       err.kind());
             process::exit(1);
     });
+}
+
+pub fn newgame_mode(_options: &Options, newgame_options: &NewGameOptions) {
+    println!("Starting new game of {}", newgame_options.game);
+    let log = game::Log::new_game(newgame_options.game.clone());
+    let file = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(format!("{}.json", newgame_options.name));
+    match file {
+        Err(e) => {
+            eprintln!("Couldn't create game file {}.json: {}",
+                      newgame_options.name, e);
+            process::exit(1);
+        }
+        Ok(file) => {
+            println!("Writing to {}.json", newgame_options.name);
+            serde_json::to_writer_pretty(file, &log).unwrap();
+        }
+    }
 }

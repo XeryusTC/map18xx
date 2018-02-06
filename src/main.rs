@@ -26,6 +26,17 @@ fn main() {
                          .help("Game for which to generate assets")
                          .required(true)
                          .index(1)))
+        .subcommand(SubCommand::with_name("newgame")
+                    .about("Start a new PBeM game")
+                    .aliases(&["n", "new"])
+                    .arg(Arg::with_name("game")
+                         .help("Name of the game you want to play")
+                         .required(true)
+                         .index(1))
+                    .arg(Arg::with_name("name")
+                         .help("Name of the new game")
+                         .required(true)
+                         .index(2)))
         .get_matches();
 
     let mut options = map18xx::Options::new();
@@ -38,6 +49,14 @@ fn main() {
             let mut asset_options = map18xx::AssetOptions::new();
             asset_options.name = matches.value_of("game").unwrap().to_string();
             map18xx::asset_mode(&options, &asset_options);
+        }
+        ("newgame", Some(ref matches)) => {
+            let mut newgame = map18xx::NewGameOptions::new();
+            newgame.game = matches.value_of("game").unwrap()
+                .to_string();
+            newgame.name = matches.value_of("name").unwrap()
+                .to_string();
+            map18xx::newgame_mode(&options, &newgame);
         }
         ("", _) => map18xx::definitions(&options),
         (name, _) => eprintln!("Unkown subcommand {}.", name),
