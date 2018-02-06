@@ -40,6 +40,7 @@ impl AssetOptions {
 pub struct NewGameOptions {
     pub game: String,
     pub name: String,
+    pub overwrite: bool,
 }
 
 impl NewGameOptions {
@@ -47,6 +48,7 @@ impl NewGameOptions {
         NewGameOptions {
             game: String::new(),
             name: String::new(),
+            overwrite: false,
         }
     }
 }
@@ -111,7 +113,9 @@ pub fn newgame_mode(_options: &Options, newgame_options: &NewGameOptions) {
     let log = game::Log::new_game(newgame_options.game.clone());
     let file = OpenOptions::new()
         .write(true)
-        .create_new(true)
+        .create(true)
+        .truncate(true)
+        .create_new(!newgame_options.overwrite)
         .open(format!("{}.json", newgame_options.name));
     match file {
         Err(e) => {

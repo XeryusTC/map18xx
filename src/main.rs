@@ -36,7 +36,11 @@ fn main() {
                     .arg(Arg::with_name("name")
                          .help("Name of the new game")
                          .required(true)
-                         .index(2)))
+                         .index(2))
+                    .arg(Arg::with_name("overwrite")
+                         .help("Overwrite existing game file if it exists")
+                         .short("o")
+                         .long("ignore_existing")))
         .get_matches();
 
     let mut options = map18xx::Options::new();
@@ -56,6 +60,7 @@ fn main() {
                 .to_string();
             newgame.name = matches.value_of("name").unwrap()
                 .to_string();
+            newgame.overwrite = matches.is_present("overwrite");
             map18xx::newgame_mode(&options, &newgame);
         }
         ("", _) => map18xx::definitions(&options),
