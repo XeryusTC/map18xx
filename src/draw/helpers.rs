@@ -335,7 +335,7 @@ pub fn draw_city_circle(pos: &na::Vector2<f64>,
 }
 
 /// Calculate the position of a single circle in a city
-fn city_circle_pos(city: &tile::City,
+pub fn city_circle_pos(city: &tile::City,
                    circle: u32,
                    center: &na::Vector2<f64>,
                    info: &game::Map,
@@ -572,4 +572,19 @@ pub fn draw_revenue_track(track: &tile::RevenueTrack,
     }
 
     g
+}
+
+/// Draw the token of a company
+pub fn draw_token(name: &str,
+                  color: &str,
+                  pos: &na::Vector2<f64>,
+                  map: &game::Map) -> element::Group {
+    element::Group::new()
+        .add(draw_circle(pos, (TOKEN_SIZE - 1.414 * LINE_WIDTH) * scale(map),
+                         "white",
+                         color, 2.0 * LINE_WIDTH * scale(map)))
+        .add(draw_text(name,
+                       &(pos + na::Vector2::new(0.0, TOKEN_SIZE / 3.5 * scale(map))),
+                       &tile::TextAnchor::Middle, None, None)
+             .set("fill", color))
 }
