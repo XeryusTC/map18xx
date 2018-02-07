@@ -176,6 +176,22 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
         doc = doc.add(helpers::draw_barrier(barrier, &pos, &game.map));
     }
 
+    // Draw tokens
+    for (location, tokens) in game.tokens().iter() {
+        let tile = tiles.get(&location).unwrap();
+        for token in tokens {
+            let city = &tile.cities()[token.station];
+            let center = offset + basis
+                * na::Vector3::from(convert_coord(location.0 as i32,
+                                                  location.1 as i32, &game.map))
+                    .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
+            let pos = helpers::city_circle_pos(&city, 0, &center, &game.map,
+                                               &tile.orientation());
+            doc = doc.add(helpers::draw_token(&token.name, &token.color, &pos,
+                                              &game.map));
+        }
+    }
+
     // Draw coordinate system
     let hoffset: f64;
     let voffset: f64 = border_offset + 1.0;

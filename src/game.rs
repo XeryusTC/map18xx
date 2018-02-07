@@ -184,6 +184,16 @@ impl Game {
         }
         placed
     }
+
+    pub fn tokens(&self) -> HashMap<(u32, u32), Vec<Token>> {
+        let mut tokens = HashMap::new();
+        for (name, company) in self.companies.iter() {
+            let token = Token::from(&company.home, name, &company.color)
+                .set_home();
+            tokens.entry(token.location).or_insert(vec![]).push(token);
+        }
+        tokens
+    }
 }
 
 pub fn top_tiles<'a>(placed: &'a HashMap<(u32, u32), PlacedTile>,
@@ -464,4 +474,39 @@ pub struct Company {
     pub name: String,
     pub color: String,
     pub home: Home,
+}
+
+pub struct Token {
+    pub name: String,
+    pub color: String,
+    pub location: (u32, u32),
+    pub station: usize,
+    pub circle: u32,
+    pub is_home: bool,
+}
+
+impl Token {
+    pub fn from(home: &Home, name: &str, color: &str) -> Self {
+        let mut token = Token {
+            name: name.to_string(),
+            color: color.to_string(),
+            location: (0, 0),
+            station: 0,
+            circle: 0,
+            is_home: false,
+        };
+        match home {
+            &Home::PositionOnly(x, y) => token.location = (x, y),
+            &Home::PositionStation(x, y, s) => {
+                token.location = (x, y);
+                token.station = s;
+            }
+        }
+        token
+    }
+
+    pub fn set_home(mut self) -> Self {
+        self.is_home = true;
+        self
+    }
 }
