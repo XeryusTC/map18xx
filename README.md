@@ -63,6 +63,16 @@ Generates a tile manifest (lists each tile in the game and how many there are
 in total) and sheets with tiles to print and play and play a specific game of
 18xx. It will also generate a map on which the tiles can be placed.
 
+### New game mode
+Creates a new game that can be used for PBEM. A game allows you to place tiles
+and tokens on a map without modifying the original map.
+
+### State mode
+Generates files to display the current state of a game started by the New game
+mode. It will create a map and manifest that reflect the tiles and tokens that
+have been placed. The manifest lists how many tiles are still available to be
+placed.
+
 # Command line arguments
 A list of command line options is given below:
 
@@ -70,8 +80,8 @@ A list of command line options is given below:
   by `-h` then help is given for that mode.
 * `-V` and `--version`: display version information and exit
 * `-v` and `--verbose`: output debug information.
-* `--pretty-coordinates`: put coordinates at each row/column instead of every
-  other column/row.
+* `-c` and `--debug-coordinates`: put coordinates at each row/column instead
+  of every other column/row.
 
 # Tile definitions
 To build a game you first need to know what tiles are available. To simplify
@@ -96,25 +106,21 @@ always drawn at the bottom right corner and has `text_id = 0`.
 ## Text IDs
 Before discussing what can be defined on a tile it is necessary to know how to
 specify text. For simplicity sake a tile definition specifies where text on the
-tile is supposed to go. A tile manifest can then simply define an array of text
-which dictates what the text for each respective entry in the `text` array
-should be. IDs start counting at 0, but this first ID is always reserved for
-the tile number. It is allowed for texts to share IDs, these will then be
-assigned the same string. It is recommended to make the ID for a text field as
-low as possible to avoid a consumer to define a needlessly long array. By
-convention the revenue on a tile has ID 1, the label of a tile has ID 2, the
-cost of building on a tile has ID 3, the name of a city has ID 4. Some tiles
-leave any of these out.
+tile is supposed to go. Each such a location can be given a name, the name
+`number` is reserved for the tile number that appears in one of the corners.
+A tile manifest or map can then specify what text goes on the tile by using a
+map `{"<id>": "text"}`. It is valid to not specify a text for some IDs, these
+will not be added.
 
 ## `text` array
 Free text on a tile can be specified by the `text array`. Each entry defines a
 single place to write text to. The usually look like
 ```JSON
 {
-	"id": 2,
+	"id": "code",
 	"position": [0.5, 0.0, 0.0],
 	"anchor": "Start",
-	"size": "120%"
+	"size": "120%",
 	"weight": 900,
 }
 ```
@@ -206,7 +212,8 @@ outputs a tile manifest in `manifest.svg` and a list of files called
 number.  The manifest file contains an example of each tile in the game
 together with a number that indicates how many of those tiles are available
 during play. The numbered sheets can be printed directly on A4 paper to create
-all the tiles required to play the game.
+all the tiles required to play the game. There is also a file which specifies
+companies, their color, and their home station.
 
 ## Tile manifest
 The tile manifest of a game is specified in games/GAME/manifest.json. The tile
@@ -217,11 +224,11 @@ array. A single entry looks like
 {
 	"color": "green",
 	"base_tile": "52",
-	"text": [
-		"59",
-		"40",
-		"OO"
-	]
+	"text": {
+		"number": "59",
+		"revenue": "40",
+		"code": "OO"
+	}
 }
 ```
 
@@ -234,7 +241,7 @@ to. The first entry is always the displayed tile number, this does not have to
 be the same as the `base_tile` key. The meaning of other entries depends on
 what the tile definition used as `text_id`.
 
-To specify the amounts available of each tile there is an `amounts` array, it
+To specify the amounts available of each tile there is an `amounts` map, it
 looks like
 ```JSON
 "amounts": {
@@ -247,7 +254,7 @@ looks like
 ```
 
 It has a number of string keys, these are the tile number that were defined
-in the first element of a tile's `text` array. After the colon is the amount of
+the `"number"` pair in the tile's `text` map.  After the colon is the amount of
 tiles that are available for placement during the game.
 
 ## Game map
@@ -259,7 +266,7 @@ fields
 	"scale": 3.81,
 	"width": 12,
 	"height": 11,
-	"barriers": [ ... ]
+	"barriers": [ ... ],
 	"tiles": [ ... ]
 }
 ```
@@ -290,8 +297,8 @@ Finally there is the `tiles` array, its entries look like
 	"location": [4, 0],
 	"color": "red",
 	"tile": "8,
-	"text": [ ... ],
 	"orientation": "S",
+	"text": [ ... ],
 	"revenue": { ... },
 	"arrows": [ ... ]
 }
@@ -326,3 +333,70 @@ A `revenue` object looks like
 Of these fields only the `position` and `yellow` are required. The `position`
 field specifies the coordinate that is the centre of the revenue track. The
 other fields all define the value that should be in the field of that color.
+
+## companies
+The companies are specified in games/GAME/companies.json. This file consists of
+a map of companies. A typical entry looks like
+```JSON
+"B&O" : {
+	"name": "Baltimore & Ohio Railroad",
+	"color": "blue",
+	"home": [7, 8]
+},
+```
+The key (`B&O` here) is used to refer to this company from any other files. It
+is also the text that will be printed on the token. The `name` field is
+currently not used but it is required. The `color` field indicates what the
+color of the token and home reservation should be. The `home` field specifies
+the home hex and optionally the home city on that hex. When a tile has multiple
+cities on it then you can use this to move the home station between them. When
+you do you can add the city number to the array so that it becomes `"home": [7,
+8, 1]`. When you don't specify this city number it defaults to 0.
+
+# New game mode
+To use new game mode you have to use the command `map18xx newgame <game>
+<name>`. This will generate a file called `<name>.json` in the current
+directory which can be used to play `<game>`
+
+# State mode
+To show the current state of a game that you're playing you can use the state
+mode. To use it run the command `map18xx state <name>` where `<name>` is the
+name of the game you used in new game mode. It will look for a file
+`<name>.json` in the current directory. It also accepts the
+`--debug-coordinates` command line parameter
+
+To be able to play the game you have to alter the `log` array that is in your
+`<name>.json` file. In this array you can place two types of action: tile lays
+and token placements. To do one of these actions simply append them to the end
+of the array. Later actions take precedence over earlier actions, map18xx does
+not enforce upgrade paths. Placing a tile looks like
+```JSON
+{
+	"type": "tilelay",
+	"location": [9, 6],
+	"tile": "62",
+	"orientation": "NE"
+}
+```
+The `type` field must be `tilelay` to place a tile. The `location` field
+specifies the tile on which the tile will be laid. At the moment this must be a
+coordinate that is given when you use `--debug-coordinates`. The `tile` field
+is the number of a tile as given in the manifest. `orientation` can be used to
+rotate the tile, the orientation of the tile shown in the manifest is `N`.
+
+To place a token the log entry looks like
+```JSON
+{
+	"type": "token",
+	"location": [9, 6],
+	"company": "B&O",
+	"city": 1
+}
+```
+The `type` field must be `token` to place a token. The `location` field is the
+same as for placing a tile. The `company` field is the abbrevation of the
+company. The `city` field is optional, the default is 0. You can use it to
+specify in which city the token must be placed when a tile has multiple cities
+(OO or NY in 1830 for example). For tiles with a single city it is not
+necessary. When you don't specify it while a city has multiple stations the
+token will be placed in city 0.
