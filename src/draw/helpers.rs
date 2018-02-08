@@ -577,14 +577,25 @@ pub fn draw_revenue_track(track: &tile::RevenueTrack,
 /// Draw the token of a company
 pub fn draw_token(name: &str,
                   color: &str,
+                  is_home: bool,
                   pos: &na::Vector2<f64>,
                   map: &game::Map) -> element::Group {
-    element::Group::new()
-        .add(draw_circle(pos, (TOKEN_SIZE - 1.414 * LINE_WIDTH) * scale(map),
-                         "white",
-                         color, 2.0 * LINE_WIDTH * scale(map)))
-        .add(draw_text(name,
-                       &(pos + na::Vector2::new(0.0, TOKEN_SIZE / 3.5 * scale(map))),
-                       &tile::TextAnchor::Middle, None, None)
-             .set("fill", color))
+    let g = element::Group::new();
+    let text_pos = pos + na::Vector2::new(0.0,
+                                          TOKEN_SIZE / 3.5 * scale(map));
+    if is_home {
+        g.add(draw_circle(pos,
+                          (TOKEN_SIZE - 2.0_f64.sqrt() * LINE_WIDTH) * scale(map),
+                          "white",
+                          color, 2.0 * LINE_WIDTH * scale(map)))
+            .add(draw_text(name, &text_pos,
+                           &tile::TextAnchor::Middle, None, None)
+                 .set("fill", color))
+    } else {
+        g.add(draw_circle(pos, (TOKEN_SIZE - 0.4 * LINE_WIDTH) * scale(map),
+                          color, "", 0.0))
+            .add(draw_text(name, &text_pos, &tile::TextAnchor::Middle, None,
+                           Some(700))
+                 .set("fill", "white"))
+    }
 }

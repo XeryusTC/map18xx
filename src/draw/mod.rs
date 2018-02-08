@@ -188,8 +188,8 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
                                                   location.1 as i32,
                                                   &game.map))
                     .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
-            let token_pos = helpers::city_circle_pos(&city, 0, &center,
-                                                     &game.map,
+            let token_pos = helpers::city_circle_pos(&city, token.circle,
+                                                     &center, &game.map,
                                                      &tile.orientation());
             if let Orientation::Vertical = game.map.orientation {
                 let station_pos = (center + rot * basis * city.position())
@@ -198,6 +198,7 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
                                                station_pos.x, station_pos.y));
             }
             g = g.add(helpers::draw_token(&token.name, &token.color,
+                                          token.is_home,
                                           &token_pos, &game.map));
             doc = doc.add(g);
         }
