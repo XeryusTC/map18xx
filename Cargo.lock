@@ -1,6 +1,6 @@
 [root]
 name = "map18xx"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "clap 2.29.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "nalgebra 0.13.1 (registry+https://github.com/rust-lang/crates.io-index)",

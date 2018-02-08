@@ -1,7 +1,7 @@
 [package]
 name = "map18xx"
 description = "18xx tile and map designer"
-version = "0.0.3"
+version = "0.0.4"
 authors = ["Xeryus Stokkel <brontitall@dds.nl>"]
 license = "MIT"
 repository = "https://github.com/XeryusTC/map18xx"
