@@ -103,17 +103,14 @@ pub fn draw_city(city: tile::City,
     let basis = get_basis(&info.orientation);
     let rot = rotate(rotation);
 
-    let text_circle_pos = scale(&info) *
+    let text_pos = scale(&info) *
         (rot * basis * city.revenue_position() + center);
-    let text_pos = text_circle_pos + scale(&info) *
-        Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
     let text = tile.get_text(&city.text_id);
     let master = if text.is_empty() {
         element::Group::new()
     } else {
         element::Group::new()
-            .add(draw_circle(&text_circle_pos,
-                             REVENUE_CIRCLE_RADIUS * scale(&info),
+            .add(draw_circle(&text_pos, REVENUE_CIRCLE_RADIUS * scale(&info),
                              "white", "black", LINE_WIDTH * scale(&info)))
             .add(draw_text(&text, &text_pos, &TextAnchor::Middle, None, None))
     };
@@ -311,9 +308,9 @@ pub fn draw_coordinate_system(game: &game::Game,
             (x + 1).to_string()
         };
         let x1 = Vector2::new(x as f64 * hstride + hoffset,
-                              0.75 * BORDER) * scale(&game.map);
+                              0.5 * BORDER) * scale(&game.map);
         let x2 = Vector2::new(x as f64 * hstride + hoffset,
-                              1.75 * BORDER + height) * scale(&game.map);
+                              1.5 * BORDER + height) * scale(&game.map);
         border = border
             .add(draw_text(&text, &x1, &TextAnchor::Middle,
                                     Some("16pt"), Some(600)))
@@ -394,7 +391,7 @@ pub fn draw_revenue_track(track: &tile::RevenueTrack,
 
     // Draw the track
     let textpos = topleft + scale(&map) *
-        Vector2::new(REVENUE_WIDTH / 2.0, REVENUE_HEIGHT * 0.8);
+        Vector2::new(REVENUE_WIDTH / 2.0, REVENUE_HEIGHT * 0.5);
     let mut g = element::Group::new()
         .add(element::Rectangle::new()
              .set("x", topleft.x)
@@ -454,11 +451,9 @@ pub fn draw_stop(stop: tile::Stop,
     // Draw the revenue if it is set
     let text = tile.get_text(&stop.text_id);
     if !text.is_empty() {
-        let text_circle_pos = pos + scale(&info) * rotate(&angle) *
+        let text_pos = pos + scale(&info) * rotate(&angle) *
             Vector2::new(STOP_TEXT_DIST, 0.0);
-        let text_pos = text_circle_pos + scale(&info) *
-            Vector2::new(0.0, REVENUE_CIRCLE_RADIUS / 2.5);
-        g = g.add(draw_circle(&text_circle_pos,
+        g = g.add(draw_circle(&text_pos,
                          REVENUE_CIRCLE_RADIUS * scale(&info),
                          "white", "black", LINE_WIDTH * scale(&info)))
             .add(draw_text(&text, &text_pos, &TextAnchor::Middle, None, None));
@@ -490,6 +485,7 @@ pub fn draw_text(text: &str,
         .set("x", pos.x)
         .set("y", pos.y)
         .set("style", style)
+        .set("dominant-baseline", "middle")
 }
 
 /// Draw the token of a company
@@ -499,18 +495,16 @@ pub fn draw_token(name: &str,
                   pos: &Vector2<f64>,
                   map: &game::Map) -> element::Group {
     let g = element::Group::new();
-    let text_pos = pos + Vector2::new(0.0,
-                                          TOKEN_SIZE / 3.5 * scale(map));
     if is_home {
         g.add(draw_circle(
                 pos, (TOKEN_SIZE - 2.0_f64.sqrt() * LINE_WIDTH) * scale(map),
                 "white", color, 2.0 * LINE_WIDTH * scale(map)))
-            .add(draw_text(name, &text_pos, &TextAnchor::Middle, None, None)
+            .add(draw_text(name, &pos, &TextAnchor::Middle, None, None)
                  .set("fill", color))
     } else {
         g.add(draw_circle(pos, (TOKEN_SIZE - 0.4 * LINE_WIDTH) * scale(map),
                           color, "", 0.0))
-            .add(draw_text(name, &text_pos, &TextAnchor::Middle, None,
+            .add(draw_text(name, &pos, &TextAnchor::Middle, None,
                            Some(700))
                  .set("fill", "white"))
     }

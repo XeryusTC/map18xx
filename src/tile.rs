@@ -295,7 +295,7 @@ impl TileSpec for TileDefinition {
     fn text_spec(&self) -> Vec<Text> {
         let tile_number = Text {
             id: "number".to_string(),
-            position: Coordinate::HexSpace((0.0, 0.0, -0.95)),
+            position: Coordinate::HexSpace((0.0, 0.0, -0.9)),
             anchor: TextAnchor::End,
             size: None,
             weight: None,
