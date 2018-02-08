@@ -211,9 +211,16 @@ impl Game {
                             placed += 1;
                         }
                     }
-                    entry.push(
-                        Token::place(self.companies.get(company).unwrap(),
-                                     company, location, city, placed));
+                    if placed >= self.placed_tiles().get(&location).unwrap()
+                                     .cities().get(city).unwrap().circles {
+                        eprintln!("Could not place token for {} in {:?}: \
+                                  too many tokens in station", company,
+                                  location);
+                    } else {
+                        entry.push(
+                            Token::place(self.companies.get(company).unwrap(),
+                                         company, location, city, placed));
+                    }
                 }
             }
         }
