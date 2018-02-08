@@ -179,16 +179,27 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
     // Draw tokens
     for (location, tokens) in game.tokens().iter() {
         let tile = tiles.get(&location).unwrap();
+        let rot = helpers::rotate(&tile.orientation());
         for token in tokens {
-            let city = &tile.cities()[token.station];
+            let mut g = Group::new();
+            let city = tile.cities().get(token.station).unwrap().clone();
             let center = offset + basis
                 * na::Vector3::from(convert_coord(location.0 as i32,
-                                                  location.1 as i32, &game.map))
+                                                  location.1 as i32,
+                                                  &game.map))
                     .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
-            let pos = helpers::city_circle_pos(&city, 0, &center, &game.map,
-                                               &tile.orientation());
-            doc = doc.add(helpers::draw_token(&token.name, &token.color, &pos,
-                                              &game.map));
+            let token_pos = helpers::city_circle_pos(&city, 0, &center,
+                                                     &game.map,
+                                                     &tile.orientation());
+            if let Orientation::Vertical = game.map.orientation {
+                let station_pos = (center + rot * basis * city.position())
+                    * helpers::scale(&game.map);
+                g = g.set("transform", format!("rotate(-30 {} {})",
+                                               station_pos.x, station_pos.y));
+            }
+            g = g.add(helpers::draw_token(&token.name, &token.color,
+                                          &token_pos, &game.map));
+            doc = doc.add(g);
         }
     }
 
