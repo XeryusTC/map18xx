@@ -1,12 +1,12 @@
 {
-	"B&O": {
+	"B&amp;O": {
 		"name": "Baltimore & Ohio",
 		"color": "#ff0000",
-		"home": [0, 2, 0]
+		"home": [2, 4, 0]
 	},
-	"C&O": {
+	"C&amp;O": {
 		"name": "Chesapeake & Ohio",
 		"color": "#6666ff",
-		"home": [0, 7]
+		"home": [1, 6]
 	}
 }

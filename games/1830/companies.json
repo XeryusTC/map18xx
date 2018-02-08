@@ -1,2 +1,42 @@
 {
+	"B&amp;M": {
+		"name": "Boston & Maine Railroad",
+		"color": "purple",
+		"home": [11, 4]
+	},
+	"B&amp;O": {
+		"name": "Baltimore & Ohio Railroad",
+		"color": "blue",
+		"home": [7, 8]
+	},
+	"C&amp;O": {
+		"name": "Chesapeake & Ohio Railroad",
+		"color": "aqua",
+		"home": [2, 5]
+	},
+	"CPR": {
+		"name": "Canadian Pacific Railroad",
+		"color": "red",
+		"home": [9, 0]
+	},
+	"Erie": {
+		"name": "Erie Railroad",
+		"color": "#ca0",
+		"home": [5, 4]
+	},
+	"NNH": {
+		"name": "New York, New Haven & Hartford Railroad",
+		"color": "orange",
+		"home": [9, 6]
+	},
+	"NYC": {
+		"name": "New York Central Railroad",
+		"color": "black",
+		"home": [9, 4]
+	},
+	"PRR": {
+		"name": "Pennsylvania Railroad",
+		"color": "green",
+		"home": [5, 7]
+	}
 }
