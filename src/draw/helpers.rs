@@ -599,3 +599,75 @@ pub fn draw_token(name: &str,
                  .set("fill", "white"))
     }
 }
+
+pub fn draw_coordinate_system(game: &game::Game,
+                              options: &::Options,
+                              width: f64,
+                              height: f64) -> element::Group {
+    let hoffset: f64;
+    let voffset: f64 = BORDER+ 1.0;
+    let hstride: f64;
+    let vstride: f64;
+    let mut hnums: u32 = 1;
+    let mut vnums: u32 = 1;
+    match game.map.orientation {
+        Orientation::Horizontal => {
+            if !options.debug_coordinates {
+                vnums = 2;
+            }
+            hoffset = BORDER + 1.0;
+            hstride = 1.5;
+            vstride = 3.0_f64.sqrt() / vnums as f64;
+        }
+        Orientation::Vertical => {
+            if !options.debug_coordinates {
+                hnums = 2;
+            }
+            hoffset = BORDER + 0.5 * 3.0_f64.sqrt();
+            hstride = 3.0_f64.sqrt() / hnums as f64;
+            vstride = 1.5;
+        }
+    }
+    let mut border = element::Group::new()
+        .add(element::Rectangle::new()
+            .set("x", BORDER * scale(&game.map))
+            .set("y", BORDER * scale(&game.map))
+            .set("width", width * scale(&game.map))
+            .set("height", height * scale(&game.map))
+            .set("fill", "none")
+            .set("stroke", "black")
+            .set("stroke-width", LINE_WIDTH * scale(&game.map)));
+    for x in 0..(game.map.width * hnums) {
+        let text = if options.debug_coordinates {
+            x.to_string()
+        } else {
+            (x + 1).to_string()
+        };
+        let x1 = na::Vector2::new(x as f64 * hstride + hoffset,
+                              0.75 * BORDER) * scale(&game.map);
+        let x2 = na::Vector2::new(x as f64 * hstride + hoffset,
+                              1.75 * BORDER + height) * scale(&game.map);
+        border = border
+            .add(draw_text(&text, &x1, &tile::TextAnchor::Middle,
+                                    Some("16pt"), Some(600)))
+            .add(draw_text(&text, &x2, &tile::TextAnchor::Middle,
+                                    Some("16pt"), Some(600)));
+    }
+    for y in 0..(game.map.height * vnums) {
+        let text = if options.debug_coordinates {
+            y.to_string()
+        } else {
+            (y + 1).to_string()
+        };
+        let y1 = na::Vector2::new(0.5 * BORDER,
+                              y as f64 * vstride + voffset) * scale(&game.map);
+        let y2 = na::Vector2::new(1.5 * BORDER + width,
+                              y as f64 * vstride + voffset) * scale(&game.map);
+        border = border
+            .add(draw_text(&text, &y1, &tile::TextAnchor::Middle,
+                                    Some("16pt"), Some(600)))
+            .add(draw_text(&text, &y2, &tile::TextAnchor::Middle,
+                                    Some("16pt"), Some(600)));
+    }
+    border
+}
