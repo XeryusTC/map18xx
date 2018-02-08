@@ -1,15 +1,15 @@
 {
-	"B&amp;M": {
+	"B&M": {
 		"name": "Boston & Maine Railroad",
 		"color": "purple",
 		"home": [11, 4]
 	},
-	"B&amp;O": {
+	"B&O": {
 		"name": "Baltimore & Ohio Railroad",
 		"color": "blue",
 		"home": [7, 8]
 	},
-	"C&amp;O": {
+	"C&O": {
 		"name": "Chesapeake & Ohio Railroad",
 		"color": "aqua",
 		"home": [2, 5]

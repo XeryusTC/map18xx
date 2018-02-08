@@ -486,7 +486,7 @@ pub fn draw_text(text: &str,
         style.push_str(format!("font-weight:{};", weight).as_str());
     }
     element::Text::new()
-        .add(node::Text::new(text.clone()))
+        .add(node::Text::new(text.replace("&", "&amp;")))
         .set("x", pos.x)
         .set("y", pos.y)
         .set("style", style)
