@@ -192,6 +192,32 @@ impl Game {
                 .set_home();
             tokens.entry(token.location).or_insert(vec![]).push(token);
         }
+        // Update with placed tokens
+        if let Some(ref log) = self.log {
+            'next_action: for act in log.log.iter() {
+                if let &Action::Token { location, ref company, city } = act {
+                    let entry = tokens.entry(location).or_insert(vec![]);
+                    let city = match city {
+                        Some(id) => id,
+                        None => 0,
+                    } as usize;
+                    let mut placed = 0;
+                    for token in entry.iter_mut() {
+                        if token.name == company.as_str() && token.is_home {
+                            token.is_home = false;
+                            continue 'next_action
+                        }
+                        if token.station == city {
+                            placed += 1;
+                        }
+                    }
+                    entry.push(
+                        Token::place(self.companies.get(company).unwrap(),
+                                     company, location, city, placed));
+                }
+            }
+        }
+
         tokens
     }
 }
@@ -503,6 +529,21 @@ impl Token {
             }
         }
         token
+    }
+
+    pub fn place(company: &Company,
+                 name: &str,
+                 location: (u32, u32),
+                 station: usize,
+                 circle: u32) -> Self {
+        Token {
+            name: name.to_string(),
+            color: company.color.to_string(),
+            location,
+            station,
+            circle,
+            is_home: false,
+        }
     }
 
     pub fn set_home(mut self) -> Self {
