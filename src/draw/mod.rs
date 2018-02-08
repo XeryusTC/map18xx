@@ -2,6 +2,7 @@ extern crate svg;
 extern crate nalgebra as na;
 
 use std::collections::HashMap;
+use std::f64::consts::PI;
 use std::ops::Deref;
 use std::process;
 use self::svg::node::element::Group;
@@ -259,8 +260,12 @@ pub fn draw_tile(tile: &tile::TileSpec,
                                        &text.anchor, text.size(), text.weight);
         // Rotate the tile number with the orientation of the map
         if let Orientation::Vertical = map.orientation {
+            let mut angle = -30;
+            if text.id == "number" {
+                angle += (tile.orientation() * 180.0 / PI) as i32;
+            }
             t = t.set("transform",
-                      format!("rotate(-30 {} {})", text_pos.x, text_pos.y));
+                      format!("rotate({} {} {})", angle, text_pos.x, text_pos.y));
         }
         g = g.add(t);
     }
