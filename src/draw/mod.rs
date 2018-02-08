@@ -13,6 +13,7 @@ use game::Orientation;
 
 mod helpers;
 mod consts;
+mod element;
 
 const TILES_PER_ROW: f64 = 4.0;
 
@@ -33,7 +34,7 @@ pub fn draw_tile_definitions(
         let text_pos = helpers::scale(&info)
             * Vector2::new(pos.x - 1.0, pos.y - 0.7);
         g = g.add(draw_tile(definition, &pos, &info))
-            .add(helpers::draw_text(&name, &text_pos,
+            .add(element::draw_text(&name, &text_pos,
                                     &tile::TextAnchor::Start, None, None));
         i += 1.0;
     }
@@ -61,7 +62,7 @@ pub fn draw_tile_manifest(game: &game::Game) -> Group {
         };
         let text_pos = helpers::scale(&game.map) *
             Vector2::new(pos.x-1.0, pos.y-0.7);
-        g = g.add(helpers::draw_text(&format!("{}×", amount), &text_pos,
+        g = g.add(element::draw_text(&format!("{}×", amount), &text_pos,
                                      &tile::TextAnchor::Start, None, None));
     }
 
@@ -80,7 +81,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
     let mut cur_doc = svg::Document::new()
         .set("width", "210mm")
         .set("height", "297mm")
-        .add(helpers::draw_text(
+        .add(element::draw_text(
                 "Tile sheet 0",
                 &(Vector2::new(2.0_f64, 0.5) * helpers::scale(&info)),
                 &tile::TextAnchor::Start,
@@ -100,7 +101,7 @@ pub fn draw_tile_sheets(game: &game::Game) -> Vec<svg::Document> {
                 cur_doc = svg::Document::new()
                     .set("width", "210mm")
                     .set("height", "297mm")
-                    .add(helpers::draw_text(
+                    .add(element::draw_text(
                             &format!("Tile sheet {}", drawn/TILES_PER_PAGE),
                             &(Vector2::new(2.0, 0.5) * helpers::scale(&info)),
                             &tile::TextAnchor::Start,
@@ -173,7 +174,7 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
         let pos = offset + basis
             * na::Vector3::from(convert_coord(x as i32, y as i32, &game.map))
                 .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
-        doc = doc.add(helpers::draw_barrier(barrier, &pos, &game.map));
+        doc = doc.add(element::draw_barrier(barrier, &pos, &game.map));
     }
 
     // Draw tokens
@@ -197,14 +198,14 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
                 g = g.set("transform", format!("rotate(-30 {} {})",
                                                station_pos.x, station_pos.y));
             }
-            g = g.add(helpers::draw_token(&token.name, &token.color,
+            g = g.add(element::draw_token(&token.name, &token.color,
                                           token.is_home,
                                           &token_pos, &game.map));
             doc = doc.add(g);
         }
     }
 
-    doc.add(helpers::draw_coordinate_system(game, options, width, height))
+    doc.add(element::draw_coordinate_system(game, options, width, height))
 }
 
 /// Draws a single tile
@@ -220,41 +221,41 @@ pub fn draw_tile(tile: &tile::TileSpec,
 
     // Draw white contrast lines first
     for path in tile.paths() {
-        g = g.add(helpers::draw_path_contrast(&path, pos, &map,
+        g = g.add(element::draw_path_contrast(&path, pos, &map,
                                               &tile.orientation()));
     }
     for city in tile.cities() {
-        g = g.add(helpers::draw_city_contrast(city, pos, &map,
+        g = g.add(element::draw_city_contrast(city, pos, &map,
                                               &tile.orientation()));
     };
 
     // Draw elements
     if tile.is_lawson() {
-        g = g.add(helpers::draw_lawson(*pos, &map));
+        g = g.add(element::draw_lawson(*pos, &map));
     }
     for path in tile.paths() {
-        g = g.add(helpers::draw_path(&path, pos, &map, &tile.orientation()));
+        g = g.add(element::draw_path(&path, pos, &map, &tile.orientation()));
     };
 
     for stop in tile.stops() {
-        g = g.add(helpers::draw_stop(stop, *pos, &map, tile,
+        g = g.add(element::draw_stop(stop, *pos, &map, tile,
                                      &tile.orientation()));
     }
 
     for city in tile.cities() {
-        g = g.add(helpers::draw_city(city, *pos, &map, tile,
+        g = g.add(element::draw_city(city, *pos, &map, tile,
                                      &tile.orientation()));
     }
 
     for arrow in tile.arrows() {
-        g = g.add(helpers::draw_arrow(&arrow, pos, &map));
+        g = g.add(element::draw_arrow(&arrow, pos, &map));
     }
 
     // Draw text on tile
     for text in tile.text_spec() {
         let text_pos = helpers::scale(&map) *
             (rotation * basis * text.position() + pos);
-        let mut t = helpers::draw_text(&tile.get_text(&text.id), &text_pos,
+        let mut t = element::draw_text(&tile.get_text(&text.id), &text_pos,
                                        &text.anchor, text.size(), text.weight);
         // Rotate the tile number with the orientation of the map
         if let Orientation::Vertical = map.orientation {
@@ -266,7 +267,7 @@ pub fn draw_tile(tile: &tile::TileSpec,
 
     // Draw revenue track
     if let Some(track) = tile.revenue_track() {
-        g = g.add(helpers::draw_revenue_track(&track, pos, &map));
+        g = g.add(element::draw_revenue_track(&track, pos, &map));
     }
 
     // Draw outline last to prevent visual effects
