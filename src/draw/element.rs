@@ -304,6 +304,8 @@ pub fn draw_coordinate_system(game: &game::Game,
     for x in 0..(game.map.width * hnums) {
         let text = if options.debug_coordinates {
             x.to_string()
+        } else if let Orientation::Horizontal = game.map.orientation {
+            number_to_letter(x)
         } else {
             (x + 1).to_string()
         };
@@ -320,6 +322,8 @@ pub fn draw_coordinate_system(game: &game::Game,
     for y in 0..(game.map.height * vnums) {
         let text = if options.debug_coordinates {
             y.to_string()
+        } else if let Orientation::Vertical = game.map.orientation {
+            number_to_letter(y)
         } else {
             (y + 1).to_string()
         };

@@ -1,5 +1,6 @@
 extern crate nalgebra as na;
 
+use std::char;
 use super::svg::node::element;
 use super::svg::node::element::path::Data;
 use draw::consts::*;
@@ -164,4 +165,13 @@ pub fn rotate(theta: &f64) -> na::Matrix2<f64> {
 
 pub fn point_to_tuple(p: na::Vector2<f64>) -> (f64, f64) {
     (p.x, p.y)
+}
+
+/// Converts a number to a coordinate letter 'A', 'B', .. 'AA', 'AB' etc.
+pub fn number_to_letter(n: u32) -> String {
+    match n {
+        n if n < 26 =>
+            char::from_digit(n + 10, 36).unwrap().to_string().to_uppercase(),
+        n => number_to_letter(n / 26 - 1) + &number_to_letter(n % 26),
+    }
 }
