@@ -18,6 +18,35 @@ pub enum Orientation {
     Vertical,
 }
 
+/// Location of a tile, token or other object on a map
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
+pub enum Location {
+    Coord(u32, u32),
+    Named(String),
+}
+
+impl Location {
+    pub fn as_coord(&self, orientation: &Orientation) -> (u32, u32) {
+        match *self {
+            Location::Coord(x, y) => (x, y),
+            Location::Named(ref s) => {
+                // Convert letter(s) to number
+                let a = s.chars().take_while(|c| c.is_alphabetic())
+                    .map(|c| c.to_digit(36).unwrap() - 9)
+                    .fold(0, |acc, d| 26 * acc + d) - 1;
+                // Map 1 based counting in string to 0 based
+                let b = (s.chars().skip_while(|c| c.is_alphabetic())
+                    .collect::<String>().parse::<u32>().unwrap() - 1) / 2;
+                match *orientation {
+                    Orientation::Horizontal => (a, b),
+                    Orientation::Vertical => (b, a),
+                }
+            }
+        }
+    }
+}
+
 #[derive(Clone, Deserialize)]
 pub struct Map {
     pub orientation: Orientation,
@@ -83,7 +112,8 @@ impl Map {
 
     pub fn tiles(&self) -> HashMap<(u32, u32), &tile::TileSpec> {
         self.raw_tiles.iter()
-            .map(|t| (t.location, t as &tile::TileSpec))
+            .map(|t| (t.location.as_coord(&self.orientation),
+                      t as &tile::TileSpec))
             .collect()
     }
 }
@@ -172,8 +202,9 @@ impl Game {
         let mut placed = HashMap::new();
         if let Some(ref log) = self.log {
             for action in log.log.iter() {
-                if let &Action::TileLay { location, ref tile,
-                                          ref orientation } = action {
+                if let &Action::TileLay {ref location, ref tile,
+                                         ref orientation} = action {
+                    let location = location.as_coord(&self.map.orientation);
                     let t = PlacedTile::new_from(self.manifest.tiles.iter()
                             .find(|t| t.name() == tile).unwrap())
                         .set_orientation(
@@ -188,14 +219,15 @@ impl Game {
     pub fn tokens(&self) -> HashMap<(u32, u32), Vec<Token>> {
         let mut tokens = HashMap::new();
         for (name, company) in self.companies.iter() {
-            let token = Token::from(&company.home, name, &company.color)
-                .set_home();
+            let token = Token::from(&company.home, name, &company.color,
+                                    &self.map.orientation).set_home();
             tokens.entry(token.location).or_insert(vec![]).push(token);
         }
         // Update with placed tokens
         if let Some(ref log) = self.log {
             'next_action: for act in log.log.iter() {
-                if let &Action::Token { location, ref company, city } = act {
+                if let &Action::Token {ref location, ref company, city} = act {
+                    let location = location.as_coord(&self.map.orientation);
                     let entry = tokens.entry(location).or_insert(vec![]);
                     let city = match city {
                         Some(id) => id,
@@ -272,7 +304,13 @@ impl Manifest {
                 let mut placed: HashMap<(u32, u32), &String> = HashMap::new();
                 let mut used: HashMap<&String, u32> = HashMap::new();
                 for action in log.log.iter() {
-                    if let &Action::TileLay{ location, ref tile, ..} = action {
+                    if let &Action::TileLay{ref location, ref tile,
+                                            ..} = action {
+                        // For calculating manifest amounts we don't care about
+                        // the exact rendered position, just the coordinate so
+                        // we can use any orientation
+                        let location = location
+                            .as_coord(&Orientation::Horizontal);
                         let old_tile = placed.insert(location, tile);
                         if let Some(old_tile) = old_tile {
                             *used.entry(old_tile).or_insert(0) -= 1;
@@ -291,7 +329,7 @@ impl Manifest {
 
 #[derive(Clone,Deserialize)]
 pub struct MapTile {
-    pub location: (u32, u32),
+    pub location: Location,
     #[serde(default="MapTile::default_tile")]
     pub tile: String,
 
@@ -442,7 +480,7 @@ impl<'a> TileSpec for PlacedTile<'a> {
 
 #[derive(Clone,Deserialize)]
 pub struct Barrier {
-    pub location: (u32, u32),
+    pub location: Location,
     pub side: String,
 }
 
@@ -491,15 +529,15 @@ impl Log {
 #[derive(Deserialize, Serialize)]
 #[serde(rename_all="lowercase", tag="type")]
 pub enum Action {
-    TileLay { location: (u32, u32), tile: String, orientation: String },
-    Token { location: (u32, u32), company: String, city: Option<u32> },
+    TileLay { location: Location, tile: String, orientation: String },
+    Token { location: Location, company: String, city: Option<u32> },
 }
 
 #[derive(Clone,Deserialize)]
 #[serde(untagged)]
 pub enum Home {
-    PositionOnly(u32, u32),
-    PositionStation(u32, u32, usize),
+    PositionOnly(Location),
+    PositionStation(Location, usize),
 }
 
 #[derive(Clone, Deserialize)]
@@ -519,7 +557,9 @@ pub struct Token {
 }
 
 impl Token {
-    pub fn from(home: &Home, name: &str, color: &str) -> Self {
+    pub fn from(home: &Home, name: &str,
+                color: &str,
+                orientation: &Orientation) -> Self {
         let mut token = Token {
             name: name.to_string(),
             color: color.to_string(),
@@ -529,9 +569,10 @@ impl Token {
             is_home: false,
         };
         match home {
-            &Home::PositionOnly(x, y) => token.location = (x, y),
-            &Home::PositionStation(x, y, s) => {
-                token.location = (x, y);
+            &Home::PositionOnly(ref loc) =>
+                token.location = loc.as_coord(orientation),
+            &Home::PositionStation(ref loc, s) => {
+                token.location = loc.as_coord(orientation);
                 token.station = s;
             }
         }

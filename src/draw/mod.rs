@@ -171,7 +171,7 @@ pub fn draw_map(game: &game::Game, options: &super::Options) -> svg::Document {
 
     // Draw barriers
     for barrier in game.map.barriers.iter() {
-        let (x, y) = barrier.location;
+        let (x, y) = barrier.location.as_coord(&game.map.orientation);
         let pos = offset + basis
             * na::Vector3::from(convert_coord(x as i32, y as i32, &game.map))
                 .component_mul(&na::Vector3::new(2.0, 1.0, 1.0));
