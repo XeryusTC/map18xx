@@ -49,6 +49,15 @@ black.
 * `barrier`
 * `white`
 
+## Location
+Tiles and token have a location on a map. This location can be specified in one
+of two ways. The first is to use a string that correlates to the coordinates on
+a map, `"G19"` is such a coordinate. It is also possible to specify it as
+`[x, y]`, where `x` and `y` refer to coordinates that are shown when the
+`c`/`--debug-coordinates` flag is specified. The former should be more
+intuitive. These location specifications are only used for tiles and tokens on
+the map.
+
 ## Modes
 The program can operate in several different modes, they are described here.
 
@@ -281,7 +290,7 @@ each row and column respectively. The `barriers` array specifies impassible
 hex-sides. Each entry in the array looks like
 ```JSON
 {
-	"location": [8, 2],
+	"location": "C17",
 	"side": "N"
 }
 ```
@@ -294,7 +303,7 @@ shared between two tiles the barrier can be specified to be on either of them.
 Finally there is the `tiles` array, its entries look like
 ```JSON
 {
-	"location": [4, 0],
+	"location": "D1",
 	"color": "red",
 	"tile": "8,
 	"orientation": "S",
@@ -373,7 +382,7 @@ not enforce upgrade paths. Placing a tile looks like
 ```JSON
 {
 	"type": "tilelay",
-	"location": [9, 6],
+	"location": "G19",
 	"tile": "62",
 	"orientation": "NE"
 }
@@ -388,7 +397,7 @@ To place a token the log entry looks like
 ```JSON
 {
 	"type": "token",
-	"location": [9, 6],
+	"location": "G19",
 	"company": "B&O",
 	"city": 1
 }
