@@ -483,6 +483,22 @@ pub fn draw_terrain(terrain: &tile::Terrain,
         .add(text);
 
     match &terrain.terrain_type {
+        &tile::TerrainType::Rough => {
+            let pos1 = Vector3::new(-0.7 * TERRAIN_SIZE, 0.0, 0.0);
+            let pos2 = Vector3::new( 0.7 * TERRAIN_SIZE, 0.0, 0.0);
+            let pos3 = Vector3::new(0.0, 0.4*TERRAIN_SIZE, 0.4*TERRAIN_SIZE);
+            let path = Data::new()
+                .move_to(point_to_tuple(scale(&map) * (basis * pos1 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos2 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos3 + center)))
+                .close();
+            g = g.add(element::Path::new()
+                      .set("d", path)
+                      .set("fill", "white")
+                      .set("stroke", "black")
+                      .set("stroke-width", LINE_WIDTH * scale(&map)));
+
+        }
         &tile::TerrainType::Hill => {
             let pos1 = Vector3::new(-0.7 * TERRAIN_SIZE, 0.0, 0.0);
             let pos2 = Vector3::new( 0.7 * TERRAIN_SIZE, 0.0, 0.0);
@@ -497,7 +513,6 @@ pub fn draw_terrain(terrain: &tile::Terrain,
                       .set("fill", "lightgrey")
                       .set("stroke", "black")
                       .set("stroke-width", LINE_WIDTH * scale(&map)));
-
         }
         &tile::TerrainType::Mountain => {
             let pos1 = Vector3::new(-TERRAIN_SIZE, 0.0, 0.0);
@@ -538,6 +553,48 @@ pub fn draw_terrain(terrain: &tile::Terrain,
                       .set("fill", "none")
                       .set("stroke", "blue")
                       .set("stroke-width", LINE_WIDTH * scale(&map)));
+        }
+        &tile::TerrainType::Marsh => {
+            let pos1 = scale(&map) * (center + basis
+                * Vector3::new(-TERRAIN_SIZE, 0.0, 0.0));
+            let pos2 = scale(&map) * (center + basis
+                * Vector3::new( TERRAIN_SIZE, 0.0, 0.0));
+            let pos3 = scale(&map) * (center + basis
+                * Vector3::new(0.0, 0.1 * TERRAIN_SIZE, 0.1 * TERRAIN_SIZE));
+            let pos4 = scale(&map) * (center + basis
+                * Vector3::new(0.0, 0.4 * TERRAIN_SIZE, 0.4 * TERRAIN_SIZE));
+            let pos5 = scale(&map) * (center + basis
+                * Vector3::new(0.3 * TERRAIN_SIZE, 0.1 * TERRAIN_SIZE,
+                               0.1 * TERRAIN_SIZE));
+            let pos6 = scale(&map) * (center + basis
+                * Vector3::new(0.6 * TERRAIN_SIZE, 0.3 * TERRAIN_SIZE,
+                               0.3 * TERRAIN_SIZE));
+            let pos7 = scale(&map) * (center + basis
+                * Vector3::new(-0.3 * TERRAIN_SIZE, 0.1 * TERRAIN_SIZE,
+                               0.1 * TERRAIN_SIZE));
+            let pos8 = scale(&map) * (center + basis
+                * Vector3::new(-0.6 * TERRAIN_SIZE, 0.3 * TERRAIN_SIZE,
+                               0.3 * TERRAIN_SIZE));
+            g = g.add(element::Line::new()
+                      .set("x1", pos1.x).set("y1", pos1.y)
+                      .set("x2", pos2.x).set("y2", pos2.y)
+                      .set("stroke", "blue")
+                      .set("stroke-width", LINE_WIDTH * scale(&map)))
+                .add(element::Line::new()
+                     .set("x1", pos3.x).set("y1", pos3.y)
+                     .set("x2", pos4.x).set("y2", pos4.y)
+                     .set("stroke", "blue")
+                     .set("stroke-width", LINE_WIDTH * scale(&map)))
+                .add(element::Line::new()
+                     .set("x1", pos5.x).set("y1", pos5.y)
+                     .set("x2", pos6.x).set("y2", pos6.y)
+                     .set("stroke", "blue")
+                     .set("stroke-width", LINE_WIDTH * scale(&map)))
+                .add(element::Line::new()
+                     .set("x1", pos7.x).set("y1", pos7.y)
+                     .set("x2", pos8.x).set("y2", pos8.y)
+                     .set("stroke", "blue")
+                     .set("stroke-width", LINE_WIDTH * scale(&map)));
         }
     }
 

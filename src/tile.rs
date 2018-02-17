@@ -478,9 +478,11 @@ impl Terrain {
 #[derive(Clone, Deserialize)]
 #[serde(rename_all="lowercase")]
 pub enum TerrainType {
+    Rough,
     Hill,
     Mountain,
     River,
+    Marsh,
 }
 
 /// Reads and parses all tile definitions in ./tiledefs/
