@@ -309,11 +309,14 @@ Finally there is the `tiles` array, its entries look like
 	"orientation": "S",
 	"text": [ ... ],
 	"revenue": { ... },
-	"arrows": [ ... ]
+	"arrows": [ ... ],
+	"terrain": { ... }
 }
 ```
 Of all these fields only the `location` is required, it defines the x and y
 coordinate of tile being specified. The coordinate [0, 0] is the top left tile.
+It is also possible to use the coordinates as presented on the map. These are
+specified as "A1", map18xx doesn't understand the format "1A".
 The `color` field specifies the color of the tile, it can be any of the colors
 that are available (see 'Colors'). The default color is `ground`. The `tile`
 field changes which tile definition is used. This should be a number as in the
@@ -342,6 +345,19 @@ A `revenue` object looks like
 Of these fields only the `position` and `yellow` are required. The `position`
 field specifies the coordinate that is the centre of the revenue track. The
 other fields all define the value that should be in the field of that color.
+
+You can specify building costs using the `terrain` object, it looks like
+```JSON
+"terrain": {
+	"type": "mountain",
+	"cost": "$120",
+	"position": "C"
+}
+```
+Where `type` can be any of `rough`, `hill`, `mountain`, `river`, or `marsh`.
+This specifies the symbol that is used to indicate the cost. `cost` is a string
+that specifies what the cost of placing a tile is. `position` determines where
+the symbol and cost are drawn on the tile.
 
 ## companies
 The companies are specified in games/GAME/companies.json. This file consists of
