@@ -230,6 +230,11 @@ pub fn draw_tile(tile: &tile::TileSpec,
                                               &tile.orientation()));
     };
 
+    // Draw terrain
+    if let Some(terrain) = tile.terrain() {
+        g = g.add(element::draw_terrain(&terrain, pos, &map));
+    }
+
     // Draw elements
     if tile.is_lawson() {
         g = g.add(element::draw_lawson(*pos, &map));

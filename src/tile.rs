@@ -146,6 +146,7 @@ pub trait TileSpec {
     fn arrows(&self) -> Vec<Coordinate> { vec![] }
     /// Revenue track on the tile
     fn revenue_track(&self) -> Option<RevenueTrack> { None }
+    fn terrain(&self) -> Option<Terrain> { None }
 
     fn get_text<'a>(&'a self, &'a str) -> &'a str;
     fn text_position(&self, usize) -> Option<na::Vector3<f64>>;
@@ -455,6 +456,31 @@ impl RevenueTrack {
     pub fn position(&self) -> na::Vector3<f64> {
         self.position.as_vector()
     }
+}
+
+/// Terrain on a tile
+#[derive(Clone, Deserialize)]
+pub struct Terrain {
+    position: Coordinate,
+    #[serde(rename="type")]
+    pub terrain_type: TerrainType,
+    pub cost: String,
+}
+
+impl Terrain {
+    /// The coordinate of the terrain in hexagon-space.
+    pub fn position(&self) -> na::Vector3<f64> {
+        self.position.as_vector()
+    }
+}
+
+/// Types of terrain that can be present
+#[derive(Clone, Deserialize)]
+#[serde(rename_all="lowercase")]
+pub enum TerrainType {
+    Hill,
+    Mountain,
+    River,
 }
 
 /// Reads and parses all tile definitions in ./tiledefs/

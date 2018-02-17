@@ -15,3 +15,4 @@ pub const ARROW_LENGTH: f64 = 3.0;
 pub const REVENUE_WIDTH: f64 = 0.35;
 pub const REVENUE_HEIGHT: f64 = 0.2;
 pub const BORDER: f64 = 0.5;
+pub const TERRAIN_SIZE: f64 = 0.2;

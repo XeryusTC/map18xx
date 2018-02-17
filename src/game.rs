@@ -340,6 +340,7 @@ pub struct MapTile {
     text: HashMap<String, String>,
     arrows: Option<Vec<tile::Coordinate>>,
     revenue: Option<tile::RevenueTrack>,
+    terrain: Option<tile::Terrain>,
 
     #[serde(skip)]
     definition: Option<tile::TileDefinition>,
@@ -430,6 +431,10 @@ impl TileSpec for MapTile {
 
    fn revenue_track(&self) -> Option<tile::RevenueTrack> {
        self.revenue.clone()
+   }
+
+   fn terrain(&self) -> Option<tile::Terrain> {
+       self.terrain.clone()
    }
 }
 

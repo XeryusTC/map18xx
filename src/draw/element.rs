@@ -465,6 +465,85 @@ pub fn draw_stop(stop: tile::Stop,
     g
 }
 
+/// Draw terrain elements
+pub fn draw_terrain(terrain: &tile::Terrain,
+                    center: &Vector2<f64>,
+                    map: &game::Map) -> element::Group {
+    let basis = get_basis(&map.orientation);
+    let center = center + basis * terrain.position();
+    let text_pos = scale(&map) * (center + basis
+        * Vector3::new(0.0, -0.4 * TERRAIN_SIZE, -0.4 * TERRAIN_SIZE));
+    let mut text = draw_text(&terrain.cost, &text_pos,
+                             &TextAnchor::Middle, None, None);
+    if let Orientation::Vertical = map.orientation {
+        text = text.set("transform",
+                        format!("rotate(-30 {} {})", text_pos.x, text_pos.y));
+    }
+    let mut g = element::Group::new()
+        .add(text);
+
+    match &terrain.terrain_type {
+        &tile::TerrainType::Hill => {
+            let pos1 = Vector3::new(-0.7 * TERRAIN_SIZE, 0.0, 0.0);
+            let pos2 = Vector3::new( 0.7 * TERRAIN_SIZE, 0.0, 0.0);
+            let pos3 = Vector3::new(0.0, 0.7*TERRAIN_SIZE, 0.7*TERRAIN_SIZE);
+            let path = Data::new()
+                .move_to(point_to_tuple(scale(&map) * (basis * pos1 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos2 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos3 + center)))
+                .close();
+            g = g.add(element::Path::new()
+                      .set("d", path)
+                      .set("fill", "lightgrey")
+                      .set("stroke", "black")
+                      .set("stroke-width", LINE_WIDTH * scale(&map)));
+
+        }
+        &tile::TerrainType::Mountain => {
+            let pos1 = Vector3::new(-TERRAIN_SIZE, 0.0, 0.0);
+            let pos2 = Vector3::new( TERRAIN_SIZE, 0.0, 0.0);
+            let pos3 = Vector3::new(0.0, TERRAIN_SIZE, TERRAIN_SIZE);
+            let path = Data::new()
+                .move_to(point_to_tuple(scale(&map) * (basis * pos1 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos2 + center)))
+                .line_to(point_to_tuple(scale(&map) * (basis * pos3 + center)))
+                .close();
+            g = g.add(element::Path::new()
+                      .set("d", path)
+                      .set("fill", "grey")
+                      .set("stroke", "black")
+                      .set("stroke-width", LINE_WIDTH * scale(&map)));
+        }
+        &tile::TerrainType::River => {
+            let pos1 = scale(&map) * (center + basis
+                * Vector3::new(- TERRAIN_SIZE, 0.0, 0.0));
+            let pos2 = scale(&map) * (center + basis
+                * Vector3::new(-0.5 * TERRAIN_SIZE, 0.0, 0.0));
+            let pos3 = scale(&map) * center;
+            let pos4 = scale(&map) * (center + basis
+                * Vector3::new(0.5 *  TERRAIN_SIZE, 0.0, 0.0));
+            let pos5 = scale(&map) * (center + basis
+                * Vector3::new(TERRAIN_SIZE, 0.0, 0.0));
+            let control = scale(&map) * (center + basis
+                * Vector3::new(-0.75 * TERRAIN_SIZE, 0.2 * TERRAIN_SIZE,
+                               0.2 * TERRAIN_SIZE));
+            let path = Data::new()
+                .move_to((pos1.x, pos1.y))
+                .quadratic_curve_to((control.x, control.y, pos2.x, pos2.y))
+                .smooth_quadratic_curve_to((pos3.x, pos3.y))
+                .smooth_quadratic_curve_to((pos4.x, pos4.y))
+                .smooth_quadratic_curve_to((pos5.x, pos5.y));
+            g = g.add(element::Path::new()
+                      .set("d", path)
+                      .set("fill", "none")
+                      .set("stroke", "blue")
+                      .set("stroke-width", LINE_WIDTH * scale(&map)));
+        }
+    }
+
+    g
+}
+
 /// Draw text
 pub fn draw_text(text: &str,
                  pos: &Vector2<f64>,
