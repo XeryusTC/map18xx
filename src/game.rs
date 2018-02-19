@@ -254,6 +254,25 @@ impl Game {
                                          company, location, city, placed));
                     }
                 }
+                else if let &Action::RemoveCompany {ref company} = act {
+                    for (_location, entry) in tokens.iter_mut() {
+                        // Remove company
+                        entry.retain(|t| t.name != *company);
+                        entry.sort_by(|a, b| a.station.cmp(&b.station));
+
+                        // Reorder remaining tokens
+                        let mut station = entry[0].station;
+                        let mut placed = 0;
+                        for token in entry.iter_mut() {
+                            if token.station != station {
+                                station = token.station;
+                                placed = 0;
+                            }
+                            token.circle = placed;
+                            placed += 1;
+                        }
+                    }
+                }
             }
         }
 
@@ -531,11 +550,12 @@ impl Log {
     }
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all="lowercase", tag="type")]
 pub enum Action {
     TileLay { location: Location, tile: String, orientation: String },
     Token { location: Location, company: String, city: Option<u32> },
+    RemoveCompany { company: String },
 }
 
 #[derive(Clone,Deserialize)]
