@@ -91,7 +91,8 @@ pub fn asset_mode(options: &Options, asset_options: &AssetOptions) {
         .set("width", "210mm") // A4 width
         .set("height",
              format!("{}mm",
-                     (game.manifest.tiles.len() as f64/3.0).ceil()*30.0+3.0))
+                     (game.manifest.tiles.len() as f64 / 4.0).ceil()
+                     * (game.map.scale * 10.0 + 3.0)))
         .add(draw::draw_tile_manifest(&game));
     svg::save(format!("{}-manifest.svg", asset_options.name), &document)
         .unwrap_or_else(|err| {
