@@ -1,4 +1,13 @@
 {
+	"text": [
+		{
+			"id": "code",
+			"position": [0.0, -0.6, 0.0],
+			"size": "120%",
+			"weight": 900,
+			"anchor": "Middle"
+		}
+	],
 	"paths": [
 		{
 			"start": "C",

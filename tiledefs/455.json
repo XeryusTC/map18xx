@@ -1,4 +1,13 @@
 {
+	"text": [
+		{
+			"id": "code",
+			"position": [ 0.0, -0.7, 0.0 ],
+			"anchor": "Middle",
+			"size": "120%",
+			"weight": 900
+		}
+	],
 	"paths": [
 		{
 			"start": "N",
@@ -18,7 +27,7 @@
 			"text_id": "1",
 			"circles": 3,
 			"position": "C",
-			"revenue_position": [ 0.1, -0.78, 0.0 ]
+			"revenue_position": [ 0.0, 0.7, 0.0 ]
 		}
 	]
 }

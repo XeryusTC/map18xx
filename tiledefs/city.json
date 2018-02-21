@@ -17,6 +17,13 @@
 			"id": "4",
 			"position": [-0.6, 0.0, 0.0],
 			"anchor": "Middle"
+		},
+		{
+			"id": "code",
+			"position": [ 0.6, 0.0, 0.0 ],
+			"anchor": "Middle",
+			"size": "120%",
+			"weight": 900
 		}
 	],
 	"cities": [
@@ -24,7 +31,7 @@
 			"text_id": "1",
 			"circles": 1,
 			"position": "C",
-			"revenue_position": [ 0.6, 0.0, 0.0 ]
+			"revenue_position": [ 0.3, 0.3, 0.0 ]
 		}
 	]
 }

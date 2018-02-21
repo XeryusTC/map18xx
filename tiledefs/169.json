@@ -1,0 +1,25 @@
+{
+	"is_lawson": true,
+	"paths": [
+		{
+			"start": "NE",
+			"end": "C"
+		},
+		{
+			"start": "N",
+			"end": "C"
+		},
+		{
+			"start": "NW",
+			"end": "C"
+		},
+		{
+			"start": "SW",
+			"end": "C"
+		},
+		{
+			"start": "S",
+			"end": "C"
+		}
+	]
+}

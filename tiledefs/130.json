@@ -1,0 +1,24 @@
+{
+	"paths": [
+		{
+			"start": "N",
+			"end": "S"
+		},
+		{
+			"start": "NW",
+			"end": "C"
+		},
+		{
+			"start": "SW",
+			"end": "C"
+		}
+	],
+	"cities": [
+		{
+			"circles": 4,
+			"position": "C",
+			"revenue_position": [ 0.0, 0.8, 0.0 ],
+			"text_id": "1"
+		}
+	]
+}

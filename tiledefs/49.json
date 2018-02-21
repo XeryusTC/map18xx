@@ -2,7 +2,7 @@
 	"text": [
 		{
 			"id": "2",
-			"position": [0.0, 0.3, 0.7],
+			"position": [0.7, 0.0, 0.0],
 			"size": "120%",
 			"weight": 900,
 			"anchor": "Middle"
