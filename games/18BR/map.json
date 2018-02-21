@@ -1,0 +1,350 @@
+{
+	"orientation": "Horizontal",
+	"scale": 3.81,
+	"width": 13,
+	"height": 11,
+	"barriers": [
+		{
+			"location": "D2",
+			"side": "SW"
+		}
+	],
+	"tiles": [
+		{"location": "A7"},
+		{"location": "A9"},
+		{
+			"location": "A11",
+			"color": "red",
+			"revenue": {
+				"position": "C",
+				"yellow": "20",
+				"green": "30",
+				"russet": "40",
+				"grey": "50"
+			},
+			"arrows": ["N"]
+		},
+
+		{
+			"location": "B2",
+			"color": "red",
+			"arrows": ["S", "SE"],
+			"revenue": {
+				"position": "C",
+				"yellow": "40",
+				"green": "50",
+				"russet": "60",
+				"grey": "80"
+			},
+			"text": {
+				"2": "Colombia"
+			}
+		},
+		{"location": "B4"},
+		{"location": "B6"},
+		{
+			"location": "B8",
+			"tile": "city",
+			"text": {
+				"3": "Rio Branco"
+			}
+		},
+		{
+			"location": "B10",
+			"color": "red",
+			"arrows": ["NW"],
+			"text": {
+				"1": "Peru"
+			}
+		},
+
+		{"location": "C3"},
+		{"location": "C5"},
+		{"location": "C7"},
+		{"location": "C9"},
+
+		{"location": "D2"},
+		{"location": "D4"},
+		{"location": "D6"},
+		{
+			"location": "D8",
+			"tile": "city",
+			"text": {
+				"3": "Porto Velho"
+			}
+		},
+		{"location": "D10"},
+		
+		{
+			"location": "E1",
+			"tile": "city",
+			"text": {
+				"3": "Boa Vista"
+			}
+		},
+		{"location": "E3"},
+		{
+			"location": "E5",
+			"tile": "city",
+			"text": {
+				"3": "Manaus"
+			}
+		},
+		{"location": "E7"},
+		{"location": "E9"},
+		{"location": "E11"},
+		{
+			"location": "E13",
+			"color": "red",
+			"arrows": ["SE", "NE"],
+			"revenue": {
+				"position": "C",
+				"yellow": "20",
+				"green": "30",
+				"russet": "40",
+				"grey": "40"
+			},
+			"text": {
+				"2": "Bolivia"
+			}
+		},
+		{
+			"location": "E21",
+			"color": "red",
+			"arrows": ["NE"],
+			"revenue": {
+				"position": "C",
+				"yellow": "20",
+				"green": "40",
+				"russet": "50",
+				"grey": "60"
+			}
+		},
+
+		{
+			"location": "F2",
+			"color": "red",
+			"arrows": ["SW", "S"],
+			"revenue": {
+				"position": "C",
+				"yellow": "20",
+				"green": "30",
+				"russet": "40",
+				"grey": "40"
+			},
+			"text": {
+				"2": "Guyana/Surinam"
+			}
+		},
+		{"location": "F4"},
+		{"location": "F6"},
+		{"location": "F8"},
+		{"location": "F10"},
+		{
+			"location": "F12",
+			"tile": "city",
+			"text": {
+				"3": "Cuiabá"
+			}
+		},
+		{"location": "F14"},
+		{
+			"location": "F20",
+			"tile": "city",
+			"text": {
+				"3": "Uruguaiana"
+			}
+		},
+		{
+			"location": "F22",
+			"color": "red",
+			"arrows": ["N", "NE"],
+			"text": {
+				"1": "Argentina"
+			}
+		},
+		
+		{
+			"location": "G1",
+			"color": "white",
+			"arrows": ["SE"]
+		},
+		{"location": "G3"},
+		{
+			"location": "G5",
+			"tile": "city",
+			"text": {
+				"3": "Santarém"
+			}
+		},
+		{"location": "G7"},
+		{"location": "G9"},
+		{"location": "G11"},
+		{"location": "G13"},
+		{"location": "G15"},
+		{"location": "G17"},
+		{"location": "G19"},
+		{
+			"location": "G21",
+			"tile": "city",
+			"text": {
+				"3": "Rio Grande"
+			}
+		},
+
+		{
+			"location": "H2",
+			"tile": "city",
+			"text": {
+				"3": "Macapá"
+			}
+		},
+		{"location": "H4"},
+		{"location": "H6"},
+		{"location": "H8"},
+		{"location": "H10"},
+		{
+			"location": "H12",
+			"tile": "city",
+			"text": {
+				"3": "Goiânia"
+			}
+		},
+		{"location": "H14"},
+		{
+			"location": "H16",
+			"tile": "city",
+			"text": {
+				"3": "Londrina"
+			}
+		},
+		{"location": "H18"},
+		{
+			"location": "H20",
+			"tile": "city",
+			"text": {
+				"3": "Porto Alegre",
+				"code": "T"
+			}
+		},
+
+		{
+			"location": "I1",
+			"color": "white",
+			"arrows": ["SW"]
+		},
+		{
+			"location": "I5",
+			"tile": "city",
+			"text": {
+				"3": "Delém"
+			}
+		},
+		{
+			"location": "I7",
+			"tile": "city",
+			"text": {
+				"3": "Imperatriz"
+			}
+		},
+		{ "location": "I9" },
+		{
+			"location": "I11",
+			"tile": "city",
+			"text": {
+				"3": "Brasilia",
+				"code": "B"
+			}
+		},
+		{"location": "I13"},
+		{"location": "I15"},
+		{
+			"location": "I17",
+			"tile": "city",
+			"text": {
+				"3": "São Paulo"
+			}
+		},
+
+		{
+			"location": "J4",
+			"tile": "city",
+			"text": {
+				"3": "São Luís"
+			}
+		},
+		{"location": "J6"},
+		{"location": "J8"},
+		{"location": "J10"},
+		{"location": "J12"},
+		{
+			"location": "J14",
+			"tile": "city",
+			"text": {
+				"3": "Belo Horizonte"
+			}
+		},
+		{
+			"location": "J16",
+			"color": "grey",
+			"tile": "130",
+			"orientation": "NE",
+			"revenue": {
+				"position": [ 0.25, -0.4, -0.4 ],
+				"yellow": "40",
+				"green": "50",
+				"russet": "60",
+				"grey": "70"
+			},
+			"text": {
+				"3": "Rio de Janeiro"
+			}
+		},
+
+		{"location": "K5"},
+		{"location": "K7"},
+		{"location": "K9"},
+		{"location": "K11"},
+		{"location": "K13"},
+		{
+			"location": "K15",
+			"tile": "city",
+			"text": {
+				"3": "Victoria",
+				"code": "T"
+			}
+		},
+
+		{
+			"location": "L6",
+			"tile": "city",
+			"text": {
+				"3": "Fortaleza"
+			}
+		},
+		{"location": "L8"},
+		{
+			"location": "L10",
+			"tile": "city",
+			"text": {
+				"3": "Salvador"
+			}
+		},
+
+		{
+			"location": "M7",
+			"tile": "city",
+			"text": {
+				"3": "Natal"
+			}
+		},
+		{
+			"location": "M9",
+			"tile": "city",
+			"text": {
+				"3": "Maceió",
+				"code": "T"
+			}
+		}
+	]
+}
