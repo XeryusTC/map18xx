@@ -10,8 +10,22 @@
 		}
 	],
 	"tiles": [
-		{"location": "A7"},
-		{"location": "A9"},
+		{
+			"location": "A7",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "A9",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "A11",
 			"color": "red",
@@ -40,11 +54,23 @@
 				"2": "Colombia"
 			}
 		},
-		{"location": "B4"},
-		{"location": "B6"},
+		{ "location": "B4" },
+		{
+			"location": "B6",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "B8",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Rio Branco"
 			}
@@ -58,14 +84,49 @@
 			}
 		},
 
-		{"location": "C3"},
-		{"location": "C5"},
-		{"location": "C7"},
-		{"location": "C9"},
+		{
+			"location": "C3",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "C5",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "C7",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{ "location": "C9" },
 
-		{"location": "D2"},
-		{"location": "D4"},
-		{"location": "D6"},
+		{ "location": "D2" },
+		{
+			"location": "D4",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "D6",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "D8",
 			"tile": "city",
@@ -86,13 +147,39 @@
 		{
 			"location": "E5",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Manaus"
 			}
 		},
-		{"location": "E7"},
-		{"location": "E9"},
-		{"location": "E11"},
+		{
+			"location": "E7",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "E9",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "E11",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "E13",
 			"color": "red",
@@ -118,6 +205,9 @@
 				"green": "40",
 				"russet": "50",
 				"grey": "60"
+			},
+			"text": {
+				"2": "Argentina"
 			}
 		},
 
@@ -136,13 +226,39 @@
 				"2": "Guyana/Surinam"
 			}
 		},
-		{"location": "F4"},
-		{"location": "F6"},
-		{"location": "F8"},
-		{"location": "F10"},
+		{ "location": "F4" },
+		{
+			"location": "F6",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "F8",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "F10",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "F12",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Cuiabá"
 			}
@@ -159,29 +275,69 @@
 			"location": "F22",
 			"color": "red",
 			"arrows": ["N", "NE"],
+			"revenue": {
+				"position": "C",
+				"yellow": "20",
+				"green": "30",
+				"russet": "40",
+				"grey": "60"
+			},
 			"text": {
-				"1": "Argentina"
+				"2": "Uruguay"
 			}
 		},
 		
 		{
 			"location": "G1",
-			"color": "white",
+			"color": "blue",
 			"arrows": ["SE"]
 		},
 		{"location": "G3"},
 		{
 			"location": "G5",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Santarém"
 			}
 		},
-		{"location": "G7"},
-		{"location": "G9"},
-		{"location": "G11"},
+		{
+			"location": "G7",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "G9",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "G11",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{"location": "G13"},
-		{"location": "G15"},
+		{
+			"location": "G15",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{"location": "G17"},
 		{"location": "G19"},
 		{
@@ -195,14 +351,47 @@
 		{
 			"location": "H2",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Macapá"
 			}
 		},
-		{"location": "H4"},
-		{"location": "H6"},
-		{"location": "H8"},
-		{"location": "H10"},
+		{
+			"location": "H4",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "H6",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "H8",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
+		{
+			"location": "H10",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "H12",
 			"tile": "city",
@@ -210,15 +399,29 @@
 				"3": "Goiânia"
 			}
 		},
-		{"location": "H14"},
+		{
+			"location": "H14",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "H16",
 			"tile": "city",
 			"text": {
-				"3": "Londrina"
+				"3": "Piracicaba"
 			}
 		},
-		{"location": "H18"},
+		{
+			"location": "H18",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "H20",
 			"tile": "city",
@@ -230,12 +433,17 @@
 
 		{
 			"location": "I1",
-			"color": "white",
+			"color": "blue",
 			"arrows": ["SW"]
 		},
 		{
 			"location": "I5",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Delém"
 			}
@@ -243,11 +451,23 @@
 		{
 			"location": "I7",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
 				"3": "Imperatriz"
 			}
 		},
-		{ "location": "I9" },
+		{
+			"location": "I9",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{
 			"location": "I11",
 			"tile": "city",
@@ -257,7 +477,13 @@
 			}
 		},
 		{"location": "I13"},
-		{"location": "I15"},
+		{
+			"location": "I15",
+			"tile": "city",
+			"text": {
+				"3": "Lavras"
+			}
+		},
 		{
 			"location": "I17",
 			"tile": "city",
@@ -269,11 +495,24 @@
 		{
 			"location": "J4",
 			"tile": "city",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": [-0.6, 0.0, 0.0]
+			},
 			"text": {
+				"code": "T",
 				"3": "São Luís"
 			}
 		},
-		{"location": "J6"},
+		{
+			"location": "J6",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{"location": "J8"},
 		{"location": "J10"},
 		{"location": "J12"},
@@ -301,10 +540,24 @@
 			}
 		},
 
-		{"location": "K5"},
+		{
+			"location": "K5",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{"location": "K7"},
 		{"location": "K9"},
-		{"location": "K11"},
+		{
+			"location": "K11",
+			"terrain": {
+				"type": "river",
+				"cost": "R$ 80",
+				"position": "C"
+			}
+		},
 		{"location": "K13"},
 		{
 			"location": "K15",
@@ -331,6 +584,11 @@
 			}
 		},
 
+		{
+			"location": "M5",
+			"color": "blue",
+			"arrows": ["S"]
+		},
 		{
 			"location": "M7",
 			"tile": "city",
