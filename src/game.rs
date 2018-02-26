@@ -245,8 +245,11 @@ impl Game {
                             placed += 1;
                         }
                     }
-                    if placed >= self.placed_tiles().get(&location).unwrap()
-                                     .cities().get(city).unwrap().circles {
+                    if placed >= top_tiles(&self.placed_tiles(),
+                                           &self.map.tiles())
+                                     .get(&location).unwrap()
+                                     .cities().get(city).unwrap().circles
+                    {
                         eprintln!("Could not place token for {} in {:?}: \
                                   too many tokens in station", company,
                                   location);
