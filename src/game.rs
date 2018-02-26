@@ -219,9 +219,11 @@ impl Game {
     pub fn tokens(&self) -> HashMap<(u32, u32), Vec<Token>> {
         let mut tokens = HashMap::new();
         for (name, company) in self.companies.iter() {
-            let token = Token::from(&company.home, name, &company.color,
-                                    &self.map.orientation).set_home();
-            tokens.entry(token.location).or_insert(vec![]).push(token);
+            if let Some(ref home) = company.home {
+                let token = Token::from(&home, name, &company.color,
+                                        &self.map.orientation).set_home();
+                tokens.entry(token.location).or_insert(vec![]).push(token);
+            }
         }
         // Update with placed tokens
         if let Some(ref log) = self.log {
@@ -569,7 +571,7 @@ pub enum Home {
 pub struct Company {
     pub name: String,
     pub color: String,
-    pub home: Home,
+    pub home: Option<Home>,
 }
 
 pub struct Token {
