@@ -1,2 +1,280 @@
 {
+	"EBS": {
+		"name": "Electric Bond and Share",
+		"color": "#3B73B9"
+	},
+	"CBTU": {
+		"name": "Compania Brasileira de Trens urbanos",
+		"color": "lightblue"
+	},
+	"VIERG": {
+		"name": "Viação e Illuminação Electricas do Rio Grande",
+		"color": "darkgreen"
+	},
+	"ALL": {
+		"name": "América Latina Logîstica",
+		"color": "darkblue"
+	},
+	"EFCJ": {
+		"name": "Estrada de Ferro Campos do Jordão",
+		"color": "blue"
+	},
+	"EFVM": {
+		"name": "Estrada de Ferro Vitória a Minas",
+		"color": "#00ffff"
+	},
+	"FCA": {
+		"name": "Ferrovia Centro-Atlântica",
+		"color": "yellow"
+	},
+	"EFC": {
+		"name": "Estrada de Ferro Carajás",
+		"color": "grey"
+	},
+	"MRS": {
+		"name": "MRS Logística",
+		"color": "orange"
+	},
+	"FNS": {
+		"name": "Ferrovia Norte-Sul",
+		"color": "#00c000"
+	},
+
+	"NCFLNB": {
+		"name": "Natal Companhia Força e Luz Nordeste do Brasil",
+		"color": "red"
+	},
+
+	"P1": {
+		"name": "Companhia Urbana de Estrada de Ferro Paraense (I5)",
+		"color": "black"
+	},
+	"P2": {
+		"name": "Companhia de Bonds Paraense (I5)",
+		"color": "black"
+	},
+	"P3": {
+		"name": "Ramal Férreo Urbano (J14)",
+		"color": "black"
+	},
+	"P4": {
+		"name": "Ferro-Carril de Bello Horizonte (J14)",
+		"color": "black"
+	},
+	"P5": {
+		"name": "Empresa de Bondes de Boa Vista (E1)",
+		"color": "black"
+	},
+	"P6": {
+		"name": "Campanhia Carris de Ferro de Boa Vista (E1)",
+		"color": "black"
+	},
+	"P7": {
+		"name": "Metrô de Brasília (I11)",
+		"color": "black"
+	},
+	"P8": {
+		"name": "Estrade de Ferro Brasília (I11)",
+		"color": "black"
+	},
+	"P9": {
+		"name": "Companhia de Bondes de Brasìlia (I11)",
+		"color": "black"
+	},
+	"P10": {
+		"name": "Companhia Carris de Ferro de Brasilia (I11)",
+		"color": "black"
+	},
+	"P11": {
+		"name": "Companhia Progresso Cuiabano (F12)",
+		"color": "black"
+	},
+	"P12": {
+		"name": "Empreza Cuiabana Ferro Carril e Matadouro (F12)",
+		"color": "black"
+	},
+	"P13": {
+		"name": "Companhia Ferro-Carril do Ceará (L6)",
+		"color": "black"
+	},
+	"P14": {
+		"name": "Ceará Tramway, Light & Power Co., Ltd. (L6)",
+		"color": "black"
+	},
+	"P15": {
+		"name": "Companhia Carris de Ferro de Goiânia (H12)",
+		"color": "black"
+	},
+	"P16": {
+		"name": "Estrade de Ferro de Goiânia (H12)",
+		"color": "black"
+	},
+	"P17": {
+		"name": "Companhia Imperatriz de Trens Metropolitans (I7)",
+		"color": "black"
+	},
+	"P18": {
+		"name": "Companhia Carris de Ferro de Imperatriz (I7)",
+		"color": "black"
+	},
+	"P19": {
+		"name": "Rede de Viação Sul Mineira (I15)",
+		"color": "black"
+	},
+	"P20": {
+		"name": "Estrada de Ferro Oeste de Mina (I15)",
+		"color": "black"
+	},
+	"P21": {
+		"name": "Ferro-Carril de Macapá (H2)",
+		"color": "black"
+	},
+	"P22": {
+		"name": "Ferro-Carril Municipal de Macapá (H2)",
+		"color": "black"
+	},
+	"P23": {
+		"name": "Estrade de Ferro Jaraguá a Bebedouro (M9)",
+		"color": "black"
+	},
+	"P24": {
+		"name": "Companhia Alagoana de Trilhos Urbanos (M9)",
+		"color": "black"
+	},
+	"P25": {
+		"name": "Companhia Força e Luz Nordeste do Brasil (M9)",
+		"color": "black"
+	},
+	"P26": {
+		"name": "Viação Suburbana (E5)",
+		"color": "black"
+	},
+	"P27": {
+		"name": "Manáos Tramways & Light Company Limited (E5)",
+		"color": "black"
+	},
+	"P28": {
+		"name": "Empreza de Melhoramentos do Natal (M7)",
+		"color": "black"
+	},
+	"P29": {
+		"name": "Empreza de Tracção, Luz e Força do Natal (M7)",
+		"color": "black"
+	},
+	"P30": {
+		"name": "Southern Brazil Electric Company (H16)",
+		"color": "black"
+	},
+	"P31": {
+		"name": "Escola Superior de Agricultura Luiz de Queiroz (H16)",
+		"color": "black"
+	},
+	"P32": {
+		"name": "Carris de Ferro Proto-Alegrense (H20)",
+		"color": "black"
+	},
+	"P33": {
+		"name": "Carris Urbanos (H20)",
+		"color": "black"
+	},
+	"P34": {
+		"name": "Companhia Força e Luz Proto-Alegrense (H20)",
+		"color": "black"
+	},
+	"P35": {
+		"name": "Empresa de Bondes de Porto Velho (D8)",
+		"color": "black"
+	},
+	"P36": {
+		"name": "Campanhia Carris de Ferro de Porto Velho (D8)",
+		"color": "black"
+	},
+	"P37": {
+		"name": "Companhia de Bondes de Rio Branco (B8)",
+		"color": "black"
+	},
+	"P38": {
+		"name": "Estrade de Carris-Ferro de Rio Branco (B8)",
+		"color": "black"
+	},
+	"P39": {
+		"name": "Companhia de Carris de Ferro da Cidade a Tijuca (J16)",
+		"color": "black"
+	},
+	"P40": {
+		"name": "Companhia de Caminho de Carris de Ferro do Jardim Botânico (J16)",
+		"color": "black"
+	},
+	"P41": {
+		"name": "Companhia Carris Urbanos (J16)",
+		"color": "black"
+	},
+	"P42": {
+		"name": "Ferro-Carril de Jacarepaguá (J16)",
+		"color": "black"
+	},
+	"P43": {
+		"name": "Companhia de Bonds Rio-Grandenses (G21)",
+		"color": "black"
+	},
+	"P44": {
+		"name": "Companhia de Mangueira (G21)",
+		"color": "black"
+	},
+	"P45": {
+		"name": "Companhia de Vehiculos Economicos (L10)",
+		"color": "black"
+	},
+	"P46": {
+		"name": "Trilhos Centraes (L10)",
+		"color": "black"
+	},
+	"P47": {
+		"name": "Companhia Carris de Ferro Santarém (G5)",
+		"color": "black"
+	},
+	"P48": {
+		"name": "Estrada de Bondes de Santarém (G5)",
+		"color": "black"
+	},
+	"P49": {
+		"name": "Empreza Ferro Carril do Maranhão (J4)",
+		"color": "black"
+	},
+	"P50": {
+		"name": "Estrada de Ferro do Anil (J4)",
+		"color": "black"
+	},
+	"P51": {
+		"name": "Serviços de Agua, Esgotos, Luz, Tração e Prensagem de Algodão (J4)",
+		"color": "black"
+	},
+	"P52": {
+		"name": "Companhia Carris de Ferro de São Paulo a Santo Amaro (I17)",
+		"color": "black"
+	},
+	"P53": {
+		"name": "Empresa de Bondes de Sant'Ana (I17)",
+		"color": "black"
+	},
+	"P54": {
+		"name": "Empresa de Bondes de Uruguaiana (F20)",
+		"color": "black"
+	},
+	"P55": {
+		"name": "Companhia Carris de Ferro de Uruguaiana (F20)",
+		"color": "black"
+	},
+	"P56": {
+		"name": "Banco do Estado do Espírito Santo (K15)",
+		"color": "black"
+	},
+	"P57": {
+		"name": "Companhia Central Brasileira de Força Elétrica (K15)",
+		"color": "black"
+	},
+	"P58": {
+		"name": "Tramways Electricos de Victoria (K15)",
+		"color": "black"
+	}
 }
