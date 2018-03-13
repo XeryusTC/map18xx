@@ -1,5 +1,5 @@
 extern crate nalgebra as na;
-extern crate serde_json;
+extern crate serde_yaml;
 
 use std::collections::HashMap;
 use std::fs::File;
@@ -76,7 +76,7 @@ impl Map {
     pub fn load(dir: PathBuf,
                 definitions: &HashMap<String, tile::TileDefinition>) -> Map {
         let mut map: Map;
-        let map_filename = dir.join("map.json");
+        let map_filename = dir.join("map.yaml");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
             process::exit(1);
@@ -89,7 +89,7 @@ impl Map {
                 process::exit(1);
             }
             Ok(file) => {
-                map = serde_json::from_reader(file).unwrap_or_else(|err| {
+                map = serde_yaml::from_reader(file).unwrap_or_else(|err| {
                     eprintln!("Failed to parse map: {}", err);
                     process::exit(1);
                 });
@@ -139,8 +139,8 @@ impl Game {
     pub fn load(dir: PathBuf,
                 definitions: &HashMap<String, tile::TileDefinition>) -> Game {
         let mut game = Game::new();
-        let manifest_filename = dir.join("manifest.json");
-        let companies_filename = dir.join("companies.json");
+        let manifest_filename = dir.join("manifest.yaml");
+        let companies_filename = dir.join("companies.yaml");
         if !dir.exists() {
             eprintln!("Can't find a game in {}", dir.to_string_lossy());
             process::exit(1);
@@ -153,7 +153,7 @@ impl Game {
                 process::exit(1);
             }
             Ok(file) => {
-                game.manifest = serde_json::from_reader(file)
+                game.manifest = serde_yaml::from_reader(file)
                     .unwrap_or_else(|err| {
                         eprintln!("Failed to parse manifest: {}", err);
                         process::exit(1);
@@ -179,7 +179,7 @@ impl Game {
                 process::exit(1);
             }
             Ok(file) => {
-                game.companies = serde_json::from_reader(file)
+                game.companies = serde_yaml::from_reader(file)
                     .unwrap_or_else(|err| {
                         eprintln!("Failed to parse companies: {}", err);
                         process::exit(1);
@@ -537,7 +537,7 @@ impl Log {
     pub fn load(state_options: &super::StateOptions,
                 _options: &super::Options) -> Log {
         let log: Log;
-        let log_filename = format!("{}.json", state_options.name);
+        let log_filename = format!("{}.yaml", state_options.name);
         println!("Reading log from file...");
         match File::open(log_filename) {
             Err(e) => {
@@ -545,7 +545,7 @@ impl Log {
                 process::exit(1);
             }
             Ok(file) => {
-                log = serde_json::from_reader(file).unwrap_or_else(|err| {
+                log = serde_yaml::from_reader(file).unwrap_or_else(|err| {
                     eprintln!("Failed to load game: {}", err);
                     process::exit(1);
                 });

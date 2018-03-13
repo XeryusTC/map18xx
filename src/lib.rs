@@ -1,6 +1,6 @@
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
+extern crate serde_yaml;
 extern crate svg;
 
 use std::fs;
@@ -145,16 +145,16 @@ pub fn newgame_mode(_options: &Options, newgame_options: &NewGameOptions) {
         .create(true)
         .truncate(true)
         .create_new(!newgame_options.overwrite)
-        .open(format!("{}.json", newgame_options.name));
+        .open(format!("{}.yaml", newgame_options.name));
     match file {
         Err(e) => {
-            eprintln!("Couldn't create game file {}.json: {}",
+            eprintln!("Couldn't create game file {}.yaml: {}",
                       newgame_options.name, e);
             process::exit(1);
         }
         Ok(file) => {
-            println!("Writing to {}.json", newgame_options.name);
-            serde_json::to_writer_pretty(file, &log).unwrap();
+            println!("Writing to {}.yaml", newgame_options.name);
+            serde_yaml::to_writer(file, &log).unwrap();
         }
     }
 }

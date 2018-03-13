@@ -22,7 +22,7 @@
 //! ![Coordinate system](../../../../axes.svg)
 
 extern crate nalgebra as na;
-extern crate serde_json;
+extern crate serde_yaml;
 
 use std::collections::HashMap;
 use std::f64::consts::PI;
@@ -502,8 +502,8 @@ pub fn definitions(options: &super::Options)
     // Read and parse each file
     let mut definitions = HashMap::new();
     for def in &def_files {
-        // Ignore non .json files
-        if def.extension().unwrap() != "json" {
+        // Ignore non .yaml files
+        if def.extension().unwrap() != "yaml" {
             continue;
         }
         if options.verbose {
@@ -511,13 +511,13 @@ pub fn definitions(options: &super::Options)
                      def.file_stem().unwrap().to_string_lossy());
         }
 
-        // Read json file
+        // Read yaml file
         let file = File::open(def).unwrap_or_else(|err| {
             eprintln!("Couldn't open {}: {:?}", def.to_string_lossy(),
                       err.kind());
             process::exit(1);
         });
-        let mut tile: TileDefinition = serde_json::from_reader(file)
+        let mut tile: TileDefinition = serde_yaml::from_reader(file)
             .unwrap_or_else(|err| {
                 eprintln!("Error parsing {}: {}", def.to_string_lossy(), err);
                 process::exit(1);
