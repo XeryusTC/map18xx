@@ -151,7 +151,8 @@
 		{"location": "H14"},
 		{"location": "H16", "tile": "city", "text": {"2": "Lancaster"}},
 		{"location": "H18", "tile": "city2",
-			"text": {"3": "Philadelphia", "4": "Trenton", "5": "C&A"},
+			"text": {"2": "OO", "3": "Philadelphia", "4": "Trenton", "5": "C&A"},
+			"color": "yellow",
 			"orientation": "N"},
 
 		{"location": "I1", "color": "red", "text": {"2": "Gulf of Mexico"},
