@@ -11,7 +11,7 @@ exclude = [
 
 [dependencies]
 svg = "0.5.7"
-nalgebra = "0.13.1"
+nalgebra = "0.16.8"
 serde = "1.0.21"
 serde_derive = "1.0.21"
 serde_yaml = "0.7.3"
